@@ -1,0 +1,110 @@
+@* File: Views/Admin/EditStudent.cshtml *@
+@model trungtamdaotao.Models.AdminViewModels.EditStudentViewModel
+@{
+    ViewData["Title"] = "Chỉnh Sửa Học Viên";
+    Layout = "_AdminLayout"; // Đảm bảo Layout có hiển thị TempData
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">@ViewData["Title"]: @Model.FullName</h1> @* Hiển thị tên học viên đang sửa *@
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Dashboard">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a asp-action="Students">Quản lý học viên</a></li>
+        <li class="breadcrumb-item active">Chỉnh sửa học viên</li>
+    </ol>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <i class="fas fa-user-edit me-1"></i>
+                    Chỉnh sửa thông tin học viên
+                </div>
+                <div class="card-body">
+                    <form asp-controller="Admin" asp-action="EditStudent" asp-route-id="@Model.Id" method="post"> @* Thêm asp-route-id và controller *@
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        <input type="hidden" asp-for="Id" /> @* Input ẩn cho ID là bắt buộc *@
+
+                        @* --- THÊM TRƯỜNG USERNAME (CHỈ ĐỌC) --- *@
+                        <div class="mb-3">
+                            <label asp-for="UserName" class="form-label"></label>
+                            <input asp-for="UserName" class="form-control" readonly /> @* Đặt readonly vì thường không cho sửa username *@
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                             <div class="form-text text-muted">Tên đăng nhập không thể thay đổi.</div>
+                        </div>
+                        @* --- KẾT THÚC TRƯỜNG USERNAME --- *@
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" type="email" class="form-control" /> @* Dùng type="email" *@
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <hr class="my-4" />
+
+                         <div class="mb-3">
+                            <label asp-for="FullName" class="form-label"></label>
+                            <input asp-for="FullName" class="form-control" />
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="PhoneNumber" class="form-label"></label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="BirthDate" class="form-label"></label>
+                            <input asp-for="BirthDate" class="form-control" type="date" />
+                            <span asp-validation-for="BirthDate" class="text-danger"></span>
+                        </div>
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Lưu Thay Đổi
+                            </button>
+                            @* Nút hủy nên quay về trang danh sách Students *@
+                            <a asp-action="Students" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i> Hủy
+                            </a>
+                             @* Hoặc quay về trang chi tiết học viên *@
+                             @* <a asp-action="StudentDetails" asp-route-id="@Model.Id" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i> Hủy
+                             </a> *@
+                        </div>
+                    </form>
+                </div> @* end card-body *@
+            </div> @* end card *@
+        </div> @* end col-lg-8 *@
+        <div class="col-lg-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Lưu ý
+                </div>
+                <div class="card-body">
+                    <p>Khi thay đổi thông tin học viên:</p>
+                    <ul>
+                        <li><strong>Tên đăng nhập</strong> thường không được phép thay đổi.</li>
+                        <li>Nếu thay đổi <strong>Email</strong>, email mới phải là duy nhất trong hệ thống.</li>
+                        <li>Để đặt lại mật khẩu cho học viên, cần có chức năng riêng (ví dụ: gửi email reset hoặc admin đặt lại trực tiếp).</li>
+                    </ul>
+                     @* Có thể thêm thông tin về ngày tạo/cập nhật cuối *@
+                     @{
+                        // Cần truyền thông tin này từ Controller GET vào ViewBag hoặc sửa ViewModel
+                        // var createdAt = ViewBag.CreatedAt ?? DateTime.MinValue;
+                        // var updatedAt = ViewBag.LastUpdatedAt ?? DateTime.MinValue;
+                     }
+                     @* <small class="text-muted d-block mt-3">Tài khoản tạo lúc: @createdAt.ToString("g")</small> *@
+                     @* <small class="text-muted d-block">Cập nhật lần cuối: @updatedAt.ToString("g")</small> *@
+                </div>
+            </div>
+        </div> @* end col-lg-4 *@
+    </div> @* end row *@
+</div> @* end container-fluid *@
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

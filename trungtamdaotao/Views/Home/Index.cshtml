@@ -1,0 +1,116 @@
+﻿@model IEnumerable<trungtamdaotao.Models.Course>
+@{
+    ViewData["Title"] = "Trang chủ";
+}
+
+<div class="jumbotron bg-light p-5 mb-4 rounded-3">
+    <div class="container">
+        <h1 class="display-4">Trung tâm đào tạo</h1>
+        <p class="lead">Chào mừng bạn đến với trung tâm đào tạo. Chúng tôi cung cấp các khóa học chất lượng cao để giúp bạn nâng cao kỹ năng và kiến thức.</p>
+        <hr class="my-4">
+        <p>Đăng ký tài khoản để bắt đầu hành trình học tập của bạn ngay hôm nay.</p>
+        <div class="mt-4">
+            <a class="btn btn-primary btn-lg" asp-controller="Account" asp-action="Register">Đăng ký</a>
+            <a class="btn btn-outline-primary btn-lg" asp-controller="Account" asp-action="Login">Đăng nhập</a>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <h2 class="text-center mb-4">Khóa học sắp khai giảng</h2>
+    
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center" role="alert">
+            Hiện tại không có khóa học nào sắp khai giảng.
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            @foreach (var course in Model)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="card-title mb-0">@course.CourseName</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text"><strong>Mã khóa học:</strong> @course.CourseCode</p>
+                            <p class="card-text"><strong>Giảng viên:</strong> @course.Instructor</p>
+                            <p class="card-text"><strong>Ngày khai giảng:</strong> @course.StartDate.ToString("dd/MM/yyyy")</p>
+                            <p class="card-text"><strong>Học phí:</strong> @string.Format("{0:N0} VNĐ", course.TuitionFee)</p>
+                            <p class="card-text"><strong>Số lượng tối đa:</strong> @course.MaxStudents học viên</p>                            
+                        </div>
+                        <div class="card-footer bg-white">
+                            <div class="d-grid">
+                                <a asp-controller="Courses" asp-action="Details" asp-route-id="@course.CourseId" class="btn btn-outline-primary">Xem chi tiết</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<div class="container-fluid bg-light py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="d-flex flex-column align-items-center text-center">
+                    <div class="bg-primary text-white rounded-circle p-3 mb-3">
+                        <i class="bi bi-book" style="font-size: 2rem;"></i>
+                    </div>
+                    <h3>Đa dạng khóa học</h3>
+                    <p>Chúng tôi cung cấp nhiều khóa học đa dạng phù hợp với nhu cầu học tập của bạn.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="d-flex flex-column align-items-center text-center">
+                    <div class="bg-primary text-white rounded-circle p-3 mb-3">
+                        <i class="bi bi-person-check" style="font-size: 2rem;"></i>
+                    </div>
+                    <h3>Giảng viên chất lượng</h3>
+                    <p>Đội ngũ giảng viên có kinh nghiệm và chuyên môn cao trong lĩnh vực giảng dạy.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="d-flex flex-column align-items-center text-center">
+                    <div class="bg-primary text-white rounded-circle p-3 mb-3">
+                        <i class="bi bi-graph-up" style="font-size: 2rem;"></i>
+                    </div>
+                    <h3>Nâng cao kỹ năng</h3>
+                    <p>Các khóa học được thiết kế để giúp bạn nâng cao kỹ năng và phát triển sự nghiệp.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <h2 class="text-center mb-4">Liên hệ với chúng tôi</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Họ tên</label>
+                        <input type="text" class="form-control" id="name" placeholder="Nhập họ tên của bạn">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="Nhập địa chỉ email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Tin nhắn</label>
+                        <textarea class="form-control" id="message" rows="4" placeholder="Nhập tin nhắn của bạn"></textarea>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Gửi tin nhắn</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

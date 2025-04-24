@@ -1,0 +1,118 @@
+@model trungtamdaotao.Models.Course
+
+@{
+    ViewData["Title"] = Model.CourseName;
+    var isRegistered = ViewBag.IsRegistered ?? false;
+    var currentRegistrations = ViewBag.CurrentRegistrations ?? 0;
+}
+
+<div class="container mt-4">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h2>@Model.CourseName</h2>
+            <h5 class="text-white-50">@Model.CourseCode</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <h4>Thông tin khóa học</h4>
+                    <hr />
+                    <dl class="row">
+                        <dt class="col-sm-4">Giảng viên:</dt>
+                        <dd class="col-sm-8">@Model.Instructor</dd>
+
+                        <dt class="col-sm-4">Ngày khai giảng:</dt>
+                        <dd class="col-sm-8">@Model.StartDate.ToString("dd/MM/yyyy")</dd>
+
+                        <dt class="col-sm-4">Học phí:</dt>
+                        <dd class="col-sm-8">@string.Format("{0:N0} VNĐ", Model.TuitionFee)</dd>
+
+                        <dt class="col-sm-4">Số lượng học viên tối đa:</dt>
+                        <dd class="col-sm-8">@Model.MaxStudents</dd>
+
+                        <dt class="col-sm-4">Số lượng đã đăng ký:</dt>
+                        <dd class="col-sm-8">@currentRegistrations</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Trạng thái đăng ký</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="progress mb-3">
+                                @{
+                                    var registrationPercentage = Model.MaxStudents > 0 
+                                        ? (int)(currentRegistrations * 100 / Model.MaxStudents) 
+                                        : 0;
+                                }
+                                <div class="progress-bar" role="progressbar" style="width: @registrationPercentage%"
+                                    aria-valuenow="@registrationPercentage" aria-valuemin="0" aria-valuemax="100">
+                                    @registrationPercentage%
+                                </div>
+                            </div>
+                            <p>
+                                <strong>Còn @(Model.MaxStudents - currentRegistrations) chỗ trống</strong>
+                            </p>
+
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                @if (isRegistered)
+                                {
+                                    <form asp-action="Cancel" asp-route-id="@Model.CourseId" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-danger w-100">Hủy đăng ký</button>
+                                    </form>
+                                }
+                                else if (currentRegistrations < Model.MaxStudents && Model.StartDate > DateTime.Now)
+                                {
+                                    <form asp-action="Register" asp-route-id="@Model.CourseId" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-success w-100">Đăng ký ngay</button>
+                                    </form>
+                                }
+                                else if (Model.StartDate <= DateTime.Now)
+                                {
+                                    <div class="alert alert-warning">
+                                        Khóa học đã khai giảng, không thể đăng ký.
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="alert alert-warning">
+                                        Khóa học đã đủ số lượng học viên.
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="alert alert-info">
+                                    Vui lòng <a asp-area="Identity" asp-page="/Account/Login">đăng nhập</a> để đăng ký khóa học.
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Quản trị trung tâm đào tạo</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @* Sử dụng phiên bản mới nhất của Font Awesome nếu có thể *@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> @* Thêm asp-append-version *@
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" /> @* Thêm asp-append-version *@
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>Quản trị</h3>
+                <span>Trung tâm đào tạo</span>
+            </div>
+            <div class="sidebar-menu">
+                <ul class="nav flex-column">
+                    @* Bảng điều khiển *@
+                    <li class="nav-item">
+                        <a asp-controller="Admin" asp-action="Dashboard" class="nav-link @IsActive("Admin", "Dashboard")">
+                            <i class="fas fa-tachometer-alt fa-fw"></i> Bảng điều khiển
+                        </a>
+                    </li>
+
+                    @* Quản lý Khóa học *@
+                    <li class="nav-item">
+                        <a asp-controller="Admin" asp-action="Courses" class="nav-link @IsActive("Admin", new[] { "Courses", "CourseDetails", "CreateCourse", "EditCourse", "DeleteCourse" })">
+                            <i class="fas fa-book fa-fw"></i> Quản lý khóa học
+                        </a>
+                    </li>
+
+                    @* --- THÊM MỤC QUẢN LÝ HỌC VIÊN --- *@
+                    <li class="nav-item">
+                        @* Liên kết đến action Students *@
+                        <a asp-controller="Admin" asp-action="Students" class="nav-link @IsActive("Admin", new[] { "Students", "StudentDetails", "CreateStudent", "EditStudent", "DeleteStudent" })">
+                            <i class="fas fa-users fa-fw"></i> Quản lý học viên
+                        </a>
+                    </li>
+                    @* --- KẾT THÚC MỤC QUẢN LÝ HỌC VIÊN --- *@
+
+                     @* Quản lý Đăng ký (Ví dụ) *@
+                    <li class="nav-item">
+                        <a asp-controller="Admin" asp-action="StudentRegistrations" class="nav-link @IsActive("Admin", "StudentRegistrations")">
+                           <i class="fas fa-clipboard-list fa-fw"></i> Quản lý đăng ký
+                        </a>
+                    </li>
+
+                    <li class="nav-header">Báo cáo doanh thu</li>
+                    <li class="nav-item">
+                        <a asp-controller="Admin" asp-action="RevenueByMonth" class="nav-link @IsActive("Admin", "RevenueByMonth")">
+                            <i class="fas fa-chart-bar fa-fw"></i> Theo tháng
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-controller="Admin" asp-action="RevenueByCourse" class="nav-link @IsActive("Admin", "RevenueByCourse")">
+                            <i class="fas fa-chart-pie fa-fw"></i> Theo khóa học
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-controller="Admin" asp-action="RevenueByDateRange" class="nav-link @IsActive("Admin", new[] { "RevenueByDateRange", "RevenueByDateRangeResults" })">
+                            <i class="fas fa-calendar-alt fa-fw"></i> Theo khoảng thời gian
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Nav -->
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 shadow-sm">
+                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3"> @* Chỉ hiển thị nút toggle trên mobile *@
+                    <i class="fa fa-bars"></i>
+                </button>
+                 <h4 class="ms-3 d-none d-md-inline text-primary fw-light">@ViewData["Title"]</h4> @* Hiển thị Title trang ở đây *@
+
+                <ul class="navbar-nav ms-auto"> @* Dùng ms-auto cho Bootstrap 5 *@
+                    <li class="nav-item dropdown no-arrow">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @* Lấy tên người dùng nếu có thể *@
+                            @{
+                                var userName = User.Identity?.Name ?? "Quản trị viên";
+                            }
+                            <span class="me-2 d-none d-lg-inline text-gray-600 small">@userName</span>
+                            <img class="img-profile rounded-circle" width="32" height="32"
+                                 src="https://ui-avatars.com/api/?name=@(userName.Length > 1 ? userName.Substring(0,1) : "A")&background=007bff&color=fff&size=32">
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end shadow animated--grow-in"
+                             aria-labelledby="userDropdown">
+                            @* <a class="dropdown-item" href="#">
+                                <i class="fas fa-user-circle fa-sm fa-fw me-2 text-gray-400"></i>
+                                Thông tin cá nhân
+                            </a>
+                            <div class="dropdown-divider"></div> *@
+                            <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
+                                <button type="submit" class="dropdown-item">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>
+                                    Đăng xuất
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Page Content -->
+            <div class="container-fluid">
+                @* --- THÊM HIỂN THỊ TempData Ở ĐÂY --- *@
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @TempData["SuccessMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @TempData["ErrorMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                 @if (TempData["WarningMessage"] != null)
+                {
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        @TempData["WarningMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                @* --- KẾT THÚC HIỂN THỊ TempData --- *@
+
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        // Script cho sidebar toggle (có thể để trong site.js)
+        const sidebarToggle = document.getElementById('sidebarToggleTop');
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function(event) {
+                event.preventDefault();
+                document.body.classList.toggle('sidebar-toggled');
+                document.querySelector('.sidebar').classList.toggle('toggled');
+            });
+        }
+
+         // Giữ trạng thái sidebar nếu cần (dùng localStorage)
+        if (localStorage.getItem('sb|sidebar-toggle') === 'true') {
+             document.body.classList.add('sidebar-toggled');
+             document.querySelector('.sidebar').classList.add('toggled');
+        }
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+@functions {
+    // Hàm helper để xác định menu item nào đang active
+    string IsActive(string controller, string action)
+    {
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+        var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+        return (currentController == controller && currentAction == action) ? "active" : null;
+    }
+
+    string IsActive(string controller, string[] actions)
+    {
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+        var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+        return (currentController == controller && actions.Contains(currentAction)) ? "active" : null;
+    }
+}

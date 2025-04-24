@@ -1,0 +1,109 @@
+@model trungtamdaotao.Models.Course
+@{
+    ViewData["Title"] = "Xóa Khóa Học";
+    Layout = "_AdminLayout"; // Đảm bảo Layout này có chỗ hiển thị TempData["SuccessMessage"]
+}
+
+<div class="container-fluid mt-4">
+    <h1 class="mb-4">Xóa Khóa Học</h1>
+
+    <div class="card shadow border-danger">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0">Xác Nhận Xóa Khóa Học</h5>
+        </div>
+        <div class="card-body">
+
+            @* --- PHẦN HIỂN THỊ LỖI --- *@
+            @* Hiển thị lỗi chung từ ModelState (được thêm bởi AddModelError("",...)) *@
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+            @* Hiển thị lỗi cụ thể được truyền qua ViewBag *@
+            @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage)) // Kiểm tra ViewBag.ErrorMessage
+            {
+                <div class="alert alert-danger" role="alert">
+                    <i class="fas fa-ban"></i> <strong>Lỗi:</strong> @ViewBag.ErrorMessage
+                </div>
+            }
+            @* --- KẾT THÚC PHẦN HIỂN THỊ LỖI --- *@
+
+            @* Chỉ hiển thị cảnh báo "chắc chắn muốn xóa?" nếu không có lỗi nào được phát hiện *@
+            @if (string.IsNullOrEmpty(ViewBag.ErrorMessage))
+            {
+                <div class="alert alert-warning" role="alert">
+                    <i class="fas fa-exclamation-triangle"></i> Bạn có chắc chắn muốn xóa khóa học này? Hành động này không thể hoàn tác.
+                </div>
+            }
+
+            @* Luôn hiển thị thông tin khóa học *@
+            <div class="row mb-3">
+                <div class="col-md-8 offset-md-2">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th style="width: 30%; background-color: #f8f9fa;">Mã Khóa Học</th>
+                                <td>@Model.CourseCode</td>
+                            </tr>
+                            <tr>
+                                <th style="background-color: #f8f9fa;">Tên Khóa Học</th>
+                                <td>@Model.CourseName</td>
+                            </tr>
+                            <tr>
+                                <th style="background-color: #f8f9fa;">Giảng Viên</th>
+                                <td>@(Model.Instructor ?? "Chưa có")</td> @* Xử lý null cho Instructor *@
+                            </tr>
+                            <tr>
+                                <th style="background-color: #f8f9fa;">Ngày Khai Giảng</th>
+                                <td>@Model.StartDate.ToString("dd/MM/yyyy")</td>
+                            </tr>
+                            <tr>
+                                <th style="background-color: #f8f9fa;">Học Phí</th>
+                                <td>@Model.TuitionFee.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN")) VNĐ</td> @* Định dạng tiền tệ VN *@
+                            </tr>
+                            <tr>
+                                <th style="background-color: #f8f9fa;">Số Lượng Đã Đăng Ký</th>
+                                <td>
+                                    @{
+                                        // Đếm số lượng đăng ký hợp lệ (chưa bị hủy)
+                                        var activeRegistrations = Model.CourseRegistrations?.Count(cr => !cr.IsCanceled) ?? 0;
+                                    }
+                                    @activeRegistrations / @Model.MaxStudents
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            @* --- LOGIC HIỂN THỊ NÚT --- *@
+            <div class="mt-4 text-center">
+                @if (string.IsNullOrEmpty(ViewBag.ErrorMessage)) // Nếu không có lỗi, hiển thị form xác nhận
+                {
+                    <form asp-action="DeleteCourse" method="post"> @* Sửa asp-action khớp với ActionName *@
+                        <input type="hidden" asp-for="CourseId" />
+                        @Html.AntiForgeryToken() @* Đảm bảo có AntiForgeryToken *@
+                        <button type="submit" class="btn btn-danger me-2">
+                            <i class="fas fa-trash-alt"></i> Xác Nhận Xóa
+                        </button>
+                        <a asp-action="Courses" class="btn btn-secondary"> @* Nút hủy nên quay về danh sách *@
+                            <i class="fas fa-times"></i> Hủy
+                        </a>
+                    </form>
+                }
+                else // Nếu có lỗi, chỉ hiển thị nút Quay lại
+                {
+                    <a asp-action="Courses" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Quay lại Danh sách
+                    </a>
+                }
+            </div>
+             @* --- KẾT THÚC LOGIC HIỂN THỊ NÚT --- *@
+
+        </div> @* end card-body *@
+    </div> @* end card *@
+</div> @* end container-fluid *@
+
+@* Phần Scripts thường không cần thiết cho trang xác nhận xóa đơn giản này,
+   nhưng giữ lại không sao nếu layout yêu cầu *@
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

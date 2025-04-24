@@ -1,0 +1,206 @@
+@model trungtamdaotao.Controllers.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Bảng Điều Khiển Admin";
+    Layout = "_AdminLayout";
+}
+
+<div class="container-fluid mt-4">
+    <h1 class="mb-4">Bảng Điều Khiển Admin</h1>
+
+    <div class="row">
+        <!-- Tổng Quan Khóa Học -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Thống Kê Học Viên Theo Khóa Học</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Khóa Học</th>
+                                    <th>Số Lượng HV</th>
+                                    <th>Tỷ Lệ Đăng Ký</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var stat in Model.CourseStats)
+                                {
+                                    <tr>
+    <td>@stat.CourseName</td>
+    <td>@stat.TotalStudents</td>
+    <td>
+        @{
+            // Giả sử ViewBag.MaxStudentsDict là Dictionary<int, int>
+            var maxDict = ViewBag.MaxStudentsDict as Dictionary<int, int>;
+            int max = maxDict != null && maxDict.ContainsKey(stat.CourseId) ? maxDict[stat.CourseId] : 0;
+            var percentage = max > 0 
+                ? (int)((float)stat.TotalStudents / max * 100) 
+                : 0;
+        }
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: @percentage%;"
+                 aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100">
+                @percentage%
+            </div>
+        </div>
+    </td>
+</tr>
+
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thống Kê Doanh Thu -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Thống Kê Doanh Thu Theo Khóa Học</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Khóa Học</th>
+                                    <th>Doanh Thu</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var revenue in Model.RevenueStats)
+                                {
+                                    <tr>
+                                        <td>@revenue.CourseName</td>
+                                        <td>@revenue.TotalRevenue.ToString("N0") VNĐ</td>
+                                    </tr>
+                                }
+                                <tr class="table-info font-weight-bold">
+                                    <td>Tổng Cộng</td>
+                                    <td>@Model.RevenueStats.Sum(r => r.TotalRevenue).ToString("N0") VNĐ</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Biểu Đồ Doanh Thu Theo Tháng -->
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Doanh Thu Theo Tháng (@DateTime.Now.Year)</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="revenueChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Các Liên Kết Quản Lý -->
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card shadow text-center">
+                <div class="card-body">
+                    <i class="fas fa-book fa-3x mb-3 text-primary"></i>
+                    <h5 class="card-title">Quản Lý Khóa Học</h5>
+                    <p class="card-text">Thêm, sửa, xóa và quản lý các khóa học</p>
+                    <a asp-action="Courses" class="btn btn-primary">Quản Lý</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card shadow text-center">
+                <div class="card-body">
+                    <i class="fas fa-users fa-3x mb-3 text-success"></i>
+                    <h5 class="card-title">Quản Lý Học Viên</h5>
+                    <p class="card-text">Xem và quản lý thông tin học viên</p>
+                    <a href="#" class="btn btn-success">Quản Lý</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card shadow text-center">
+                <div class="card-body">
+                    <i class="fas fa-chart-line fa-3x mb-3 text-info"></i>
+                    <h5 class="card-title">Báo Cáo Doanh Thu</h5>
+                    <p class="card-text">Xem báo cáo doanh thu chi tiết</p>
+                    <a asp-action="RevenueByMonth" class="btn btn-info">Xem Báo Cáo</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var ctx = document.getElementById('revenueChart').getContext('2d');
+            
+            // Get data from model
+            var monthlyData = @Html.Raw(Json.Serialize(Model.MonthlyRevenue));
+            
+            // Prepare labels and data
+            var months = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 
+                        'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
+            var revenueData = Array(12).fill(0);
+            
+            // Fill data from model
+            monthlyData.forEach(function(item) {
+                if (item.Month >= 1 && item.Month <= 12) {
+                    revenueData[item.Month - 1] = item.Revenue;
+                }
+            });
+            
+            var chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'Doanh Thu (VNĐ)',
+                        data: revenueData,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString('vi-VN') + ' VNĐ';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    var label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += context.parsed.y.toLocaleString('vi-VN') + ' VNĐ';
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+}

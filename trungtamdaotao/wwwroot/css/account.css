@@ -1,0 +1,172 @@
+/* Main styling for account-related pages */
+.account-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+/* Card styling */
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.card-header {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    padding: 1.25rem;
+    border-bottom: none;
+}
+
+.card-header h3 {
+    color: white;
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+.card-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #eee;
+    padding: 1rem;
+}
+
+/* Form styling */
+.form-group label {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+.form-control {
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ced4da;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+/* Button styling */
+.btn-primary {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    border: none;
+    border-radius: 6px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background: linear-gradient(135deg, #2980b9, #1c638d);
+    box-shadow: 0 4px 10px rgba(41, 128, 185, 0.35);
+    transform: translateY(-1px);
+}
+
+/* Validation styling */
+.text-danger {
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+.validation-summary-errors ul {
+    padding-left: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Links styling */
+a {
+    color: #3498db;
+    transition: color 0.2s ease;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 1.5rem;
+    }
+    
+    .form-control {
+        padding: 0.6rem 0.75rem;
+    }
+    
+    .btn-primary {
+        padding: 0.6rem 1.25rem;
+    }
+}
+
+/* Remember me checkbox styling */
+.form-check-input {
+    cursor: pointer;
+}
+
+.form-check-input:checked {
+    background-color: #3498db;
+    border-color: #3498db;
+}
+
+.form-check-label {
+    cursor: pointer;
+    padding-left: 0.25rem;
+}
+
+/* Form transitions */
+.form-control, .btn {
+    transition: all 0.3s ease;
+}
+
+/* Date input styling */
+input[type="date"] {
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 0.75rem 1rem;
+    line-height: 1.5;
+}
+
+/* Focus visibility for accessibility */
+:focus {
+    outline: none;
+}
+
+/* Animation for validation errors */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.input-validation-error {
+    border-color: #dc3545;
+    animation: shake 0.6s;
+}
+
+/* Success message styling */
+.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}

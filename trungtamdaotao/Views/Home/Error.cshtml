@@ -1,0 +1,24 @@
+@model ErrorViewModel
+@{
+    ViewData["Title"] = "Lỗi";
+}
+
+<div class="container text-center my-5">
+    <h1 class="display-1 text-danger">Lỗi!</h1>
+    <h2 class="my-4">Đã xảy ra lỗi khi xử lý yêu cầu của bạn.</h2>
+    
+    @if (Model.ShowRequestId)
+    {
+        <p>
+            <strong>Mã yêu cầu:</strong> <code>@Model.RequestId</code>
+        </p>
+    }
+    
+    <div class="my-5">
+        <p class="lead">Xin lỗi vì sự bất tiện này. Vui lòng thử lại sau hoặc liên hệ với quản trị viên nếu vấn đề vẫn tiếp tục xảy ra.</p>
+    </div>
+    
+    <div class="mt-4">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-lg">Quay lại trang chủ</a>
+    </div>
+</div>

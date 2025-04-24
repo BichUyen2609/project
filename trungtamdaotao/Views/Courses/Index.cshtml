@@ -1,0 +1,43 @@
+@model IEnumerable<trungtamdaotao.Models.Course>
+
+@{
+    ViewData["Title"] = "Danh sách khóa học";
+}
+
+<div class="container mt-4">
+    <h1>@ViewData["Title"]</h1>
+    <p class="lead">Các khóa học sắp khai giảng</p>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title">@item.CourseName</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">@item.CourseCode</h6>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <i class="bi bi-calendar-event"></i> Ngày khai giảng: @item.StartDate.ToString("dd/MM/yyyy")
+                            </li>
+                            <li class="list-group-item">
+                                <i class="bi bi-person"></i> Giảng viên: @item.Instructor
+                            </li>
+                            <li class="list-group-item">
+                                <i class="bi bi-currency-dollar"></i> Học phí: @string.Format("{0:N0} VNĐ", item.TuitionFee)
+                            </li>
+                            <li class="list-group-item">
+                                <i class="bi bi-people"></i> Số lượng tối đa: @item.MaxStudents học viên
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        <a asp-action="Details" asp-route-id="@item.CourseId" class="btn btn-primary">Xem chi tiết</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

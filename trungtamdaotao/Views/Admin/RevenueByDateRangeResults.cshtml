@@ -1,0 +1,190 @@
+@model IEnumerable<trungtamdaotao.Models.MonthlyRevenue>
+@{
+    ViewData["Title"] = "Kết quả doanh thu theo khoảng thời gian";
+    var startDate = ViewBag.StartDate;
+    var endDate = ViewBag.EndDate;
+    
+    // Định dạng ngày tháng hiển thị trong tiêu đề
+    var startDateStr = startDate.ToString("dd/MM/yyyy");
+    var endDateStr = endDate.ToString("dd/MM/yyyy");
+    
+    // Tạo dữ liệu cho biểu đồ
+    var dataPoints = new List<object>();
+    foreach (var item in Model)
+    {
+        dataPoints.Add(new { 
+            y = item.TotalRevenue, 
+            label = "Tháng " + item.Month + "/" + item.Year 
+        });
+    }
+    var dataPointsJson = System.Text.Json.JsonSerializer.Serialize(dataPoints);
+}
+
+<div class="container-fluid mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="fas fa-chart-line me-2"></i>Doanh Thu Từ @startDateStr Đến @endDateStr
+            </h5>
+            <div>
+                <a href="javascript:void(0)" onclick="exportToCsv()" class="btn btn-sm btn-light me-2">
+                    <i class="fas fa-file-export me-1"></i>Xuất CSV
+                </a>
+                <button class="btn btn-sm btn-light" onclick="window.print()">
+                    <i class="fas fa-print me-1"></i>In báo cáo
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Không có dữ liệu doanh thu trong khoảng thời gian này.
+                </div>
+                <div class="text-center mt-3">
+                    <a asp-action="RevenueByDateRange" class="btn btn-primary">
+                        <i class="fas fa-arrow-left me-2"></i>Quay lại
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-md-8">
+                        <!-- Vùng biểu đồ -->
+                        <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+                    </div>
+                    <div class="col-md-4">
+                        <!-- Vùng thống kê -->
+                        <div class="card">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0">Tổng Quan Doanh Thu</h6>
+                            </div>
+                            <div class="card-body">
+                                @{
+                                    var totalRevenue = Model.Sum(m => m.TotalRevenue);
+                                    var avgRevenue = Model.Average(m => m.TotalRevenue);
+                                    var maxRevenue = Model.Max(m => m.TotalRevenue);
+                                    var maxMonth = Model.OrderByDescending(m => m.TotalRevenue).First();
+                                    var monthCount = Model.Count();
+                                }
+                                <div class="mb-3">
+                                    <h5 class="text-primary">@string.Format("{0:N0}", totalRevenue) VNĐ</h5>
+                                    <small class="text-muted">Tổng doanh thu</small>
+                                </div>
+                                <div class="mb-3">
+                                    <h5>@string.Format("{0:N0}", avgRevenue) VNĐ</h5>
+                                    <small class="text-muted">Doanh thu trung bình mỗi tháng</small>
+                                </div>
+                                <div class="mb-3">
+                                    <h5>@string.Format("{0:N0}", maxRevenue) VNĐ</h5>
+                                    <small class="text-muted">Doanh thu cao nhất (Tháng @maxMonth.Month/@maxMonth.Year)</small>
+                                </div>
+                                <div class="mb-3">
+                                    <h5>@monthCount tháng</h5>
+                                    <small class="text-muted">Tổng số tháng trong khoảng thời gian</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-3 text-center">
+                            <a asp-action="RevenueByDateRange" class="btn btn-primary">
+                                <i class="fas fa-arrow-left me-2"></i>Thay đổi khoảng thời gian
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <hr />
+                
+                <!-- Bảng dữ liệu -->
+                <div class="table-responsive mt-4">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Tháng/Năm</th>
+                                <th class="text-end">Doanh Thu (VNĐ)</th>
+                                <th class="text-end">Tỷ lệ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.OrderBy(m => m.Year).ThenBy(m => m.Month))
+                            {
+                                var percentage = totalRevenue > 0 ? (item.TotalRevenue / totalRevenue) * 100 : 0;
+                                <tr>
+                                    <td>Tháng @item.Month/@item.Year</td>
+                                    <td class="text-end">@string.Format("{0:N0}", item.TotalRevenue)</td>
+                                    <td class="text-end">
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar" role="progressbar" 
+                                                 style="width: @percentage.ToString("0.0")%;" 
+                                                 aria-valuenow="@percentage.ToString("0.0")" 
+                                                 aria-valuemin="0" 
+                                                 aria-valuemax="100">
+                                                @percentage.ToString("0.0")%
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot class="table-dark">
+                            <tr>
+                                <th>Tổng</th>
+                                <th class="text-end">@string.Format("{0:N0}", totalRevenue)</th>
+                                <th class="text-end">100%</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+    <script>
+        window.onload = function() {
+            @if (Model.Any())
+            {
+                <text>
+                var chart = new CanvasJS.Chart("chartContainer", {
+                    animationEnabled: true,
+                    theme: "light2",
+                    title: {
+                        text: "Doanh Thu Theo Tháng"
+                    },
+                    axisY: {
+                        title: "Doanh Thu (VNĐ)",
+                        valueFormatString: "#,###,###",
+                        suffix: ""
+                    },
+                    data: [{
+                        type: "column",
+                        indexLabel: "{y}",
+                        indexLabelFontColor: "#5A5757",
+                        indexLabelFontSize: 12,
+                        indexLabelFormatter: function(e) {
+                            return formatNumber(e.dataPoint.y);
+                        },
+                        dataPoints: @Html.Raw(dataPointsJson)
+                    }]
+                });
+                chart.render();
+                </text>
+            }
+        }
+        
+        function formatNumber(num) {
+            return new Intl.NumberFormat('vi-VN').format(num);
+        }
+        
+        function exportToCsv() {
+            var startDate = '@startDate.ToString("yyyy-MM-dd")';
+            var endDate = '@endDate.ToString("yyyy-MM-dd")';
+            window.location.href = '/Admin/ExportRevenueByDateRange?startDate=' + startDate + '&endDate=' + endDate;
+        }
+    </script>
+}

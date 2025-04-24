@@ -1,0 +1,140 @@
+@* File: Views/Admin/DeleteStudent.cshtml *@
+@using System.Linq  @* Cần cho .Any() và .Count() *@
+@model trungtamdaotao.Models.ApplicationUser
+@{
+    ViewData["Title"] = "Xác Nhận Xóa Học Viên";
+    Layout = "_AdminLayout"; // Đảm bảo Layout có hiển thị TempData
+    // Xác định xem có thể xóa hay không dựa trên lỗi từ Controller
+    bool canDelete = string.IsNullOrEmpty(ViewBag.ErrorMessage);
+    // Đếm số lượng đăng ký (cẩn thận với null)
+    int activeRegistrations = Model.CourseRegistrations?.Count(cr => !cr.IsCanceled) ?? 0;
+    int canceledRegistrations = Model.CourseRegistrations?.Count(cr => cr.IsCanceled) ?? 0;
+    int totalRegistrations = activeRegistrations + canceledRegistrations;
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">@ViewData["Title"]</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Dashboard">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a asp-action="Students">Quản lý học viên</a></li>
+        <li class="breadcrumb-item active">Xác nhận xóa</li>
+    </ol>
+
+    @* --- HIỂN THỊ LỖI TRƯỚC --- *@
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+    @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+    {
+        <div class="alert alert-danger" role="alert">
+            <i class="fas fa-times-circle me-2"></i> <strong>Lỗi:</strong> @ViewBag.ErrorMessage
+        </div>
+    }
+    @* --- KẾT THÚC HIỂN THỊ LỖI --- *@
+
+
+    <div class="card mb-4 shadow-sm @(canDelete ? "border-warning" : "border-danger")"> @* Đổi border dựa vào khả năng xóa *@
+        <div class="card-header @(canDelete ? "bg-warning text-dark" : "bg-danger text-white")"> @* Đổi background header *@
+            <i class="fas fa-exclamation-triangle me-1"></i>
+            @(canDelete ? "Xác nhận xóa học viên" : "Không thể xóa học viên")
+        </div>
+        <div class="card-body">
+            @if (canDelete)
+            {
+                 <div class="alert alert-warning" role="alert">
+                    <h5 class="alert-heading">Cảnh báo!</h5>
+                    <p>Bạn có chắc chắn muốn xóa vĩnh viễn học viên <strong>@Model.FullName</strong> (@Model.UserName)?</p>
+                    <p class="mb-0">Tất cả dữ liệu liên quan (bao gồm cả các đăng ký đã hủy) sẽ bị xóa. Hành động này không thể hoàn tác.</p>
+                </div>
+            }
+            else
+            {
+                 <div class="alert alert-danger" role="alert">
+                    <h5 class="alert-heading">Không Thể Xóa!</h5>
+                    <p>Bạn không thể xóa học viên <strong>@Model.FullName</strong> (@Model.UserName) vào lúc này.</p>
+                    <p class="mb-0">Lý do: @(ViewBag.ErrorMessage ?? "Học viên đang có đăng ký khóa học hợp lệ.")</p>
+                    <p>Vui lòng hủy tất cả các đăng ký hợp lệ của học viên này trước khi thử lại.</p>
+                 </div>
+            }
+
+
+            <div class="row mb-4">
+                <div class="col-md-7">
+                    <h5>Thông tin học viên:</h5>
+                    <dl class="row"> @* Dùng Description List cho đẹp hơn *@
+                        <dt class="col-sm-4">Họ tên:</dt>
+                        <dd class="col-sm-8">@Model.FullName</dd>
+
+                        <dt class="col-sm-4">Username:</dt>
+                        <dd class="col-sm-8">@Model.UserName</dd>
+
+                        <dt class="col-sm-4">Email:</dt>
+                        <dd class="col-sm-8">@Model.Email</dd>
+
+                        <dt class="col-sm-4">Số điện thoại:</dt>
+                        <dd class="col-sm-8">@(Model.PhoneNumber ?? "Chưa cung cấp")</dd>
+
+                        <dt class="col-sm-4">Ngày sinh:</dt>
+                        <dd class="col-sm-8">@(Model.BirthDate?.ToString("dd/MM/yyyy") ?? "Chưa cung cấp")</dd>
+
+                         <dt class="col-sm-4">Ngày tạo TK:</dt>
+                        <dd class="col-sm-8">@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</dd>
+                    </dl>
+                </div>
+                <div class="col-md-5">
+                    <h5>Thông tin đăng ký:</h5>
+                     @if (totalRegistrations > 0)
+                    {
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Tổng số đăng ký:
+                                <span class="badge bg-secondary rounded-pill">@totalRegistrations</span>
+                            </li>
+                             <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Đăng ký hiện tại:
+                                <span class="badge @(activeRegistrations > 0 ? "bg-danger" : "bg-success") rounded-pill">@activeRegistrations</span>
+                            </li>
+                             <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Đăng ký đã hủy:
+                                <span class="badge bg-info rounded-pill">@canceledRegistrations</span>
+                            </li>
+                        </ul>
+                        @if (!canDelete && activeRegistrations > 0) {
+                             <p class="text-danger mt-2 small"><i class="fas fa-exclamation-circle"></i> Cần hủy các đăng ký hiện tại.</p>
+                        }
+                         @if (canDelete && canceledRegistrations > 0) {
+                             <p class="text-info mt-2 small"><i class="fas fa-info-circle"></i> Các đăng ký đã hủy (@canceledRegistrations) sẽ bị xóa cùng.</p>
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-light border" role="alert">
+                           <i class="fas fa-info-circle me-1"></i> Học viên chưa có đăng ký nào.
+                        </div>
+                    }
+                </div>
+            </div>
+
+            @* --- LOGIC HIỂN THỊ NÚT --- *@
+            <div class="mt-4 d-flex @(canDelete ? "" : "justify-content-end")"> @* Chỉ căn phải nếu chỉ có nút Quay lại *@
+                 <a asp-action="Students" class="btn btn-secondary me-2">
+                    <i class="fas fa-arrow-left me-1"></i> Quay lại Danh sách
+                </a>
+                @if (canDelete) // Chỉ hiển thị form xóa nếu có thể xóa
+                {
+                    <form asp-action="DeleteStudent" method="post">
+                        <input type="hidden" name="id" value="@Model.Id" /> @* Đảm bảo gửi ID đúng *@
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash-alt me-1"></i> Xóa Vĩnh Viễn Học Viên Này
+                        </button>
+                    </form>
+                }
+            </div>
+             @* --- KẾT THÚC LOGIC HIỂN THỊ NÚT --- *@
+
+        </div> @* end card-body *@
+    </div> @* end card *@
+</div> @* end container-fluid *@
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

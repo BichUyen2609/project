@@ -1,0 +1,161 @@
+@model IEnumerable<trungtamdaotao.Models.MonthlyRevenue>
+@{
+    ViewData["Title"] = "Doanh thu theo tháng";
+    var currentYear = ViewBag.Year;
+    
+    // Tạo dữ liệu cho biểu đồ
+    var dataPoints = new List<object>();
+    foreach (var item in Model)
+    {
+        dataPoints.Add(new { y = item.TotalRevenue, label = "Tháng " + item.Month });
+    }
+    var dataPointsJson = System.Text.Json.JsonSerializer.Serialize(dataPoints);
+}
+
+<div class="container-fluid mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class="fas fa-chart-line me-2"></i>Doanh Thu Theo Tháng - Năm @currentYear
+            </h5>
+            <div>
+                <button class="btn btn-sm btn-light" id="btnExport">
+                    <i class="fas fa-file-export me-1"></i>Xuất CSV
+                </button>
+                <button class="btn btn-sm btn-light ms-2" onclick="window.print()">
+                    <i class="fas fa-print me-1"></i>In báo cáo
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <!-- Vùng biểu đồ -->
+                    <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+                </div>
+                <div class="col-md-4">
+                    <!-- Vùng thống kê -->
+                    <div class="card">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0">Tổng Quan Doanh Thu</h6>
+                        </div>
+                        <div class="card-body">
+                            @{
+                                var totalRevenue = Model.Sum(m => m.TotalRevenue);
+                                var avgRevenue = Model.Count() > 0 ? Model.Average(m => m.TotalRevenue) : 0;
+                                var maxRevenue = Model.Count() > 0 ? Model.Max(m => m.TotalRevenue) : 0;
+                                var maxMonth = Model.Count() > 0 ? Model.OrderByDescending(m => m.TotalRevenue).First().Month : 0;
+                            }
+                            <div class="mb-3">
+                                <h5 class="text-primary">@string.Format("{0:N0}", totalRevenue) VNĐ</h5>
+                                <small class="text-muted">Tổng doanh thu cả năm</small>
+                            </div>
+                            <div class="mb-3">
+                                <h5>@string.Format("{0:N0}", avgRevenue) VNĐ</h5>
+                                <small class="text-muted">Doanh thu trung bình mỗi tháng</small>
+                            </div>
+                            <div class="mb-3">
+                                <h5>@string.Format("{0:N0}", maxRevenue) VNĐ</h5>
+                                <small class="text-muted">Doanh thu cao nhất (Tháng @maxMonth)</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <hr />
+            
+            <!-- Bảng dữ liệu -->
+            <div class="table-responsive mt-4">
+                <table class="table table-striped table-hover">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Tháng</th>
+                            <th class="text-end">Doanh Thu (VNĐ)</th>
+                            <th class="text-end">Tỷ lệ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OrderBy(m => m.Month))
+                        {
+                            var percentage = totalRevenue > 0 ? (item.TotalRevenue / totalRevenue) * 100 : 0;
+                            <tr>
+                                <td>Tháng @item.Month/@currentYear</td>
+                                <td class="text-end">@string.Format("{0:N0}", item.TotalRevenue)</td>
+                                <td class="text-end">
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar" role="progressbar" 
+                                             style="width: @percentage.ToString("0.0")%;" 
+                                             aria-valuenow="@percentage.ToString("0.0")" 
+                                             aria-valuemin="0" 
+                                             aria-valuemax="100">
+                                            @percentage.ToString("0.0")%
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot class="table-dark">
+                        <tr>
+                            <th>Tổng</th>
+                            <th class="text-end">@string.Format("{0:N0}", totalRevenue)</th>
+                            <th class="text-end">100%</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+    <script>
+        window.onload = function() {
+            var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                theme: "light2",
+                title: {
+                    text: "Doanh Thu Theo Tháng Năm @currentYear"
+                },
+                axisY: {
+                    title: "Doanh Thu (VNĐ)",
+                    valueFormatString: "#,###,###",
+                    suffix: "",
+                    stripLines: [{
+                        value: @avgRevenue,
+                        label: "Trung bình",
+                        labelFontColor: "#FFC107",
+                        color: "#FFC107",
+                        thickness: 2
+                    }]
+                },
+                data: [{
+                    type: "column",
+                    indexLabel: "{y}",
+                    indexLabelFontColor: "#5A5757",
+                    indexLabelFontSize: 12,
+                    indexLabelFormatter: function(e) {
+                        return formatNumber(e.dataPoint.y);
+                    },
+                    dataPoints: @Html.Raw(dataPointsJson)
+                }]
+            });
+            chart.render();
+            
+            function formatNumber(num) {
+                return new Intl.NumberFormat('vi-VN').format(num);
+            }
+            
+            // Xử lý xuất CSV
+            document.getElementById("btnExport").addEventListener("click", function() {
+                var year = @currentYear;
+                var startDate = new Date(year, 0, 1);
+                var endDate = new Date(year, 11, 31);
+                window.location.href = '/Admin/ExportRevenueByDateRange?startDate=' + 
+                    startDate.toISOString() + '&endDate=' + endDate.toISOString();
+            });
+        }
+    </script>
+}

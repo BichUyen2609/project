@@ -1,0 +1,174 @@
+@{
+    ViewData["Title"] = "Doanh thu theo khoảng thời gian";
+    var startDate = ViewBag.StartDate ?? DateTime.Today.AddDays(-30);
+    var endDate = ViewBag.EndDate ?? DateTime.Today;
+}
+
+<div class="container-fluid mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                <i class="fas fa-calendar-alt me-2"></i>Doanh Thu Theo Khoảng Thời Gian
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8 mx-auto">
+                    <form asp-action="RevenueByDateRange" method="post" class="needs-validation" novalidate>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="startDate" class="form-label">Từ ngày:</label>
+                                            <input type="date" id="startDate" name="startDate" class="form-control" 
+                                                   value="@startDate.ToString("yyyy-MM-dd")" required />
+                                            <div class="invalid-feedback">
+                                                Vui lòng chọn ngày bắt đầu.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="endDate" class="form-label">Đến ngày:</label>
+                                            <input type="date" id="endDate" name="endDate" class="form-control" 
+                                                   value="@endDate.ToString("yyyy-MM-dd")" required />
+                                            <div class="invalid-feedback">
+                                                Vui lòng chọn ngày kết thúc.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-center mt-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-search me-2"></i>Xem Báo Cáo
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0">Báo Cáo Gần Đây</h6>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="list-group list-group-flush">
+                                <a href="javascript:void(0)" class="list-group-item list-group-item-action" 
+                                   onclick="setDateRange(30)">
+                                    <i class="far fa-calendar-alt me-2"></i>
+                                    30 ngày gần nhất
+                                </a>
+                                <a href="javascript:void(0)" class="list-group-item list-group-item-action" 
+                                   onclick="setDateRange(90)">
+                                    <i class="far fa-calendar-alt me-2"></i>
+                                    90 ngày gần nhất
+                                </a>
+                                <a href="javascript:void(0)" class="list-group-item list-group-item-action" 
+                                   onclick="setCurrentMonth()">
+                                    <i class="far fa-calendar-alt me-2"></i>
+                                    Tháng hiện tại
+                                </a>
+                                <a href="javascript:void(0)" class="list-group-item list-group-item-action" 
+                                   onclick="setLastMonth()">
+                                    <i class="far fa-calendar-alt me-2"></i>
+                                    Tháng trước
+                                </a>
+                                <a href="javascript:void(0)" class="list-group-item list-group-item-action" 
+                                   onclick="setCurrentYear()">
+                                    <i class="far fa-calendar-alt me-2"></i>
+                                    Năm hiện tại
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Hiển thị thông báo lỗi validation
+        (function () {
+            'use strict'
+            
+            var forms = document.querySelectorAll('.needs-validation')
+            
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        
+                        // Kiểm tra ngày bắt đầu <= ngày kết thúc
+                        var startDate = new Date(document.getElementById('startDate').value);
+                        var endDate = new Date(document.getElementById('endDate').value);
+                        
+                        if (startDate > endDate) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            alert("Ngày bắt đầu không được sau ngày kết thúc!");
+                        }
+                        
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+        
+        // Hàm thiết lập khoảng thời gian
+        function setDateRange(days) {
+            var endDate = new Date();
+            var startDate = new Date();
+            startDate.setDate(endDate.getDate() - days);
+            
+            document.getElementById('startDate').value = formatDate(startDate);
+            document.getElementById('endDate').value = formatDate(endDate);
+        }
+        
+        function setCurrentMonth() {
+            var today = new Date();
+            var startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+            
+            document.getElementById('startDate').value = formatDate(startDate);
+            document.getElementById('endDate').value = formatDate(today);
+        }
+        
+        function setLastMonth() {
+            var today = new Date();
+            var startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+            var endDate = new Date(today.getFullYear(), today.getMonth(), 0);
+            
+            document.getElementById('startDate').value = formatDate(startDate);
+            document.getElementById('endDate').value = formatDate(endDate);
+        }
+        
+        function setCurrentYear() {
+            var today = new Date();
+            var startDate = new Date(today.getFullYear(), 0, 1);
+            
+            document.getElementById('startDate').value = formatDate(startDate);
+            document.getElementById('endDate').value = formatDate(today);
+        }
+        
+        function formatDate(date) {
+            var d = new Date(date),
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear();
+            
+            if (month.length < 2) month = '0' + month;
+            if (day.length < 2) day = '0' + day;
+            
+            return [year, month, day].join('-');
+        }
+    </script>
+}

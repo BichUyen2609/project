@@ -1,0 +1,111 @@
+@* File: Views/Admin/CreateStudent.cshtml *@
+@model trungtamdaotao.Models.AdminViewModels.CreateStudentViewModel
+@{
+    ViewData["Title"] = "Thêm Học Viên Mới";
+    Layout = "_AdminLayout";
+}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">@ViewData["Title"]</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a asp-controller="Admin" asp-action="Dashboard">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a asp-action="Students">Quản lý học viên</a></li>
+        <li class="breadcrumb-item active">Thêm học viên</li>
+    </ol>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <i class="fas fa-user-plus me-1"></i>
+                    Thông tin học viên mới
+                </div>
+                <div class="card-body">
+                    <form asp-controller="Admin" asp-action="CreateStudent" method="post">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        @* --- LOẠI BỎ KHỐI INPUT USERNAME ---
+                        <div class="mb-3">
+                            <label asp-for="UserName" class="form-label"></label>
+                            <input asp-for="UserName" class="form-control" placeholder="Ví dụ: an.nguyen123"/>
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                             <div class="form-text">Chỉ chứa chữ cái, số, dấu gạch dưới (_), dấu chấm (.). Dùng để đăng nhập.</div>
+                        </div>
+                        *@
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" type="email" class="form-control" placeholder="vidu@email.com"/>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                            <div class="form-text text-muted">Email này cũng sẽ được dùng làm Tên đăng nhập.</div> @* Thêm gợi ý *@
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label"></label>
+                            <input asp-for="Password" type="password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                            <div class="form-text">Ít nhất 6 ký tự.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ConfirmPassword" class="form-label"></label>
+                            <input asp-for="ConfirmPassword" type="password" class="form-control" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+
+                        <hr class="my-4"/>
+
+                         <div class="mb-3">
+                            <label asp-for="FullName" class="form-label"></label>
+                            <input asp-for="FullName" class="form-control" />
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="PhoneNumber" class="form-label"></label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="BirthDate" class="form-label"></label>
+                            <input asp-for="BirthDate" class="form-control" type="date" />
+                            <span asp-validation-for="BirthDate" class="text-danger"></span>
+                        </div>
+
+
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Tạo Học Viên
+                            </button>
+                            <a asp-action="Students" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i> Hủy
+                            </a>
+                        </div>
+                    </form>
+                </div> @* end card-body *@
+            </div> @* end card *@
+        </div> @* end col-lg-8 *@
+        <div class="col-lg-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Hướng dẫn & Lưu ý
+                </div>
+                <div class="card-body">
+                    <p>Điền thông tin cho học viên mới:</p>
+                     <ul>
+                        <li><strong>Email:</strong> Sẽ được dùng làm Tên đăng nhập. Phải là duy nhất và đúng định dạng.</li> @* Sửa lại hướng dẫn *@
+                        <li><strong>Mật khẩu:</strong> Phải có ít nhất 6 ký tự và khớp với mật khẩu xác nhận.</li>
+                        <li>Các thông tin khác giúp quản lý học viên hiệu quả hơn.</li>
+                    </ul>
+                </div>
+            </div>
+        </div> @* end col-lg-4 *@
+    </div> @* end row *@
+</div> @* end container-fluid *@
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <path d="M0 0h100v100H0z" fill="#FFFFFF" opacity="0.05"/>
+  <path d="M20 10h3v3h-3zM40 10h3v3h-3zM60 10h3v3h-3zM80 10h3v3h-3z
+           M10 20h3v3h-3zM30 20h3v3h-3zM50 20h3v3h-3zM70 20h3v3h-3zM90 20h3v3h-3z
+           M20 30h3v3h-3zM40 30h3v3h-3zM60 30h3v3h-3zM80 30h3v3h-3z
+           M10 40h3v3h-3zM30 40h3v3h-3zM50 40h3v3h-3zM70 40h3v3h-3zM90 40h3v3h-3z
+           M20 50h3v3h-3zM40 50h3v3h-3zM60 50h3v3h-3zM80 50h3v3h-3z
+           M10 60h3v3h-3zM30 60h3v3h-3zM50 60h3v3h-3zM70 60h3v3h-3zM90 60h3v3h-3z
+           M20 70h3v3h-3zM40 70h3v3h-3zM60 70h3v3h-3zM80 70h3v3h-3z
+           M10 80h3v3h-3zM30 80h3v3h-3zM50 80h3v3h-3zM70 80h3v3h-3zM90 80h3v3h-3z
+           M20 90h3v3h-3zM40 90h3v3h-3zM60 90h3v3h-3zM80 90h3v3h-3z" fill="#CC7D51"/>
+</svg>

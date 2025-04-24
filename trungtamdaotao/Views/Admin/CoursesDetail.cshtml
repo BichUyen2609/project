@@ -1,0 +1,132 @@
+@model trungtamdaotao.Models.Course
+@{
+    ViewData["Title"] = "Chi Tiết Khóa Học";
+    Layout = "_AdminLayout";
+}
+
+<div class="container-fluid mt-4">
+    <h1 class="mb-4">Chi Tiết Khóa Học</h1>
+
+    <div class="row">
+        <div class="col-md-5">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Thông Tin Khóa Học</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4 font-weight-bold">Mã Khóa Học:</div>
+                        <div class="col-md-8">@Model.CourseCode</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 font-weight-bold">Tên Khóa Học:</div>
+                        <div class="col-md-8">@Model.CourseName</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 font-weight-bold">Giảng Viên:</div>
+                        <div class="col-md-8">@Model.Instructor</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 font-weight-bold">Ngày Khai Giảng:</div>
+                        <div class="col-md-8">@Model.StartDate.ToString("dd/MM/yyyy")</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 font-weight-bold">Học Phí:</div>
+                        <div class="col-md-8">@Model.TuitionFee.ToString("N0") VNĐ</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 font-weight-bold">Số Lượng Học Viên:</div>
+                        <div class="col-md-8">
+                            @{
+                                var registeredStudents = Model.CourseRegistrations?.Count ?? 0;
+                                var percentage = Model.MaxStudents > 0 
+                                    ? (int)((float)registeredStudents / Model.MaxStudents * 100) 
+                                    : 0;
+                            }
+                            <div>@registeredStudents/@Model.MaxStudents</div>
+                            <div class="progress mt-1">
+                                <div class="progress-bar" role="progressbar" style="width: @percentage%;" 
+                                     aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100">
+                                    @percentage%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 font-weight-bold">Ngày Tạo:</div>
+                        <div class="col-md-8">@Model.CreatedAt.ToString("dd/MM/yyyy HH:mm")</div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="EditCourse" asp-route-id="@Model.CourseId" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Chỉnh Sửa
+                        </a>
+                        <a asp-action="DeleteCourse" asp-route-id="@Model.CourseId" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Xóa
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Danh Sách Học Viên Đã Đăng Ký</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.CourseRegistrations != null && Model.CourseRegistrations.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Họ Tên</th>
+                                        <th>Email</th>
+                                        <th>Số Điện Thoại</th>
+                                        <th>Ngày Đăng Ký</th>
+                                        <th>Trạng Thái</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var registration in Model.CourseRegistrations)
+                                    {
+                                        <tr>
+                                            <td>@registration.User.FullName</td>
+                                            <td>@registration.User.Email</td>
+                                            <td>@registration.User.PhoneNumber</td>
+                                            <td>@registration.RegistrationDate.ToString("dd/MM/yyyy")</td>
+                                            <td>
+                                                @* @if (registration.IsConfirmed) *@
+                                                {
+                                                    <span class="badge badge-success">Đã Xác Nhận</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge badge-warning">Chờ Xác Nhận</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            Chưa có học viên nào đăng ký khóa học này.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a asp-action="Courses" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Quay Lại Danh Sách
+        </a>
+    </div>
+</div>

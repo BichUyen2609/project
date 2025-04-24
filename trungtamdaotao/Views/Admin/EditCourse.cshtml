@@ -1,0 +1,93 @@
+@model trungtamdaotao.Models.Course
+@{
+    ViewData["Title"] = "Chỉnh Sửa Khóa Học";
+    Layout = "_AdminLayout";
+}
+
+<div class="container-fluid mt-4">
+    <h1 class="mb-4">Chỉnh Sửa Khóa Học</h1>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <form asp-action="EditCourse" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                <input type="hidden" asp-for="CourseId" />
+                <input type="hidden" asp-for="CreatedAt" />
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="CourseCode" class="font-weight-bold">Mã Khóa Học</label>
+                            <input asp-for="CourseCode" class="form-control" required maxlength="20" />
+                            <span asp-validation-for="CourseCode" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label asp-for="CourseName" class="font-weight-bold">Tên Khóa Học</label>
+                            <input asp-for="CourseName" class="form-control" required maxlength="100" />
+                            <span asp-validation-for="CourseName" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label asp-for="Instructor" class="font-weight-bold">Giảng Viên</label>
+                            <input asp-for="Instructor" class="form-control" maxlength="100" />
+                            <span asp-validation-for="Instructor" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="StartDate" class="font-weight-bold">Ngày Khai Giảng</label>
+                            <input asp-for="StartDate" type="date" class="form-control" required />
+                            <span asp-validation-for="StartDate" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label asp-for="TuitionFee" class="font-weight-bold">Học Phí (VNĐ)</label>
+                            <input asp-for="TuitionFee" type="number" class="form-control" min="0" step="1000" required />
+                            <span asp-validation-for="TuitionFee" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label asp-for="MaxStudents" class="font-weight-bold">Số Lượng Học Viên Tối Đa</label>
+                            <input asp-for="MaxStudents" type="number" class="form-control" min="1" required />
+                            <span asp-validation-for="MaxStudents" class="text-danger"></span>
+                            @{
+                                var registeredStudents = Model.CourseRegistrations?.Count ?? 0;
+                                if (registeredStudents > 0)
+                                {
+                                    <small class="form-text text-warning">
+                                        <i class="fas fa-exclamation-triangle"></i> Hiện có @registeredStudents học viên đã đăng ký. 
+                                        Không nên giảm số lượng tối đa thấp hơn số này.
+                                    </small>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Cập Nhật
+                    </button>
+                    <a asp-action="CourseDetails" asp-route-id="@Model.CourseId" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Hủy
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $(document).ready(function() {
+            // Format date properly for the input
+            var startDate = new Date('@Model.StartDate.ToString("yyyy-MM-dd")');
+            var dateString = startDate.toISOString().split('T')[0];
+            $('#StartDate').val(dateString);
+        });
+    </script>
+}
