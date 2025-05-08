@@ -1,0 +1,84 @@
+@model List<HeThongTimViec.Models.LichRanhUngVien>
+@using HeThongTimViec.Models
+@using HeThongTimViec.Controllers
+@using System.Security.Claims 
+
+@{
+    ViewData["Title"] = "Cập nhật Lịch làm việc mong muốn";
+    Layout = "_LayoutUser";
+
+    // Helper to check if a specific slot is selected in the Model
+    bool IsSelected(NgayTrongTuan ngay, BuoiLamViec buoi)
+    {
+        return Model?.Any(l => l.NgayTrongTuan == ngay && l.BuoiLamViec == buoi) ?? false;
+    }
+
+    // Get user ID safely
+    var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    int.TryParse(userIdClaim, out var userId); // userId will be 0 if parsing fails
+
+    var days = Enum.GetValues(typeof(NgayTrongTuan)).Cast<NgayTrongTuan>();
+    var sessions = Enum.GetValues(typeof(BuoiLamViec)).Cast<BuoiLamViec>();
+}
+
+<h1>@ViewData["Title"]</h1>
+<p class="text-muted">Chọn những ngày và buổi bạn có thể làm việc.</p>
+<hr />
+
+<form asp-action="EditSchedule" method="post">
+    @Html.AntiForgeryToken() @* Add AntiForgeryToken *@
+    <div asp-validation-summary="All" class="text-danger mb-3"></div> @* Show all errors *@
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover schedule-table align-middle">
+             <thead>
+                <tr class="table-light">
+                    <th style="min-width: 100px;">Ngày \ Buổi</th>
+                    @foreach (var session in sessions)
+                    {
+                        <th class="text-center">@CaNhanControllerHelper.GetBuoiLamViecDisplay(session)</th>
+                    }
+                </tr>
+            </thead>
+             <tbody>
+                 @{ int k = 0; } @* Index for model binding *@
+                 @foreach (var day in days)
+                 {
+                     <tr>
+                         <td class="fw-bold">@CaNhanControllerHelper.GetNgayTrongTuanDisplay(day)</td>
+                         @foreach (var session in sessions)
+                         {
+                             var isChecked = IsSelected(day, session);
+                             <td class="text-center">
+                                 <div class="form-check d-inline-block">
+                                     <input type="hidden" name="lichRanhItems[@k].NguoiDungId" value="@userId" />
+                                     <input type="hidden" name="lichRanhItems[@k].NgayTrongTuan" value="@day" />
+                                     <input type="hidden" name="lichRanhItems[@k].BuoiLamViec" value="@session" />
+
+                                     <input class="form-check-input" type="checkbox"
+                                            name="lichRanhItems[@k].IsSelected" @* Bind to the ViewModel property *@
+                                            value="true" @* Required for binding *@
+                                            id="slot_@k"
+                                            @(isChecked ? "checked" : "") />
+                                     <label class="form-check-label visually-hidden" for="slot_@k">
+                                         Chọn @CaNhanControllerHelper.GetNgayTrongTuanDisplay(day) @CaNhanControllerHelper.GetBuoiLamViecDisplay(session)
+                                     </label>
+                                 </div>
+                             </td>
+                              k++;
+                         }
+                     </tr>
+                 }
+             </tbody>
+        </table>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 mt-4">
+        <a asp-action="Index" class="btn btn-secondary">Hủy Bỏ</a>
+        <button type="submit" class="btn btn-primary"><i class="fa-regular fa-save me-1"></i> Lưu Lịch</button>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,26 @@
+@{
+    ViewData["Title"] = "Tài Khoản Bị Khóa";
+     Layout = "~/Views/Shared/_Layout.cshtml"; // Layout công khai
+}
+
+<div class="container text-center mt-5 mb-5">
+     <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm border-danger">
+                <div class="card-body p-5">
+                     <i class="fas fa-lock fa-3x text-danger mb-3"></i>
+                    <h2 class="card-title text-danger">@ViewData["Title"]</h2>
+                    <p class="card-text lead">
+                       Tài khoản này đã bị khóa tạm thời do nhập sai mật khẩu nhiều lần hoặc vi phạm quy định.
+                    </p>
+                     <p class="card-text">
+                       Vui lòng thử lại sau hoặc liên hệ với bộ phận hỗ trợ để biết thêm chi tiết.
+                    </p>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary mt-3">Quay về Trang chủ</a>
+                     @* Thêm link liên hệ nếu có *@
+                     @* <a asp-controller="Home" asp-action="Contact" class="btn btn-outline-info mt-3">Liên hệ hỗ trợ</a> *@
+                 </div>
+             </div>
+         </div>
+     </div>
+</div>

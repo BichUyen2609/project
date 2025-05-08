@@ -1,0 +1,227 @@
+@model HeThongTimViec.Models.NguoiDung
+@using HeThongTimViec.Models
+@{
+    ViewData["Title"] = "Chỉnh sửa Thông tin Tài khoản";
+    Layout = "_LayoutUser";
+    // Lấy QuanHuyenId ban đầu một cách an toàn hơn, tránh lỗi nếu là null
+    var initialQuanHuyenIdValue = Model.QuanHuyenId.HasValue ? Model.QuanHuyenId.Value.ToString() : "";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <form asp-action="EditAccount" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken() @* Rất quan trọng cho POST request *@
+            <input type="hidden" asp-for="Id" />
+
+            @* Hiển thị lỗi validation tổng hợp nếu có *@
+            @if (!ViewData.ModelState.IsValid)
+            {
+                 <div asp-validation-summary="All" class="text-danger mb-3 alert alert-danger" role="alert"></div>
+            }
+
+
+            <div class="mb-3">
+                 <label class="form-label fw-bold">Email (Không thể thay đổi)</label>
+                 <input type="email" class="form-control" value="@Model.Email" readonly disabled />
+            </div>
+             <div class="mb-3">
+                 <label class="form-label fw-bold">Loại tài khoản (Không thể thay đổi)</label>
+                 <input type="text" class="form-control" value="@Model.LoaiTk.ToString()" readonly disabled />
+            </div>
+
+             @* --- Avatar Section --- *@
+             <div class="mb-3">
+                 <label class="form-label fw-bold">Ảnh đại diện</label>
+                 <div class="mb-2">
+                     @if (!string.IsNullOrEmpty(Model.UrlAvatar))
+                     {
+                         @* --- SỬA LỖI RZ1010 TẠI ĐÂY (Bỏ @{ })--- *@
+                         // Gán vào biến cục bộ không null bên trong khối if đã kiểm tra
+                         var avatarUrlForContent = Model.UrlAvatar;
+                         <img src="@Url.Content(avatarUrlForContent)" alt="Ảnh đại diện" class="img-thumbnail" style="max-width: 150px; max-height: 150px; object-fit: cover;" id="avatarPreview" />
+                         @* --- KẾT THÚC SỬA RZ1010 --- *@
+                     }
+                     else
+                     {
+                         <img src="/images/default-avatar.png" alt="Ảnh đại diện mặc định" class="img-thumbnail" style="max-width: 150px; max-height: 150px; object-fit: cover;" id="avatarPreview" />
+                     }
+                 </div>
+                 <label for="avatarFile" class="form-label">Tải lên ảnh mới (Tối đa 5MB, .jpg, .png, .gif)</label>
+                 <input type="file" name="avatarFile" id="avatarFile" class="form-control" accept=".jpg,.jpeg,.png,.gif" />
+
+                 @* --- SỬA LỖI CS8602 TẠI ĐÂY --- *@
+                 @* Hiển thị lỗi cụ thể cho avatarFile nếu có trong ModelState *@
+                 @{
+                     var avatarFileError = ViewData.ModelState["avatarFile"]?.Errors.FirstOrDefault();
+                 }
+                 @if (avatarFileError != null)
+                 {
+                     <span class="text-danger d-block">@avatarFileError.ErrorMessage</span>
+                 }
+                 @* --- KẾT THÚC SỬA CS8602 --- *@
+             </div>
+             @* --- End Avatar Section --- *@
+
+
+            <div class="mb-3">
+                <label asp-for="HoTen" class="form-label fw-bold"></label>
+                <input asp-for="HoTen" class="form-control" />
+                <span asp-validation-for="HoTen" class="text-danger"></span>
+            </div>
+
+             <div class="mb-3">
+                <label asp-for="Sdt" class="form-label fw-bold">Số điện thoại</label>
+                <input asp-for="Sdt" class="form-control" />
+                <span asp-validation-for="Sdt" class="text-danger"></span>
+            </div>
+
+             <div class="row g-3 mb-3">
+                 <div class="col-md-6">
+                     <label asp-for="GioiTinh" class="form-label fw-bold"></label>
+                     <select asp-for="GioiTinh" class="form-select" asp-items="@(ViewBag.GioiTinhList as List<SelectListItem>)">
+                     </select>
+                     <span asp-validation-for="GioiTinh" class="text-danger"></span>
+                 </div>
+                 <div class="col-md-6">
+                     <label asp-for="NgaySinh" class="form-label fw-bold"></label>
+                     <input asp-for="NgaySinh" type="date" class="form-control" value="@Model.NgaySinh?.ToString("yyyy-MM-dd")" />
+                     <span asp-validation-for="NgaySinh" class="text-danger"></span>
+                 </div>
+             </div>
+
+             <div class="mb-3">
+                <label asp-for="DiaChiChiTiet" class="form-label fw-bold">Địa chỉ chi tiết (Số nhà, đường)</label>
+                <input asp-for="DiaChiChiTiet" class="form-control" />
+                <span asp-validation-for="DiaChiChiTiet" class="text-danger"></span>
+            </div>
+
+            <div class="row g-3 mb-3">
+                 <div class="col-md-6">
+                     <label asp-for="ThanhPhoId" class="form-label fw-bold">Tỉnh/Thành Phố</label>
+                     <select asp-for="ThanhPhoId" class="form-select" asp-items="ViewBag.ThanhPhoId" id="ThanhPhoSelect">
+                         <option value="">-- Chọn Tỉnh/Thành phố --</option>
+                     </select>
+                     <span asp-validation-for="ThanhPhoId" class="text-danger"></span>
+                 </div>
+                 <div class="col-md-6">
+                     <label asp-for="QuanHuyenId" class="form-label fw-bold">Quận/Huyện</label>
+                     <select asp-for="QuanHuyenId" class="form-select" asp-items="ViewBag.QuanHuyenId" id="QuanHuyenSelect">
+                          <option value="">-- Chọn Quận/Huyện --</option>
+                     </select>
+                     <span asp-validation-for="QuanHuyenId" class="text-danger"></span>
+                 </div>
+             </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-4">
+                 <a asp-action="Index" class="btn btn-secondary">Hủy Bỏ</a>
+                <button type="submit" class="btn btn-primary"><i class="fa-regular fa-save me-1"></i> Lưu Thay Đổi</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @* Đảm bảo jQuery đã được tải trước *@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            var thanhPhoSelect = $('#ThanhPhoSelect');
+            var quanHuyenSelect = $('#QuanHuyenSelect');
+
+            function loadQuanHuyen(thanhPhoId, selectedQuanHuyenId) {
+                console.log("loadQuanHuyen called with thanhPhoId:", thanhPhoId, "selectedQuanHuyenId:", selectedQuanHuyenId);
+                quanHuyenSelect.empty().append('<option value="">-- Đang tải... --</option>').prop('disabled', true);
+
+                if (thanhPhoId && parseInt(thanhPhoId) > 0) {
+                     var urlToCall = '@Url.Action("GetQuanHuyenByThanhPho", "CaNhan")';
+                     console.log("Đang gọi action:", urlToCall, "với thanhPhoId:", thanhPhoId);
+
+                    $.ajax({
+                        url: urlToCall,
+                        type: 'GET',
+                        data: { thanhPhoId: thanhPhoId },
+                        dataType: 'json',
+                        success: function (data) {
+                            console.log("AJAX Success. Data received:", data);
+                            quanHuyenSelect.empty().append('<option value="">-- Chọn Quận/Huyện --</option>');
+
+                            if (data && Array.isArray(data)) {
+                                if (data.length > 0) {
+                                    $.each(data, function (index, item) {
+                                         var option = $('<option></option>').val(item.id).text(item.ten);
+                                         if (item.id != null && selectedQuanHuyenId != null && item.id.toString() === selectedQuanHuyenId.toString()) {
+                                             console.log("Selecting Quan Huyen:", item.id);
+                                             option.prop('selected', true);
+                                         }
+                                         quanHuyenSelect.append(option);
+                                    });
+                                } else {
+                                    console.log("API trả về mảng rỗng.");
+                                    quanHuyenSelect.append('<option value="">-- Không có dữ liệu --</option>');
+                                }
+                            } else {
+                                 console.warn("Dữ liệu trả về không phải là mảng hợp lệ:", data);
+                                 quanHuyenSelect.empty().append('<option value="">-- Dữ liệu không hợp lệ --</option>');
+                            }
+                            quanHuyenSelect.prop('disabled', false);
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.error("AJAX Error Details:");
+                            console.error("   Status:", jqXHR.status);
+                            console.error("   Status Text:", jqXHR.statusText);
+                            console.error("   Response Text:", jqXHR.responseText);
+                            console.error("   Text Status:", textStatus);
+                            console.error("   Error Thrown:", errorThrown);
+
+                            quanHuyenSelect.empty().append('<option value="">-- Lỗi tải dữ liệu --</option>');
+                            quanHuyenSelect.prop('disabled', false);
+
+                             if (jqXHR.status === 401) {
+                                 alert('Phiên đăng nhập đã hết hạn hoặc bạn không có quyền truy cập.');
+                                 window.location.reload();
+                             } else if (jqXHR.status === 302) {
+                                 alert('Yêu cầu bị chuyển hướng, có thể do chưa đăng nhập. Đang tải lại trang...');
+                                 window.location.reload();
+                             } else if (jqXHR.status === 404) {
+                                 alert('Không tìm thấy đường dẫn lấy dữ liệu Quận/Huyện. Kiểm tra lại Controller.');
+                             } else if (jqXHR.status === 500) {
+                                 alert('Lỗi xử lý phía máy chủ khi lấy dữ liệu Quận/Huyện.');
+                             }
+                        }
+                    });
+                } else {
+                    console.log("Không có thanhPhoId hợp lệ, reset Quận/Huyện dropdown.");
+                    quanHuyenSelect.empty().append('<option value="">-- Chọn Tỉnh/Thành phố trước --</option>').prop('disabled', true);
+                }
+            }
+
+            thanhPhoSelect.change(function () {
+                var selectedThanhPhoId = $(this).val();
+                console.log("Thanh Pho changed to:", selectedThanhPhoId);
+                loadQuanHuyen(selectedThanhPhoId, null);
+            });
+
+            var initialThanhPhoId = thanhPhoSelect.val();
+            var initialQuanHuyenId = '@initialQuanHuyenIdValue';
+            console.log("Initial Load - ThanhPhoId:", initialThanhPhoId, "QuanHuyenId:", initialQuanHuyenId);
+
+            loadQuanHuyen(initialThanhPhoId, initialQuanHuyenId);
+
+            $("#avatarFile").change(function () {
+                const file = this.files[0];
+                if (file) {
+                    let reader = new FileReader();
+                    reader.onload = function (event) {
+                        $("#avatarPreview").attr("src", event.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+             });
+        });
+    </script>
+}

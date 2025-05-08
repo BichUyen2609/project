@@ -1,0 +1,173 @@
+@using HeThongTimViec.Models
+@* Loại bỏ: using HeThongTimViec.Controllers *@
+
+@{
+    ViewData["Title"] = "Cập nhật Khu vực làm việc mong muốn";
+    Layout = "_LayoutUser";
+    var selectedIds = ViewBag.SelectedQuanHuyenIds as List<int> ?? new List<int>();
+}
+
+@* ---- CSS for Select2 and Bootstrap 5 Theme ---- *@
+@section Styles {
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+    <style>
+        .select2-container--bootstrap-5 .select2-dropdown { z-index: 1060; }
+        .select2-container--bootstrap-5 .select2-selection--multiple { min-height: 150px; }
+        .select2-container--bootstrap-5 .select2-selection--multiple .select2-search__field { font-style: italic; }
+        .select2-results__option { color: #212529; }
+        .select2-container--bootstrap-5 .select2-results__option--highlighted { background-color: #0d6efd; color: white; }
+    </style>
+}
+
+<h1>@ViewData["Title"]</h1>
+<p class="text-muted">Chọn Tỉnh/Thành phố để lọc Quận/Huyện, sau đó chọn các Quận/Huyện bạn muốn làm việc.</p>
+<hr />
+
+<form asp-action="EditLocations" method="post">
+     @Html.AntiForgeryToken() @* <<<=== ĐẢM BẢO CÓ DÒNG NÀY TRONG FORM ===*@
+     @if (!ViewData.ModelState.IsValid)
+     {
+         <div asp-validation-summary="All" class="text-danger alert alert-danger mb-3" role="alert"></div>
+     }
+
+     <div class="row g-3">
+          <div class="col-md-6 mb-3">
+              <label for="ThanhPhoFilter" class="form-label fw-bold">Lọc theo Tỉnh/Thành phố</label>
+              <select class="form-select" asp-items="ViewBag.ThanhPhoId" id="ThanhPhoFilter">
+                   <option value="0">-- Hiển thị Tất cả Quận/Huyện --</option> @* Value 0 sẽ không gửi thanhPhoId tới API *@
+              </select>
+          </div>
+     </div>
+
+      <div class="mb-3">
+          <label for="QuanHuyenMultiSelect" class="form-label fw-bold">Chọn Quận/Huyện mong muốn</label>
+          <select name="selectedQuanHuyenIds" id="QuanHuyenMultiSelect" class="form-select" multiple
+                  data-placeholder="Tìm kiếm và chọn Quận/Huyện..." data-allow-clear="true">
+              @* Options sẽ được load bằng AJAX *@
+          </select>
+          <div class="form-text">Bạn có thể tìm kiếm, chọn hoặc bỏ chọn nhiều mục.</div>
+          @Html.ValidationMessage("selectedQuanHuyenIds", new { @class = "text-danger" })
+      </div>
+
+     <div class="d-flex justify-content-end gap-2 mt-4">
+         <a asp-action="Index" class="btn btn-secondary">Hủy Bỏ</a>
+         <button type="submit" class="btn btn-primary"><i class="fa-regular fa-save me-1"></i> Lưu Khu Vực</button>
+     </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @* ---- JavaScript Libraries (jQuery must be loaded first) ---- *@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> @* Đảm bảo jQuery đã được tải *@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/i18n/vi.js"></script>
+
+     <script>
+        $(document).ready(function () {
+            var multiSelect = $('#QuanHuyenMultiSelect');
+            var thanhPhoFilter = $('#ThanhPhoFilter');
+            var initiallySelectedIds = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(selectedIds));
+            // Lấy giá trị AntiForgeryToken từ input ẩn được tạo bởi @Html.AntiForgeryToken()
+            var antiForgeryToken = $('input[name="__RequestVerificationToken"]').val();
+
+            multiSelect.select2({
+                theme: 'bootstrap-5',
+                language: "vi",
+                width: '100%',
+                closeOnSelect: false // Giữ dropdown mở khi chọn nhiều mục
+            });
+
+            function loadDistricts(thanhPhoId) {
+                multiSelect.empty().prop('disabled', true).append(new Option('Đang tải...', '')).trigger('change'); // Hiển thị loading
+
+                var ajaxData = {};
+                // Chỉ thêm thanhPhoId vào data nếu nó có giá trị hợp lệ (> 0)
+                 if (thanhPhoId && thanhPhoId > 0) {
+                    ajaxData.thanhPhoId = thanhPhoId;
+                 } else {
+                    // Nếu chọn "Tất cả", không gửi thanhPhoId để API trả về rỗng (hoặc tất cả, tùy logic API)
+                    // API DiaChiController hiện tại trả về rỗng nếu không có thanhPhoId hợp lệ.
+                 }
+
+                console.log("Đang gọi API:", '/api/DiaChi/GetQuanHuyenByThanhPho', "với data:", ajaxData); // DEBUG
+
+                $.ajax({
+                     // --- THAY ĐỔI URL ĐỂ GỌI API CONTROLLER ---
+                     url: '/api/DiaChi/GetQuanHuyenByThanhPho',
+                     type: 'GET',
+                     data: ajaxData, // Gửi thanhPhoId (nếu có) như query string
+                     dataType: 'json',
+                     headers: {
+                         // Vẫn gửi token cho chắc chắn, dù có thể không bắt buộc cho GET API
+                         'RequestVerificationToken': antiForgeryToken
+                     },
+                     success: function (data) {
+                        console.log("API Response Data Success:", data);
+                         multiSelect.empty(); // Xóa option "Đang tải..." hoặc option cũ
+
+                         if (data && Array.isArray(data) && data.length >= 0) { // Kiểm tra là mảng hợp lệ
+                            var optionsToAdd = [];
+                            $.each(data, function (index, item) {
+                                // API chỉ trả về id và ten
+                                var optionText = item.ten;
+                                // Kiểm tra xem ID này có trong danh sách ID đã chọn ban đầu không
+                                var isSelected = initiallySelectedIds.includes(item.id);
+                                var option = new Option(optionText, item.id, isSelected, isSelected);
+                                optionsToAdd.push(option);
+                             });
+                             multiSelect.append(optionsToAdd); // Thêm tất cả option mới
+                         } else if(data && data.message) { // Có thể API trả về lỗi dạng { message: "..." }
+                             console.error("Lỗi trả về từ API:", data.message);
+                              multiSelect.append(new Option('Lỗi tải dữ liệu!', '')).trigger('change');
+                         }
+                         else {
+                              console.log("Không có dữ liệu Quận/Huyện hợp lệ trả về hoặc API trả về định dạng không mong đợi.");
+                              multiSelect.append(new Option('Không có dữ liệu', '')).trigger('change'); // Hiển thị thông báo không có dữ liệu
+                         }
+                         // Kích hoạt lại select và cập nhật giao diện select2
+                         multiSelect.prop('disabled', false).trigger('change');
+
+                         // Cập nhật lại giá trị đã chọn cho Select2 (quan trọng sau khi load lại options)
+                         multiSelect.val(initiallySelectedIds).trigger('change');
+
+                     },
+                     error: function (jqXHR, textStatus, errorThrown) {
+                         console.error("AJAX Error:", textStatus, errorThrown, jqXHR.status, jqXHR.responseText);
+                         multiSelect.empty().prop('disabled', false); // Xóa loading, bật lại select
+
+                         // **** XỬ LÝ LỖI XÁC THỰC / CHUYỂN HƯỚNG ****
+                         if (jqXHR.status === 401) {
+                             alert('Phiên đăng nhập đã hết hạn hoặc bạn không có quyền truy cập. Vui lòng đăng nhập lại.');
+                              window.location.href = '/Account/Login?ReturnUrl=' + encodeURIComponent(window.location.pathname + window.location.search);
+                         } else if (jqXHR.status === 302) {
+                              alert('Yêu cầu bị chuyển hướng, có thể do chưa đăng nhập. Đang tải lại trang...');
+                              window.location.reload();
+                         } else {
+                             // Các lỗi khác
+                             alert('Đã xảy ra lỗi khi tải dữ liệu Quận/Huyện. Vui lòng thử lại.');
+                             multiSelect.append(new Option('Lỗi tải dữ liệu!', '')).trigger('change'); // Hiển thị lỗi trên select
+                         }
+                         multiSelect.trigger('change'); // Cập nhật select2 sau khi thêm option lỗi
+                     }
+                 });
+            }
+
+            thanhPhoFilter.change(function () {
+                 var selectedThanhPhoId = $(this).val();
+                 // Khi thay đổi Tỉnh/TP, danh sách ID đã chọn ban đầu không còn ý nghĩa cho việc chọn lại,
+                 // nhưng ta vẫn cần load lại quận huyện theo TP mới.
+                 // Có thể reset initiallySelectedIds ở đây nếu muốn behavior là bỏ chọn hết khi đổi TP.
+                 // initiallySelectedIds = []; // Bỏ dòng này nếu muốn giữ lại các lựa chọn cũ khi load lại
+                 loadDistricts(selectedThanhPhoId);
+             });
+
+             // --- Load lần đầu khi trang tải xong ---
+             // Lấy giá trị được chọn sẵn của dropdown Tỉnh/TP (nếu có)
+             var initialThanhPhoId = thanhPhoFilter.val();
+             // Gọi loadDistricts với ID Tỉnh/TP ban đầu (hoặc 0 nếu không có gì được chọn)
+             loadDistricts(initialThanhPhoId);
+
+        });
+    </script>
+}

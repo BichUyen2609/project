@@ -1,0 +1,169 @@
+@model HeThongTimViec.ViewModels.Admin.NguoiDungCreateViewModel
+@using HeThongTimViec.Models
+
+@{
+    ViewData["Title"] = "Tạo người dùng mới";
+    // Đảm bảo đường dẫn này đúng với layout admin của bạn
+    Layout = "_LayoutAdmin"; // Hoặc "~/Views/Shared/_AdminLayout.cshtml" tùy cấu trúc dự án
+}
+
+<div class="container-fluid mt-4">
+    <h1 class="h3 mb-4 text-gray-800">@ViewData["Title"]</h1>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Thông tin người dùng</h6>
+        </div>
+        <div class="card-body">
+            @* Form trỏ đến action Create của AdminUserController *@
+            <form asp-controller="AdminUser" asp-action="Create" method="post">
+                @Html.AntiForgeryToken() @* Chống tấn công CSRF *@
+
+                @* Hiển thị lỗi chung của model (nếu có) *@
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row">
+                    <!-- Cột trái -->
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="HoTen" class="form-label"></label> @* Tên hiển thị từ [Display] *@
+                            <input asp-for="HoTen" class="form-control" />
+                            <span asp-validation-for="HoTen" class="text-danger"></span> @* Thông báo lỗi validation *@
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" type="email"/> @* Nên dùng type="email" *@
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                         <div class="mb-3">
+                            <label asp-for="Sdt" class="form-label"></label>
+                            <input asp-for="Sdt" class="form-control" placeholder="Ví dụ: 0912345678 hoặc +84912345678"/>
+                            <span asp-validation-for="Sdt" class="text-danger"></span>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-6">
+                                <label asp-for="Password" class="form-label"></label>
+                                <input asp-for="Password" class="form-control" type="password"/>
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
+                             <div class="col-sm-6">
+                                <label asp-for="ConfirmPassword" class="form-label"></label>
+                                <input asp-for="ConfirmPassword" class="form-control" type="password"/>
+                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        @{
+                            var loaiTaiKhoanList = Html.GetEnumSelectList<LoaiTaiKhoan>()
+                                .Where(i => i.Value != ((int)LoaiTaiKhoan.quantrivien).ToString())
+                                .ToList();
+                        }
+
+                        <div class="mb-3">
+                            <label asp-for="LoaiTk" class="form-label"></label>
+                            <select asp-for="LoaiTk" class="form-select" asp-items="loaiTaiKhoanList">
+                                <option value="">-- Chọn loại tài khoản --</option>
+                            </select>
+                            <span asp-validation-for="LoaiTk" class="text-danger"></span>
+                        </div>
+
+
+                        @* Không cần dropdown Trạng thái tài khoản ở đây vì Controller sẽ tự đặt *@
+
+                    </div>
+
+                    <!-- Cột phải -->
+                    <div class="col-md-6">
+                        <div class="row mb-3">
+                            <div class="col-sm-6">
+                                <label asp-for="GioiTinh" class="form-label"></label>
+                                <select asp-for="GioiTinh" class="form-select" asp-items="Html.GetEnumSelectList<GioiTinhNguoiDung>()">
+                                    <option value="">-- Chọn giới tính --</option>
+                                </select>
+                                @* Validation cho trường tùy chọn (GioiTinh là nullable) *@
+                                <span asp-validation-for="GioiTinh" class="text-danger"></span>
+                            </div>
+                             <div class="col-sm-6">
+                                <label asp-for="NgaySinh" class="form-label"></label>
+                                <input asp-for="NgaySinh" class="form-control" type="date"/> @* Sử dụng input type date *@
+                                <span asp-validation-for="NgaySinh" class="text-danger"></span>
+                             </div>
+                        </div>
+
+                         <div class="mb-3">
+                             <label asp-for="ThanhPhoId" class="form-label"></label>
+                             @* Lấy danh sách Tỉnh/Thành phố từ ViewBag *@
+                             <select asp-for="ThanhPhoId" id="ThanhPhoId" class="form-select" asp-items="@(ViewBag.ThanhPhoId as SelectList ?? new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"))">
+                                 <option value="">-- Chọn Tỉnh/Thành phố --</option>
+                             </select>
+                             <span asp-validation-for="ThanhPhoId" class="text-danger"></span>
+                         </div>
+
+                         <div class="mb-3">
+                              <label asp-for="QuanHuyenId" class="form-label"></label>
+                              @* **** THAY ĐỔI Ở ĐÂY: Thêm input-group và span loading **** *@
+                              <div class="input-group">
+                                  <select asp-for="QuanHuyenId" id="QuanHuyenId" class="form-select" asp-items="@(ViewBag.QuanHuyenId as SelectList ?? new SelectList(Enumerable.Empty<SelectListItem>(), "Value", "Text"))" disabled> @* Bắt đầu với trạng thái disabled *@
+                                      <option value="">-- Chọn Quận/Huyện --</option>
+                                  </select>
+                                  @* Phần tử chỉ báo đang tải *@
+                                  <span class="input-group-text" id="QuanHuyenLoading" style="display: none;">
+                                      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                  </span>
+                              </div>
+                              @* **** KẾT THÚC THAY ĐỔI **** *@
+                              <span asp-validation-for="QuanHuyenId" class="text-danger"></span>
+                          </div>
+
+                         <div class="mb-3">
+                            <label asp-for="DiaChiChiTiet" class="form-label"></label>
+                            <textarea asp-for="DiaChiChiTiet" class="form-control" rows="2" placeholder="Ví dụ: Số 123, Đường ABC, Phường XYZ"></textarea>
+                            <span asp-validation-for="DiaChiChiTiet" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="d-flex justify-content-end mt-3">
+                    @* Nút quay lại trang danh sách người dùng *@
+                    <a asp-controller="AdminUser" asp-action="Index" class="btn btn-secondary me-2">
+                        <i class="fas fa-arrow-left me-1"></i> Quay lại
+                    </a>
+                    @* Nút lưu để submit form *@
+                    <button type="submit" class="btn btn-primary">
+                       <i class="fas fa-save me-1"></i> Lưu người dùng
+                    </button>
+                </div>
+            </form>
+        </div><!-- /.card-body -->
+    </div><!-- /.card -->
+
+</div><!-- /.container-fluid -->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    @* Include the new address dropdown script *@
+    <script src="~/js/admin/address-dropdowns.js" asp-append-version="true"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Gọi hàm khởi tạo từ script bên ngoài
+            // Cấu hình này đã chính xác và giờ khớp với HTML có loading indicator
+            initializeAddressDropdowns({
+                citySelectId: 'ThanhPhoId',          // Khớp với <select id="ThanhPhoId">
+                districtSelectId: 'QuanHuyenId',       // Khớp với <select id="QuanHuyenId">
+                loadingIndicatorId: 'QuanHuyenLoading', // Khớp với <span id="QuanHuyenLoading"> (ĐÃ THÊM)
+                apiUrlTemplate: '@Url.Action("GetQuanHuyenByThanhPho", "DiaChi", new { id = "__CITY_ID__" })' // Trỏ đúng tới Controller/Action
+            });
+
+             // Bạn có thể thêm các mã JavaScript khác dành riêng cho trang này ở đây nếu cần
+             console.log("[CreateUserForm] Page-specific script loaded after address dropdowns.");
+
+        });
+    </script>
+}

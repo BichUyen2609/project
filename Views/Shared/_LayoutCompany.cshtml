@@ -1,0 +1,90 @@
+@using HeThongTimViec.Models
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Quản lý Tuyển dụng - Hệ Thống Tìm Việc</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/HeThongTimViec.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-toggleable-lg navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="NhaTuyenDung" asp-controller="Dashboard" asp-action="Index">NTD Panel</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="NhaTuyenDung" asp-controller="Dashboard" asp-action="Index">Bảng điều khiển</a>
+                        </li>
+                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="NhaTuyenDung" asp-controller="CompanyPosting" asp-action="Index">Quản Lý Tin Đăng</a>
+                        </li>
+                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="NhaTuyenDung" asp-controller="UngVien" asp-action="QuanLy">Quản Lý Ứng Viên</a>
+                        </li>
+                        @* Uncomment nếu có chức năng này
+                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="NhaTuyenDung" asp-controller="HoSo" asp-action="TimKiem">Tìm Kiếm Hồ Sơ</a>
+                        </li>
+                        *@
+                         <li class="nav-item ms-lg-auto">
+                            <a class="btn btn-primary" asp-area="NhaTuyenDung" asp-controller="TinTuyenDung" asp-action="TaoMoi">Đăng Tin Mới</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                         <li class="nav-item me-2">
+                            <a class="nav-link text-dark position-relative" asp-area="NhaTuyenDung" asp-controller="TinNhan" asp-action="Index" title="Tin nhắn">
+                                <i class="fa-regular fa-envelope"></i>
+                            </a>
+                        </li>
+                         <li class="nav-item me-3">
+                            <a class="nav-link text-dark position-relative" asp-area="NhaTuyenDung" asp-controller="ThongBao" asp-action="Index" title="Thông báo">
+                                <i class="fa-regular fa-bell"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdownCompany" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-regular fa-building me-1"></i>
+                                @ViewBag.TenCongTy @* Truyền từ Controller *@
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownCompany">
+                                <li><a class="dropdown-item" asp-area="NhaTuyenDung" asp-controller="CongTy" asp-action="HoSo">Hồ sơ Công ty</a></li>
+                                <li><a class="dropdown-item" asp-area="NhaTuyenDung" asp-controller="TaiKhoan" asp-action="CaiDat">Cài Đặt Tài Khoản</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form asp-area="" asp-controller="TaiKhoan" asp-action="DangXuat" method="post">
+                                        <button type="submit" class="dropdown-item">Đăng Xuất</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <footer class="border-top footer text-muted mt-auto py-3 bg-light">
+        <div class="container">
+             © @DateTime.Now.Year - Hệ Thống Tìm Việc - Nhà Tuyển Dụng
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

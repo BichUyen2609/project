@@ -1,0 +1,37 @@
+@model HeThongTimViec.ViewModels.ForgotPasswordViewModel
+
+@{
+    ViewData["Title"] = "Quên Mật Khẩu";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Layout công khai
+}
+
+<div class="row justify-content-center mt-5 mb-5">
+    <div class="col-md-6 col-lg-5 col-xl-4">
+        <div class="card shadow-sm">
+            <div class="card-body p-4 p-md-5">
+                 <h2 class="text-center mb-4">@ViewData["Title"]</h2>
+                 <p class="text-center text-muted small mb-4">Nhập địa chỉ email bạn đã dùng để đăng ký. Chúng tôi sẽ gửi cho bạn một liên kết để đặt lại mật khẩu.</p>
+
+                <form asp-action="QuenMatKhau" method="post">
+                     @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+                    <div class="form-floating mb-3">
+                        <input asp-for="Email" class="form-control" placeholder="name@example.com" autocomplete="email" />
+                        <label asp-for="Email"></label>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 btn-lg">Gửi Yêu Cầu</button>
+                </form>
+                 <div class="mt-4 text-center">
+                    <p class="small mb-0">
+                        <a asp-action="DangNhap" class="link-secondary text-decoration-none">Quay lại Đăng nhập</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,138 @@
+@model IEnumerable<HeThongTimViec.ViewModels.JobPosting.JobPostingListViewModel>
+@using HeThongTimViec.Models // Quan trọng: Để sử dụng Enum TrangThaiTinTuyenDung
+@using HeThongTimViec.Extensions // Giữ lại nếu bạn có Extensions
+
+@{
+    ViewData["Title"] = "Quản lý Tin tuyển dụng (Doanh nghiệp)";
+}
+
+@* Breadcrumb (Ví dụ - bạn có thể điều chỉnh Controller/Action cho Dashboard DN) *@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="CompanyIndex">Bảng điều khiển DN</a></li>
+    <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
+  </ol>
+</nav>
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-success"><i class="fas fa-plus me-1"></i> Đăng tin mới</a>
+</p>
+
+@* Hiển thị TempData Messages (Giữ nguyên) *@
+@if (TempData["SuccessMessage"] != null) { <div class="alert alert-success alert-dismissible fade show" role="alert">@TempData["SuccessMessage"]<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div> }
+@if (TempData["ErrorMessage"] != null) { <div class="alert alert-danger alert-dismissible fade show" role="alert">@TempData["ErrorMessage"]<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div> }
+@if (TempData["InfoMessage"] != null) { <div class="alert alert-info alert-dismissible fade show" role="alert">@TempData["InfoMessage"]<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div> }
+
+<div class="table-responsive shadow-sm rounded">
+    <table class="table table-striped table-hover align-middle caption-top mb-0">
+         <caption class="px-3 pt-2">Danh sách tin tuyển dụng công ty đã đăng</caption>
+        <thead class="table-light">
+            <tr>
+                <th scope="col">@Html.DisplayNameFor(model => model.First().TieuDe)</th>
+                <th scope="col">@Html.DisplayNameFor(model => model.First().TrangThai)</th>
+                <th scope="col">@Html.DisplayNameFor(model => model.First().NgayDang)</th>
+                <th scope="col">@Html.DisplayNameFor(model => model.First().NgayHetHan)</th>
+                <th scope="col" class="text-center">@Html.DisplayNameFor(model => model.First().SoUngVien)</th>
+                <th scope="col" class="text-center" style="min-width: 150px;">Hành động</th> @* Đảm bảo đủ rộng *@
+            </tr>
+        </thead>
+        <tbody>
+    @if (Model != null && Model.Any()) {
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="text-decoration-none fw-medium">@Html.DisplayFor(modelItem => item.TieuDe)</a>
+                 </td>
+                 @* Sử dụng hàm helper từ @functions *@
+                <td><span class="badge @GetStatusBadgeClass(item.TrangThai)">@GetStatusDisplayName(item.TrangThai)</span></td>
+                <td>@item.NgayDang.ToString("dd/MM/yyyy")</td> @* Format ngày *@
+                <td>@(item.NgayHetHan.HasValue ? item.NgayHetHan.Value.ToString("dd/MM/yyyy") : "Không")</td> @* Format ngày + null check *@
+                <td class="text-center">
+                     @Html.DisplayFor(modelItem => item.SoUngVien)
+                     @* Link xem ứng viên (TODO: Thay controller/action nếu cần) *@
+                     @* <a asp-controller="CompanyApplicantManagement" asp-action="IndexForPosting" asp-route-postingId="@item.Id" class="ms-1 small" title="Xem ứng viên">(Xem)</a> *@
+                 </td>
+                <td class="text-center">
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Hành động cho tin @item.Id">
+
+                        @* Nút Sửa và Xóa Logic (Sử dụng hàm helper) *@
+                        @if (CanEditOrDelete(item.TrangThai)) {
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary" title="Sửa tin"><i class="fas fa-edit"></i></a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger" title="Xóa tin (logic)"><i class="fas fa-trash-alt"></i></a>
+                        } else {
+                             <button class="btn btn-outline-secondary" disabled title="Không thể sửa ở trạng thái này"><i class="fas fa-edit"></i></button>
+                             <button class="btn btn-outline-secondary" disabled title="Không thể xóa ở trạng thái này"><i class="fas fa-trash-alt"></i></button>
+                        }
+
+                        @* --- NÚT ẨN/HIỆN CHO DOANH NGHIỆP (ĐÃ THÊM) --- *@
+                        @if (item.TrangThai == TrangThaiTinTuyenDung.daduyet || item.TrangThai == TrangThaiTinTuyenDung.taman)
+                        {
+                            var isHidden = item.TrangThai == TrangThaiTinTuyenDung.taman;
+                            // Hiện lại sẽ chuyển sang Chờ duyệt, nên tooltip và màu sắc cần phản ánh điều đó
+                            var buttonClass = isHidden ? "btn-outline-info" : "btn-outline-warning"; // Hiện lại (chờ duyệt): Info xanh dương, Ẩn: Warning vàng
+                            var buttonIcon = isHidden ? "fa-eye" : "fa-eye-slash"; // Icon mắt mở / mắt gạch chéo
+                            var buttonTitle = isHidden ? "Yêu cầu hiện lại (chờ duyệt)" : "Ẩn tin"; // Tooltip rõ ràng
+
+                            <form asp-action="ToggleVisibility" asp-route-id="@item.Id" method="post" class="d-inline"> @* d-inline để form không xuống dòng *@
+                                @Html.AntiForgeryToken() @* Bảo mật CSRF *@
+                                <button type="submit" class="btn @buttonClass" title="@buttonTitle">
+                                    <i class="fas @buttonIcon"></i>
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                             @* Hiển thị nút bị vô hiệu hóa nếu không thể ẩn/hiện *@
+                             <button class="btn btn-outline-secondary" disabled title="Không thể ẩn/hiện ở trạng thái này"><i class="fas fa-eye-slash"></i></button>
+                        }
+                        @* --- HẾT NÚT ẨN/HIỆN --- *@
+
+                        @* Nút xem trước công khai (ví dụ) *@
+                        @* <a asp-controller="Job" asp-action="Details" asp-route-id="@item.Id" target="_blank" class="btn btn-outline-info" title="Xem tin đăng công khai"><i class="fas fa-external-link-alt"></i></a> *@
+                    </div>
+                </td>
+            </tr>
+        }
+    } else {
+        <tr><td colspan="6" class="text-center fst-italic py-4">Công ty chưa đăng tin tuyển dụng nào. <a asp-action="Create">Đăng tin ngay!</a></td></tr>
+    }
+        </tbody>
+    </table>
+</div>
+
+@functions {
+    // Hàm lấy tên hiển thị thân thiện cho Trạng Thái Tin Tuyển Dụng
+     string GetStatusDisplayName(HeThongTimViec.Models.TrangThaiTinTuyenDung status) {
+         return status switch {
+             HeThongTimViec.Models.TrangThaiTinTuyenDung.choduyet => "Chờ duyệt",
+             HeThongTimViec.Models.TrangThaiTinTuyenDung.daduyet => "Đang hiển thị", // Đổi tên cho rõ
+             HeThongTimViec.Models.TrangThaiTinTuyenDung.taman => "Tạm ẩn",
+             HeThongTimViec.Models.TrangThaiTinTuyenDung.hethan => "Hết hạn",
+             HeThongTimViec.Models.TrangThaiTinTuyenDung.datuyen => "Đã tuyển",
+             HeThongTimViec.Models.TrangThaiTinTuyenDung.bituchoi => "Bị từ chối",
+             HeThongTimViec.Models.TrangThaiTinTuyenDung.daxoa => "Đã xóa",
+             _ => status.ToString() };
+      }
+
+    // Hàm lấy lớp CSS cho badge dựa trên Trạng Thái Tin Tuyển Dụng
+     string GetStatusBadgeClass(HeThongTimViec.Models.TrangThaiTinTuyenDung status) {
+         return status switch {
+            HeThongTimViec.Models.TrangThaiTinTuyenDung.choduyet => "bg-warning text-dark",
+            HeThongTimViec.Models.TrangThaiTinTuyenDung.daduyet => "bg-success",
+            HeThongTimViec.Models.TrangThaiTinTuyenDung.taman => "bg-secondary",
+            HeThongTimViec.Models.TrangThaiTinTuyenDung.hethan => "bg-info text-dark",
+            HeThongTimViec.Models.TrangThaiTinTuyenDung.datuyen => "bg-primary",
+            HeThongTimViec.Models.TrangThaiTinTuyenDung.bituchoi => "bg-danger",
+            HeThongTimViec.Models.TrangThaiTinTuyenDung.daxoa => "bg-dark",
+            _ => "bg-light text-dark", };
+      }
+
+     // Hàm kiểm tra xem có thể sửa hoặc xóa (logic) tin dựa trên trạng thái không
+     bool CanEditOrDelete(HeThongTimViec.Models.TrangThaiTinTuyenDung status) {
+         // Cho phép sửa/xóa khi: Chờ duyệt, Đang hiển thị, Tạm ẩn, Hết hạn
+         return status == HeThongTimViec.Models.TrangThaiTinTuyenDung.choduyet || status == HeThongTimViec.Models.TrangThaiTinTuyenDung.daduyet ||
+                status == HeThongTimViec.Models.TrangThaiTinTuyenDung.taman || status == HeThongTimViec.Models.TrangThaiTinTuyenDung.hethan;
+     }
+}

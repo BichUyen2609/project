@@ -1,0 +1,150 @@
+@model HeThongTimViec.Models.NguoiDung // Sử dụng model NguoiDung trực tiếp
+
+@{
+    ViewData["Title"] = "Cài Đặt Tài Khoản";
+    Layout = "~/Views/Shared/_LayoutLoggedIn.cshtml"; // Layout cho user đã đăng nhập
+}
+
+<div class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <h2 class="mb-4 text-center">@ViewData["Title"]</h2>
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <form asp-action="CaiDat" method="post">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" readonly disabled />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="HoTen" class="form-label"></label>
+                            <input asp-for="HoTen" class="form-control" />
+                            <span asp-validation-for="HoTen" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Sdt" class="form-label"></label>
+                            <input asp-for="Sdt" class="form-control" placeholder="Nhập số điện thoại (nếu có)" type="tel" />
+                            <span asp-validation-for="Sdt" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="GioiTinh" class="form-label"></label>
+                                <select asp-for="GioiTinh" class="form-select" asp-items="@ViewBag.GioiTinhList">
+                                    <option value="">-- Chọn giới tính --</option>
+                                </select>
+                                <span asp-validation-for="GioiTinh" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="NgaySinh" class="form-label"></label>
+                                <input asp-for="NgaySinh" class="form-control" type="date" />
+                                <span asp-validation-for="NgaySinh" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="DiaChiChiTiet" class="form-label">Địa chỉ chi tiết</label>
+                            <textarea asp-for="DiaChiChiTiet" class="form-control" rows="2" placeholder="Số nhà, tên đường..."></textarea>
+                            <span asp-validation-for="DiaChiChiTiet" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ThanhPhoId" class="form-label">Tỉnh/Thành phố</label>
+                                <select asp-for="ThanhPhoId" class="form-select" asp-items="@ViewBag.ThanhPhoList" id="ThanhPhoSelect">
+                                    <option value="">-- Chọn Tỉnh/Thành phố --</option>
+                                </select>
+                                <span asp-validation-for="ThanhPhoId" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="QuanHuyenId" class="form-label">Quận/Huyện</label>
+                                <select asp-for="QuanHuyenId" class="form-select" asp-items="@ViewBag.QuanHuyenList" id="QuanHuyenSelect" disabled>
+                                    <option value="">-- Chọn Quận/Huyện --</option>
+                                </select>
+                                <span asp-validation-for="QuanHuyenId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="UrlAvatar" class="form-label">URL Ảnh đại diện</label>
+                            <input asp-for="UrlAvatar" class="form-control" type="url" placeholder="https://example.com/avatar.jpg" />
+                            <span asp-validation-for="UrlAvatar" class="text-danger"></span>
+                            @if (!string.IsNullOrEmpty(Model.UrlAvatar))
+                            {
+                                <div class="mt-2">
+                                    <img src="@Model.UrlAvatar" alt="Ảnh đại diện hiện tại" style="max-height: 100px; max-width: 100px; border-radius: 50%; object-fit: cover;" />
+                                </div>
+                            }
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">Lưu thay đổi</button>
+                            @* <a asp-action="ChangePassword" class="btn btn-outline-secondary">Đổi mật khẩu</a> *@
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            const quanHuyenSelect = $('#QuanHuyenSelect');
+            const thanhPhoSelect = $('#ThanhPhoSelect');
+            function loadQuanHuyen(showLoading = true) {
+                 var selectedThanhPhoId = thanhPhoSelect.val();
+                 quanHuyenSelect.prop('disabled', true);
+                 if (selectedThanhPhoId) {
+                     if(showLoading) {
+                         quanHuyenSelect.empty().append($('<option/>', { value: '', text: '-- Đang tải... --' }));
+                     }
+                     const url = `/api/diachi/quanhuyen/${selectedThanhPhoId}`;
+                     $.getJSON(url)
+                         .done(function (data) {
+                             quanHuyenSelect.empty().append($('<option/>', { value: '', text: '-- Chọn Quận/Huyện --' }));
+                             if (data && data.length > 0) {
+                                 $.each(data, function (index, item) {
+                                     const isSelected = item.id == '@Html.Raw(Model?.QuanHuyenId)';
+                                     quanHuyenSelect.append($('<option/>', {
+                                         value: item.id,
+                                         text: item.ten,
+                                         selected: isSelected
+                                     }));
+                                 });
+                             }
+                              quanHuyenSelect.prop('disabled', false);
+                         })
+                         .fail(function(jqXHR, textStatus, errorThrown) {
+                             console.error("Lỗi tải quận/huyện:", textStatus, errorThrown);
+                              quanHuyenSelect.empty().append($('<option/>', { value: '', text: '-- Lỗi tải dữ liệu --' }));
+                              quanHuyenSelect.prop('disabled', true);
+                         });
+                 } else {
+                      quanHuyenSelect.empty().append($('<option/>', { value: '', text: '-- Chọn Quận/Huyện --' }));
+                      quanHuyenSelect.prop('disabled', true);
+                 }
+            }
+             thanhPhoSelect.change(function() { loadQuanHuyen(true); });
+             if (thanhPhoSelect.val()) { loadQuanHuyen(false); }
+             else { quanHuyenSelect.prop('disabled', true); }
+        });
+    </script>
+}

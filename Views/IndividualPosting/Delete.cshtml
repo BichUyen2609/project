@@ -1,0 +1,36 @@
+@using HeThongTimViec.Extensions
+@using HeThongTimViec.Models
+@{
+    ViewData["Title"] = "Xác nhận Xóa Tin (Cá nhân)";
+    string postingTitle = ViewBag.PostingTitle ?? "tin tuyển dụng này";
+    int postingId = ViewBag.PostingId ?? 0;
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb bg-light p-2 rounded">
+     <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index">Bảng điều khiển NTD</a></li>
+     <li class="breadcrumb-item"><a asp-action="Index">Quản lý Tin đăng</a></li>
+     <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
+  </ol>
+</nav>
+
+
+<h1 class="display-6"><i class="fas fa-exclamation-triangle text-danger me-2"></i>@ViewData["Title"]</h1>
+
+<div class="alert alert-danger mt-3 shadow-sm" role="alert">
+  <h4 class="alert-heading">Bạn có chắc chắn muốn xóa?</h4>
+  <p>Bạn sắp xóa (logic) tin tuyển dụng: <strong>@postingTitle</strong>.</p>
+  <hr>
+  <p class="mb-0">Tin sẽ được chuyển sang trạng thái "Đã xóa" và không hiển thị công khai. Hành động này không thể hoàn tác dễ dàng.</p>
+</div>
+
+@if(postingId > 0) {
+<form asp-action="Delete" asp-route-id="@postingId" method="post" class="mt-3">
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-danger btn-lg"><i class="fas fa-trash-alt me-1"></i> Vâng, Xóa tin này</button>
+    <a asp-action="Index" class="btn btn-secondary btn-lg ms-2">Không, Quay lại</a>
+</form>
+} else {
+    <div class="alert alert-warning mt-3">Không xác định được tin cần xóa. Vui lòng quay lại danh sách.</div>
+     <a asp-action="Index" class="btn btn-secondary mt-2">Quay lại danh sách</a>
+}

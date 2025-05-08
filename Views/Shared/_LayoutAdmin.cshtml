@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin Panel</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" /> @* CSS riêng cho Admin *@
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    @await RenderSectionAsync("Styles", required: false)
+    @* Style cơ bản cho sidebar *@
+    <style>
+        body {
+            overflow-x: hidden;
+        }
+
+        #sidebar-wrapper {
+            min-height: 100vh;
+            margin-left: -15rem;
+            transition: margin .25s ease-out;
+        }
+
+        #sidebar-wrapper .sidebar-heading {
+            padding: 0.875rem 1.25rem;
+            font-size: 1.2rem;
+        }
+
+        #sidebar-wrapper .list-group {
+            width: 15rem;
+        }
+
+         #page-content-wrapper {
+            min-width: 100vw;
+        }
+
+        #wrapper.toggled #sidebar-wrapper {
+            margin-left: 0;
+        }
+
+        @@media (min-width: 768px) {
+            #sidebar-wrapper {
+                margin-left: 0;
+            }
+
+            #page-content-wrapper {
+                min-width: 0;
+                width: 100%;
+            }
+
+             #wrapper.toggled #sidebar-wrapper {
+                margin-left: -15rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div class="bg-light border-end" id="sidebar-wrapper">
+            <div class="sidebar-heading border-bottom bg-light">Admin Panel</div>
+            <div class="list-group list-group-flush">
+                <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="list-group-item list-group-item-action list-group-item-light p-3"><i class="fas fa-tachometer-alt me-2"></i>Bảng điều khiển</a>
+                <a asp-area="Admin" asp-controller="AdminUser" asp-action="Index" class="list-group-item list-group-item-action list-group-item-light p-3"><i class="fas fa-users me-2"></i>Quản lý Người dùng</a>
+                <a asp-area="Admin" asp-controller="TinTuyenDung" asp-action="Index" class="list-group-item list-group-item-action list-group-item-light p-3"><i class="fas fa-briefcase me-2"></i>Quản lý Tin đăng</a>
+                <a asp-area="Admin" asp-controller="DanhMuc" asp-action="Index" class="list-group-item list-group-item-action list-group-item-light p-3"><i class="fas fa-list me-2"></i>Quản lý Danh mục</a>
+                <a asp-area="Admin" asp-controller="BaoCao" asp-action="Index" class="list-group-item list-group-item-action list-group-item-light p-3"><i class="fas fa-flag me-2"></i>Báo cáo Vi phạm</a>
+                <a asp-area="Admin" asp-controller="ThongBao" asp-action="Gui" class="list-group-item list-group-item-action list-group-item-light p-3"><i class="fas fa-bullhorn me-2"></i>Gửi Thông báo</a>
+                @*<a asp-area="Admin" asp-controller="CauHinh" asp-action="Index" class="list-group-item list-group-item-action list-group-item-light p-3"><i class="fas fa-cog me-2"></i>Cấu hình Hệ thống</a>*@
+            </div>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content Wrapper -->
+        <div id="page-content-wrapper">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+                <div class="container-fluid">
+                    <button class="btn btn-primary" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+                    <div class="ms-auto"> @* Đẩy sang phải *@
+                       <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAdmin" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-user-shield me-1"></i> @User.Identity?.Name
+                                 </a>
+                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAdmin">
+                                     <li><a class="dropdown-item" asp-action="Index" asp-controller="Home" asp-area="">Xem Trang Chính</a></li>
+                                     <li><hr class="dropdown-divider"></li>
+                                     <li>
+                                         <form asp-area="" asp-controller="TaiKhoan" asp-action="DangXuat" method="post">
+                                             <button type="submit" class="dropdown-item">Đăng Xuất</button>
+                                         </form>
+                                     </li>
+                                 </ul>
+                            </li>
+                       </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container-fluid px-4 py-4"> @* Thêm padding *@
+                <main role="main">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+    </div>
+    <!-- /#wrapper -->
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @* Script đơn giản để toggle sidebar *@
+    <script>
+        document.addEventListener("DOMContentLoaded", event => {
+            const sidebarToggle = document.body.querySelector('#sidebarToggle');
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', event => {
+                    event.preventDefault();
+                    document.body.querySelector('#wrapper').classList.toggle('toggled');
+                });
+            }
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

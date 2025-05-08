@@ -1,0 +1,767 @@
+@using System.Globalization
+@* Remove the using for MonthlyGoalProgressViewModel *@
+@* @using HeThongTimViec.ViewModels.Admin *@
+
+@{
+    ViewData["Title"] = "Bảng điều khiển Quản trị";
+    // Layout = "_AdminLayout"; // Ensure this Layout exists and renders sections: Styles, Scripts
+}
+
+@section Styles {
+    @* Custom CSS for card icons, activity feed, etc. *@
+    <style>
+        /* Styles for Statistic Cards */
+        .info-card .card-icon {
+            font-size: 28px;
+            width: 56px;
+            height: 56px;
+            line-height: 0; /* Helps center icons vertically */
+            flex-shrink: 0; /* Prevent icon shrinking */
+            display: inline-flex; /* Use flex for centering */
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%; /* Make icon background circular */
+        }
+        /* Light background colors for card icons */
+        .bg-primary-light { background-color: rgba(78, 115, 223, 0.1); } /* Adjusted alpha */
+        .bg-success-light { background-color: rgba(28, 200, 138, 0.1); } /* Adjusted alpha */
+        .bg-warning-light { background-color: rgba(246, 194, 62, 0.1); } /* Adjusted alpha */
+        .bg-danger-light { background-color: rgba(231, 74, 59, 0.1); } /* Adjusted alpha */
+        .bg-info-light { background-color: rgba(54, 185, 204, 0.1); } /* Added for Info */
+
+        /* Styling for Recent Activity Feed */
+        .activity { max-height: 415px; overflow-y: auto; } /* Set max height and scroll */
+        .activity .activity-item {
+            display: flex;
+            align-items: flex-start;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--bs-border-color-translucent);
+            margin-bottom: 15px;
+        }
+        .activity .activity-item:last-child {
+            margin-bottom: 0; padding-bottom: 0; border-bottom: none;
+        }
+        .activity .activite-label {
+            color: var(--bs-secondary-color); position: relative;
+            flex-shrink: 0; flex-basis: 75px; /* Reduced basis */
+            text-align: right; font-size: 0.85em; padding-right: 10px;
+            white-space: nowrap; /* Prevent wrapping */
+        }
+        .activity .activity-badge {
+            margin-top: 3px; z-index: 1; font-size: 1rem;
+            position: relative; flex-shrink: 0; width: 34px; height: 34px;
+            display: inline-flex; align-items: center; justify-content: center;
+            border-radius: 50%;
+        }
+        .activity .activity-content {
+            padding-left: 12px; font-size: 0.9em; flex-grow: 1;
+            word-break: break-word; /* Prevent text overflow */
+        }
+        .activity .activity-content strong { font-weight: 600; color: var(--bs-body-color); }
+
+        /* REMOVED: Monthly Goal Progress Bar Styles */
+
+        /* Chart Filter Dropdown */
+        .filter .icon { color: var(--bs-secondary-color); transition: 0.3s; padding: 0.25rem 0.5rem; }
+        .filter .icon:hover, .filter .icon:focus { color: var(--bs-primary); }
+        .filter .dropdown-header { padding: 8px 15px; font-size: 0.85em; font-weight: 600; }
+        .filter .dropdown-item { padding: 8px 15px; font-size: 0.9em; }
+
+        /* Loading Spinner */
+        .spinner-border-sm { width: 1rem; height: 1rem; border-width: 0.2em; }
+
+        /* Ensure cards have consistent height */
+         .h-100 { height: 100% !important; }
+
+        /* Chart container wrappers */
+         .chart-container-wrapper {
+             position: relative; /* Needed for absolute positioning of error/loading */
+             min-height: 350px; /* Height for line chart */
+             height: 350px; /* Fixed height */
+             width: 100%;
+         }
+          .doughnut-chart-container-wrapper {
+             position: relative;
+             height: 300px; /* Reduced height for doughnut */
+             width: 100%;
+             max-width: 300px; /* Limit doughnut size */
+             margin: auto; /* Center horizontally */
+         }
+         /* Centering loading/error inside chart wrappers */
+          .chart-overlay-message {
+             position: absolute;
+             top: 50%;
+             left: 50%;
+             transform: translate(-50%, -50%);
+             text-align: center;
+             width: 90%;
+             z-index: 10; /* Ensure it's above canvas */
+         }
+         /* Specific style for card body holding charts */
+         .chart-card-body {
+             display: flex;
+             justify-content: center;
+             align-items: center;
+             min-height: 340px; /* Ensure card body has height for overlay (match tallest chart) */
+             padding-top: 1rem; /* Add some padding */
+             padding-bottom: 1rem;
+         }
+        /* Ensure doughnut chart card body matches min-height */
+        .doughnut-chart-container-wrapper + .chart-overlay-message {
+            /* Specific adjustments if needed, but usually handled by chart-card-body */
+        }
+
+    </style>
+}
+
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12 mb-3">
+            <h1><i class="fas fa-tachometer-alt me-2"></i>@ViewData["Title"]</h1>
+            <hr />
+        </div>
+    </div>
+
+    @* Display error message from initial page load if any *@
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i> @ViewBag.ErrorMessage
+        </div>
+    }
+    else
+    {
+        <!-- Row 1: Overview Statistics Cards -->
+        <div class="row gy-4">
+            <!-- Total Users Card -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card info-card shadow-sm h-100"> @* Added shadow-sm *@
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title text-secondary fw-normal">Tổng người dùng <span class="small text-muted">| Tháng này</span></h5>
+                        <div class="d-flex align-items-center flex-grow-1 mt-2">
+                            <div class="card-icon bg-primary-light d-flex align-items-center justify-content-center">
+                                <i class="fas fa-users text-primary"></i>
+                            </div>
+                            <div class="ps-3">
+                                <h6 class="fs-4 fw-bold mb-1">@(ViewBag.TotalUsers?.ToString("N0", CultureInfo.InvariantCulture) ?? "0")</h6>
+                                @{
+                                    double userGrowth = ViewBag.UserGrowthPercentage ?? 0.0;
+                                    string userGrowthClass = userGrowth >= 0 ? "text-success" : "text-danger";
+                                    string userGrowthIcon = userGrowth >= 0 ? "fas fa-arrow-up" : "fas fa-arrow-down";
+                                }
+                                <span class="@userGrowthClass small pt-1 fw-bold d-inline-block"> @* d-inline-block to prevent wrapping icon from number *@
+                                    <i class="@userGrowthIcon small"></i> @userGrowth.ToString("N1")%
+                                </span>
+                                <span class="text-muted small pt-1 ps-1">so với trước</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Employers Card -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card info-card shadow-sm h-100">
+                    <div class="card-body d-flex flex-column">
+                         <h5 class="card-title text-secondary fw-normal">Doanh nghiệp <span class="small text-muted">| Tháng này</span></h5>
+                        <div class="d-flex align-items-center flex-grow-1 mt-2">
+                             <div class="card-icon bg-success-light d-flex align-items-center justify-content-center">
+                                <i class="fas fa-building text-success"></i>
+                            </div>
+                            <div class="ps-3">
+                                <h6 class="fs-4 fw-bold mb-1">@(ViewBag.TotalEmployers?.ToString("N0", CultureInfo.InvariantCulture) ?? "0")</h6>
+                                @{
+                                    double employerGrowth = ViewBag.EmployerGrowthPercentage ?? 0.0;
+                                    string employerGrowthClass = employerGrowth >= 0 ? "text-success" : "text-danger";
+                                    string employerGrowthIcon = employerGrowth >= 0 ? "fas fa-arrow-up" : "fas fa-arrow-down";
+                                }
+                                <span class="@employerGrowthClass small pt-1 fw-bold d-inline-block">
+                                    <i class="@employerGrowthIcon small"></i> @employerGrowth.ToString("N1")%
+                                </span>
+                                <span class="text-muted small pt-1 ps-1">so với trước</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Job Postings Card -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card info-card shadow-sm h-100">
+                    <div class="card-body d-flex flex-column">
+                         <h5 class="card-title text-secondary fw-normal">Bài đăng <span class="small text-muted">| Tháng này</span></h5>
+                        <div class="d-flex align-items-center flex-grow-1 mt-2">
+                             <div class="card-icon bg-warning-light d-flex align-items-center justify-content-center">
+                                <i class="fas fa-briefcase text-warning"></i>
+                            </div>
+                            <div class="ps-3">
+                                <h6 class="fs-4 fw-bold mb-1">@(ViewBag.TotalJobPostings?.ToString("N0", CultureInfo.InvariantCulture) ?? "0")</h6>
+                                @{
+                                    double postGrowth = ViewBag.PostGrowthPercentage ?? 0.0;
+                                    string postGrowthClass = postGrowth >= 0 ? "text-success" : "text-danger";
+                                    string postGrowthIcon = postGrowth >= 0 ? "fas fa-arrow-up" : "fas fa-arrow-down";
+                                }
+                                <span class="@postGrowthClass small pt-1 fw-bold d-inline-block">
+                                    <i class="@postGrowthIcon small"></i> @postGrowth.ToString("N1")%
+                                </span>
+                                <span class="text-muted small pt-1 ps-1">so với trước</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Reports Card -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card info-card shadow-sm h-100">
+                    <div class="card-body d-flex flex-column">
+                         <h5 class="card-title text-secondary fw-normal">Báo cáo chờ xử lý <span class="small text-muted">| Hiện tại</span></h5>
+                        <div class="d-flex align-items-center flex-grow-1 mt-2">
+                             <div class="card-icon bg-danger-light d-flex align-items-center justify-content-center">
+                                <i class="fas fa-flag text-danger"></i>
+                            </div>
+                            <div class="ps-3">
+                                <h6 class="fs-4 fw-bold mb-1">@(ViewBag.PendingReports?.ToString("N0", CultureInfo.InvariantCulture) ?? "0")</h6>
+                                @{ int newReports = ViewBag.NewPendingReportsThisMonth ?? 0; }
+                                @if (newReports > 0)
+                                {
+                                    <span class="text-primary small pt-1 fw-bold d-inline-block">@newReports</span>
+                                    <span class="text-muted small pt-1 ps-1">mới tháng này</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small pt-1 d-block">Không có báo cáo mới</span> @* d-block for alignment *@
+                                }
+                            </div>
+                        </div>
+                        @* Link removed for now as AdminManagement controller is not provided
+                           <a asp-action="PendingReports" asp-controller="AdminManagement" class="btn btn-link btn-sm mt-auto align-self-start p-0 text-decoration-none">Xem chi tiết <i class="fas fa-arrow-right small"></i></a>
+                        *@
+                         <span class="mt-auto align-self-start p-0 text-muted small"> (Xem chi tiết trong quản lý)</span>
+                    </div>
+                </div>
+            </div>
+        </div><!-- End Row Stats Cards -->
+
+        <!-- Row 2: User Growth Chart and Recent Activity -->
+        <div class="row mt-4 gy-4">
+            <!-- User Growth Chart -->
+            <div class="col-lg-8">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center bg-light border-bottom py-3">
+                        <h6 class="m-0 fw-bold text-primary">Tăng trưởng người dùng</h6>
+                        <div class="filter dropstart">
+                            <a class="icon text-secondary" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="Lọc">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow shadow-sm">
+                                <li class="dropdown-header text-start"><h6>Lọc theo</h6></li>
+                                <li><button class="dropdown-item" type="button" onclick="loadUserGrowthData('week')">Tuần này</button></li>
+                                <li><button class="dropdown-item" type="button" onclick="loadUserGrowthData('month')">Tháng này</button></li>
+                                <li><button class="dropdown-item" type="button" onclick="loadUserGrowthData('year')">Năm này</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body chart-card-body"> @* Added class *@
+                        <div class="chart-container-wrapper"> @* Wrapper for canvas and overlay *@
+                            <canvas id="userGrowthChart"></canvas>
+                            <div id="userGrowthChartLoading" class="chart-overlay-message"> @* Show loading initially *@
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Đang tải biểu đồ...</span>
+                                </div>
+                                <p class="mt-2 mb-0 text-muted">Đang tải dữ liệu...</p>
+                            </div>
+                            <div id="userGrowthChartError" class="alert alert-warning chart-overlay-message" style="display: none;">
+                                <i class="fas fa-exclamation-triangle me-1"></i>
+                                <span class="alert-message">Lỗi tải dữ liệu.</span> @* Span for message replacement *@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity Feed -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header d-flex justify-content-between align-items-center bg-light border-bottom py-3">
+                         <h6 class="m-0 fw-bold text-primary">Hoạt động gần đây</h6>
+                         <button class="btn btn-sm btn-link text-secondary p-0" onclick="loadRecentActivity()" title="Tải lại">
+                             <i class="fas fa-sync-alt"></i>
+                         </button>
+                     </div>
+                    <div class="card-body p-3"> @* Adjusted padding *@
+                        <div id="recentActivityListContainer" class="activity">
+                             <div id="recentActivityLoading" class="text-center p-3"> @* Show loading initially *@
+                                <div class="spinner-border text-primary spinner-border-sm" role="status">
+                                    <span class="visually-hidden">Đang tải hoạt động...</span>
+                                </div>
+                            </div>
+                            <div id="recentActivityError" class="alert alert-warning text-center mt-3" style="display: none;">
+                                 <i class="fas fa-exclamation-triangle me-1"></i>
+                                 <span class="alert-message">Lỗi tải dữ liệu.</span>
+                             </div>
+                            @* Activity items will be loaded here by JS *@
+                             <div class="text-center text-muted p-3 no-activity-message" style="display: none;">Không có hoạt động nào gần đây.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- End Row User Growth and Activity -->
+
+        <!-- Row 3: Job Distribution Charts -->
+        <div class="row mt-4 gy-4 mb-4">
+             <!-- Job Distribution by Industry -->
+            <div class="col-lg-6"> @* Adjusted column width *@
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-light border-bottom py-3">
+                        <h6 class="m-0 fw-bold text-primary">Phân bổ việc làm theo ngành (Đã duyệt)</h6>
+                     </div>
+                     <div class="card-body chart-card-body"> @* Added class *@
+                         <div class="doughnut-chart-container-wrapper"> @* Wrapper *@
+                            <canvas id="jobsByIndustryChart"></canvas>
+                            <div id="jobsByIndustryLoading" class="chart-overlay-message"> @* Show loading initially *@
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Đang tải biểu đồ...</span>
+                                </div>
+                                <p class="mt-2 mb-0 text-muted">Đang tải dữ liệu...</p>
+                            </div>
+                            <div id="jobsByIndustryError" class="alert alert-warning chart-overlay-message" style="display: none;">
+                                 <i class="fas fa-exclamation-triangle me-1"></i>
+                                 <span class="alert-message">Lỗi tải dữ liệu.</span>
+                             </div>
+                              <div class="text-center text-muted chart-overlay-message no-data-message" style="display: none;">Không có dữ liệu để hiển thị.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             <!-- NEW: Job Posting Status Distribution -->
+            <div class="col-lg-6"> @* Adjusted column width *@
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-light border-bottom py-3">
+                        <h6 class="m-0 fw-bold text-primary">Phân bổ trạng thái tin đăng</h6>
+                    </div>
+                    <div class="card-body chart-card-body"> @* Added class *@
+                        <div class="doughnut-chart-container-wrapper"> @* Wrapper *@
+                            <canvas id="jobStatusChart"></canvas> @* New Canvas ID *@
+                            <div id="jobStatusChartLoading" class="chart-overlay-message"> @* Show loading initially *@
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Đang tải biểu đồ...</span>
+                                </div>
+                                 <p class="mt-2 mb-0 text-muted">Đang tải dữ liệu...</p>
+                            </div>
+                            <div id="jobStatusChartError" class="alert alert-warning chart-overlay-message" style="display: none;">
+                                <i class="fas fa-exclamation-triangle me-1"></i>
+                                <span class="alert-message">Lỗi tải dữ liệu.</span>
+                             </div>
+                             <div class="text-center text-muted chart-overlay-message no-data-message" style="display: none;">Không có dữ liệu để hiển thị.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- End Row Job Distribution -->
+
+        @* --- REMOVED Monthly Goals Section --- *@
+
+    } @* End of else block (no initial error message) *@
+</div>
+
+@section Scripts {
+    @* Include Chart.js (Ensure it's loaded only once, preferably in _Layout) *@
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    @* Include Bootstrap JS Bundle if not already in _Layout *@
+    @* <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> *@
+
+    <script>
+        (function() {
+            "use strict"; // Enable strict mode
+
+            // Chart instances (to allow destroying before redraw)
+            let userGrowthChartInstance = null;
+            let jobsByIndustryChartInstance = null;
+            let jobStatusChartInstance = null; // Added for the new chart
+
+            // --- DOM Element Getter ---
+            const getElement = (id) => document.getElementById(id);
+             // --- DOM Element Selector ---
+             const selectElement = (selector, parent = document) => parent.querySelector(selector);
+             const selectAllElements = (selector, parent = document) => parent.querySelectorAll(selector);
+
+
+            // --- Utility: Show/Hide Element and Set Message ---
+            function displayOverlayMessage(containerId, type, show = true, message = null) {
+                const container = getElement(containerId);
+                if (!container) {
+                    console.warn(`Container element with ID '${containerId}' not found for overlay message.`);
+                    return;
+                }
+
+                // Find the specific overlay element (loading, error, no-data)
+                const overlayId = containerId + (type.charAt(0).toUpperCase() + type.slice(1)); // e.g., userGrowthChartLoading
+                const overlayElement = getElement(overlayId);
+
+                if (overlayElement) {
+                     overlayElement.style.display = show ? 'block' : 'none';
+                    if (show && message) {
+                        // Try to find a specific message span inside, otherwise set textContent
+                        const messageSpan = overlayElement.querySelector('.alert-message') || overlayElement.querySelector('p');
+                        if (messageSpan) {
+                            messageSpan.textContent = message;
+                        } else if (overlayElement.classList.contains('alert')) {
+                             // Basic fallback for alert without specific span
+                             overlayElement.textContent = message; // May lose icon
+                        }
+                    }
+                 } else {
+                     console.warn(`Overlay element with ID '${overlayId}' not found inside '${containerId}'.`);
+                 }
+
+                 // Hide other overlays in the same container when showing one
+                 if (show) {
+                     const allOverlays = selectAllElements('.chart-overlay-message', container.closest('.card-body') || container);
+                     allOverlays.forEach(overlay => {
+                         if (overlay.id !== overlayId) {
+                             overlay.style.display = 'none';
+                         }
+                     });
+                 }
+            }
+
+
+             // --- Utility: Fetch Data with Error Handling ---
+             async function fetchData(url, options = {}) {
+                console.log(`Fetching: ${url}`); // Log fetch attempts
+                 try {
+                     const response = await fetch(url, options);
+                     if (!response.ok) {
+                         let errorMsg = `Lỗi HTTP: ${response.status} (${response.statusText})`;
+                         try {
+                             const errorData = await response.json();
+                             errorMsg = errorData.message || errorData.title || errorMsg;
+                         } catch (e) { /* Ignore if response is not JSON */ }
+                         console.error(`Fetch failed for ${url}: ${errorMsg}`);
+                         throw new Error(errorMsg);
+                     }
+                     const contentType = response.headers.get("content-type");
+                      if (contentType && contentType.includes("application/json")) {
+                          const data = await response.json();
+                           // console.debug(`Data received from ${url}:`, JSON.stringify(data).substring(0, 500) + '...'); // Log snippet
+                           console.debug(`Data received from ${url}. Items: ${Array.isArray(data) ? data.length : (data.labels ? data.labels.length : 'N/A')}`);
+                          return data;
+                      } else {
+                          const textData = await response.text();
+                          console.warn(`Response from ${url} is not JSON (${contentType}). Content:`, textData.substring(0, 100) + '...');
+                          throw new Error(`Máy chủ trả về dữ liệu không phải JSON (Content-Type: ${contentType})`);
+                      }
+                 } catch (error) {
+                     console.error(`Fetch error from ${url}:`, error);
+                     throw error; // Re-throw for specific handlers
+                 }
+             }
+
+            // --- General Chart Rendering Options ---
+            const commonDoughnutOptions = {
+                 responsive: true,
+                 maintainAspectRatio: false, // Important for wrapper sizing
+                 plugins: {
+                     legend: {
+                         position: 'bottom',
+                         labels: { padding: 15, boxWidth: 12, font: { size: 11 } }
+                     },
+                     tooltip: {
+                         backgroundColor: "rgb(255,255,255)",
+                         bodyColor: "#858796", // Changed from bodyFontColor
+                         borderColor: '#dddfeb',
+                         borderWidth: 1,
+                         padding: 10,
+                         displayColors: true, // Show color box
+                         callbacks: {
+                             label: function(context) {
+                                 let label = context.label || '';
+                                 if (label) label += ': ';
+                                 if (context.parsed !== null) {
+                                     // Ensure data exists before reducing
+                                     const datasetData = context.chart.data.datasets[0]?.data;
+                                     if (datasetData && Array.isArray(datasetData)) {
+                                         const total = datasetData.reduce((a, b) => (a || 0) + (b || 0), 0);
+                                         const percentage = total > 0 ? Math.round((context.parsed / total) * 100) : 0;
+                                         label += `${context.formattedValue} (${percentage}%)`;
+                                     } else {
+                                         label += context.formattedValue; // Fallback if data is weird
+                                     }
+                                 }
+                                 return label;
+                             }
+                         }
+                     }
+                 },
+                 cutout: '70%' // Adjust for doughnut thickness
+             };
+             const commonLineOptions = {
+                 responsive: true,
+                 maintainAspectRatio: false, // Important for wrapper sizing
+                 scales: {
+                     y: {
+                         beginAtZero: true,
+                         ticks: {
+                            precision: 0, // Ensure whole numbers on Y-axis
+                            callback: function(value) { // Only show integer ticks
+                                if (Math.floor(value) === value) { return value; }
+                            }
+                          }
+                     },
+                     x: {
+                        grid: { display: false },
+                        ticks: {
+                             autoSkip: true, // Allow Chart.js to skip labels if too crowded
+                             maxRotation: 0, // Prevent rotation if possible
+                             minRotation: 0
+                        }
+                     }
+                 },
+                 interaction: { intersect: false, mode: 'index' },
+                 plugins: {
+                    legend: { position: 'top', labels: { boxWidth: 12, padding: 15 } },
+                    tooltip: { // Similar tooltip style as doughnut
+                         backgroundColor: "rgb(255,255,255)",
+                         bodyColor: "#858796",
+                         titleColor: "#6e707e", // Title color
+                         borderColor: '#dddfeb',
+                         borderWidth: 1,
+                         padding: 10,
+                         displayColors: true, // Show color boxes
+                         mode: 'index', // Show tooltip for all datasets at that index
+                         intersect: false
+                     }
+                 },
+                 elements: { line: { tension: 0.3 } } // Slightly curved lines
+             };
+
+            // --- User Growth Chart Logic ---
+            async function loadUserGrowthData(period = 'week') {
+                const chartId = 'userGrowthChart';
+                const chartCanvas = getElement(chartId);
+                if (!chartCanvas) { console.error(`Canvas element '${chartId}' not found.`); return; }
+
+                displayOverlayMessage(chartId, 'error', false);
+                displayOverlayMessage(chartId, 'no-data', false); // Ensure no-data is hidden
+                displayOverlayMessage(chartId, 'loading', true);
+                if (userGrowthChartInstance) {
+                    userGrowthChartInstance.destroy();
+                    userGrowthChartInstance = null;
+                    console.log("Previous User Growth chart destroyed.");
+                }
+
+                try {
+                    const data = await fetchData(`/admin/dashboard/user-growth-data?period=${period}`);
+                    if (!data || !data.labels || data.labels.length === 0) {
+                        console.warn("User Growth: No data received or empty labels.");
+                        displayOverlayMessage(chartId, 'no-data', true, "Không có dữ liệu tăng trưởng người dùng trong khoảng thời gian này.");
+                    } else {
+                        renderUserGrowthChart(chartCanvas, data);
+                    }
+                } catch (error) {
+                    console.error("Error loading/rendering User Growth chart:", error);
+                    displayOverlayMessage(chartId, 'error', true, `Lỗi tải dữ liệu: ${error.message}`);
+                } finally {
+                    displayOverlayMessage(chartId, 'loading', false);
+                }
+            }
+
+            function renderUserGrowthChart(canvasElement, chartData) {
+                 const ctx = canvasElement.getContext('2d');
+                 userGrowthChartInstance = new Chart(ctx, { type: 'line', data: chartData, options: commonLineOptions });
+                 console.log("User Growth chart rendered.");
+             }
+
+            // --- Recent Activity Logic ---
+            async function loadRecentActivity() {
+                const containerId = 'recentActivityListContainer';
+                const listContainer = getElement(containerId);
+                if (!listContainer) { console.error(`Activity container '${containerId}' not found.`); return; }
+
+                const loadingElement = selectElement('#recentActivityLoading', listContainer.parentNode); // Find loading in parent card-body
+                const errorElement = selectElement('#recentActivityError', listContainer.parentNode);
+                const noActivityMessage = selectElement('.no-activity-message', listContainer);
+
+                if (errorElement) errorElement.style.display = 'none';
+                if (noActivityMessage) noActivityMessage.style.display = 'none';
+                if (loadingElement) loadingElement.style.display = 'block';
+
+                // Clear previous items directly in the container
+                listContainer.innerHTML = '';
+
+                try {
+                    const activities = await fetchData(`/admin/dashboard/recent-activity?count=7`);
+                    renderRecentActivity(listContainer, activities);
+                     if (errorElement) errorElement.style.display = 'none'; // Hide error on success
+                } catch (error) {
+                    console.error("Error loading/rendering Recent Activity:", error);
+                     if (errorElement) {
+                        const msgSpan = errorElement.querySelector('.alert-message');
+                        if(msgSpan) msgSpan.textContent = `Lỗi tải hoạt động: ${error.message}`;
+                        errorElement.style.display = 'block';
+                    }
+                } finally {
+                    if (loadingElement) loadingElement.style.display = 'none';
+                }
+            }
+
+            function renderRecentActivity(listContainer, activities) {
+                 if (!Array.isArray(activities)) {
+                      console.error("Dữ liệu hoạt động không hợp lệ:", activities);
+                      listContainer.innerHTML = '<div class="alert alert-danger">Dữ liệu hoạt động nhận được không hợp lệ.</div>';
+                      return;
+                  }
+                  const noActivityMessage = selectElement('.no-activity-message', listContainer.parentNode); // Check sibling
+
+                  if (activities.length === 0) {
+                      listContainer.innerHTML = ''; // Clear just in case
+                      if (noActivityMessage) noActivityMessage.style.display = 'block';
+                      return;
+                  } else {
+                     if (noActivityMessage) noActivityMessage.style.display = 'none';
+                  }
+
+                  let html = '';
+                  activities.forEach(act => {
+                      // Determine badge color based on activity type keywords
+                      let badgeClass = 'bg-secondary'; // Default
+                      const typeLower = act.type?.toLowerCase() || '';
+
+                       if (typeLower.includes("ứng viên mới")) badgeClass = 'bg-primary';
+                       else if (typeLower.includes("doanh nghiệp mới")) badgeClass = 'bg-info';
+                       else if (typeLower.includes("chờ duyệt")) badgeClass = 'bg-warning text-dark';
+                       else if (typeLower.includes("đã duyệt")) badgeClass = 'bg-success'; // Changed approved to success
+                       else if (typeLower.includes("bị từ chối") || typeLower.includes("đã xóa")) badgeClass = 'bg-danger';
+                       else if (typeLower.includes("hết hạn") || typeLower.includes("tạm ẩn")) badgeClass = 'bg-secondary';
+                       else if (typeLower.includes("đã tuyển")) badgeClass = 'bg-primary'; // Maybe another color? Reusing primary
+                       else if (typeLower.includes("báo cáo")) badgeClass = 'bg-danger';
+                       else if (typeLower.includes("bài đăng") || typeLower.includes("cập nhật")) badgeClass = 'bg-info'; // General post update
+
+
+                      // Basic HTML escaping (replace with a library for production)
+                      const escapeHtml = (unsafe) => {
+                          if (!unsafe) return '';
+                          return unsafe
+                               .replace(/&/g, "&amp;")
+                               .replace(/</g, "&lt;")
+                               .replace(/>/g, "&gt;")
+                               .replace(/"/g, "&quot;")
+                               .replace(/'/g, "&#039;");
+                      }
+                      const safeDescription = escapeHtml(act.description) || '(Không có mô tả)';
+                      const safeType = escapeHtml(act.type) || 'Thông báo';
+                      const safeRelativeTime = escapeHtml(act.relativeTime) || '';
+                      const safeIcon = escapeHtml(act.icon) || 'fas fa-info-circle'; // Fallback icon
+
+                      html += `
+                          <div class="activity-item d-flex">
+                              <div class="activite-label" title="${escapeHtml(act.timestamp)}">${safeRelativeTime}</div>
+                              <i class='activity-badge ${badgeClass} text-white ${safeIcon}'></i>
+                              <div class="activity-content">
+                                  <strong>${safeType}:</strong> ${safeDescription}
+                              </div>
+                          </div>`;
+                  });
+                  listContainer.innerHTML = html; // Replace content
+                   console.log("Recent activity list rendered.");
+            }
+
+            // --- Jobs by Industry Chart Logic ---
+            async function loadJobsByIndustry() {
+                const chartId = 'jobsByIndustryChart';
+                const chartCanvas = getElement(chartId);
+                 if (!chartCanvas) { console.error(`Canvas element '${chartId}' not found.`); return; }
+
+                displayOverlayMessage(chartId, 'error', false);
+                displayOverlayMessage(chartId, 'no-data', false);
+                displayOverlayMessage(chartId, 'loading', true);
+                if (jobsByIndustryChartInstance) {
+                    jobsByIndustryChartInstance.destroy();
+                    jobsByIndustryChartInstance = null;
+                    console.log("Previous Jobs By Industry chart destroyed.");
+                }
+
+                try {
+                    // Get top 6 + Other makes 7 max slices, adjust topN if needed
+                    const data = await fetchData(`/admin/dashboard/jobs-by-industry?topN=6`);
+                     if (!data || !data.labels || data.labels.length === 0) {
+                        console.warn("Jobs By Industry: No data received or empty labels.");
+                         displayOverlayMessage(chartId, 'no-data', true, "Không có dữ liệu phân bổ ngành để hiển thị.");
+                    } else {
+                        renderJobsByIndustryChart(chartCanvas, data);
+                    }
+                } catch (error) {
+                    console.error("Error loading/rendering Jobs By Industry chart:", error);
+                    displayOverlayMessage(chartId, 'error', true, `Lỗi tải dữ liệu: ${error.message}`);
+                } finally {
+                    displayOverlayMessage(chartId, 'loading', false);
+                }
+            }
+
+            function renderJobsByIndustryChart(canvasElement, chartData) {
+                 const ctx = canvasElement.getContext('2d');
+                 jobsByIndustryChartInstance = new Chart(ctx, { type: 'doughnut', data: chartData, options: commonDoughnutOptions });
+                  console.log("Jobs By Industry chart rendered.");
+            }
+
+            // --- Job Status Distribution Chart Logic (NEW) ---
+             async function loadJobStatusChart() {
+                const chartId = 'jobStatusChart'; // Use the new ID
+                const chartCanvas = getElement(chartId);
+                 if (!chartCanvas) { console.error(`Canvas element '${chartId}' not found.`); return; }
+
+                 displayOverlayMessage(chartId, 'error', false);
+                 displayOverlayMessage(chartId, 'no-data', false);
+                 displayOverlayMessage(chartId, 'loading', true);
+                if (jobStatusChartInstance) {
+                    jobStatusChartInstance.destroy();
+                    jobStatusChartInstance = null;
+                     console.log("Previous Job Status chart destroyed.");
+                }
+
+                try {
+                    const data = await fetchData(`/admin/dashboard/job-status-distribution`); // Use the new endpoint
+                    if (!data || !data.labels || data.labels.length === 0) {
+                        console.warn("Job Status: No data received or empty labels.");
+                        displayOverlayMessage(chartId, 'no-data', true, "Không có dữ liệu trạng thái tin đăng để hiển thị.");
+                    } else {
+                        renderJobStatusChart(chartCanvas, data);
+                    }
+                } catch (error) {
+                     console.error("Error loading/rendering Job Status chart:", error);
+                    displayOverlayMessage(chartId, 'error', true, `Lỗi tải dữ liệu: ${error.message}`);
+                } finally {
+                    displayOverlayMessage(chartId, 'loading', false);
+                }
+            }
+
+            function renderJobStatusChart(canvasElement, chartData) {
+                 const ctx = canvasElement.getContext('2d');
+                 jobStatusChartInstance = new Chart(ctx, { type: 'doughnut', data: chartData, options: commonDoughnutOptions });
+                 console.log("Job Status chart rendered.");
+             }
+
+            // --- REMOVED Monthly Goals Logic ---
+
+            // --- Add Event Listeners and Initial Load ---
+            // Make load functions globally accessible for onclick handlers
+            window.loadUserGrowthData = loadUserGrowthData;
+            window.loadRecentActivity = loadRecentActivity;
+             // No need to expose loadJobsByIndustry or loadJobStatusChart unless triggered manually
+
+            // Initial data load when the DOM is ready
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log("Admin Dashboard DOMContentLoaded - Loading initial data...");
+                loadUserGrowthData('week'); // Default to weekly view
+                loadRecentActivity();
+                loadJobsByIndustry();
+                loadJobStatusChart(); // Load the new chart
+                // loadMonthlyGoals(); // REMOVED Call
+                console.log("Initial data load triggered.");
+            });
+
+        })(); // Immediately Invoked Function Expression (IIFE)
+    </script>
+}

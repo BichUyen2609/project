@@ -1,0 +1,32 @@
+@* File: Views/TuyenDungCaNhan/Index.cshtml *@
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Nhà tuyển dụng cá nhân";
+    var hoTen = ViewBag.HoTenNguoiDung ?? "Bạn";
+    var dangLaNTD = HttpContextAccessor.HttpContext?.Session.GetInt32("DangLaNTD") == 1;
+}
+
+@if(dangLaNTD)
+{
+    <h2>@ViewData["Title"]</h2>
+    <hr />
+    <p>Chào mừng, <strong>@hoTen</strong>!</p>
+
+    <p>Đây là trang quản lý dành cho Nhà tuyển dụng cá nhân.</p>
+
+    <p>
+        @* Các link này sẽ chưa hoạt động nếu Action chưa được tạo *@
+        <a asp-action="DangTin" asp-controller="TuyenDungCaNhan">Đăng Tin Mới</a> |
+        <a asp-action="QuanLyTinDang" asp-controller="TuyenDungCaNhan">Quản Lý Tin Đăng</a> |
+        <a asp-action="QuanLyUngVien" asp-controller="TuyenDungCaNhan">Quản Lý Ứng Viên</a>
+    </p>
+}
+else
+{
+     <p>Bạn đang ở chế độ xem của Ứng viên.</p>
+     <form asp-controller="TaiKhoan" asp-action="ChuyenDoiVaiTro" method="post">
+         @Html.AntiForgeryToken()
+         <button type="submit">Chuyển sang Nhà tuyển dụng</button>
+     </form>
+}

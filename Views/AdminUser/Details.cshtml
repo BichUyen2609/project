@@ -1,0 +1,526 @@
+@* File: Views/AdminUser/Details.cshtml *@
+
+@* *** SỬ DỤNG VIEWMODEL MỚI ĐỂ CHỨA DỮ LIỆU PHỨC TẠP HƠN *** *@
+@model HeThongTimViec.ViewModels.Admin.AdminUserDetailsViewModel
+@using HeThongTimViec.Controllers 
+@using HeThongTimViec.Models     
+
+@{
+    ViewData["Title"] = $"Chi tiết người dùng: {(Model.User?.HoTen ?? "Không rõ")}";
+    Layout = "_LayoutAdmin"; // Đảm bảo đường dẫn Layout admin đúng
+
+    // Lấy thông tin hiển thị trạng thái, vai trò (chỉ khi Model.User không null)
+    var statusInfo = (Model.User != null) ? AdminUserController.GetTrangThaiDisplay(Model.User.TrangThaiTk) : ("Không rõ", "badge bg-light");
+    var roleText = (Model.User != null) ? AdminUserController.GetVaiTroDisplay(Model.User.LoaiTk) : "Không rõ";
+
+    // Tạo chữ cái đầu cho avatar dự phòng
+    var initials = "?";
+    if (Model.User != null && !string.IsNullOrWhiteSpace(Model.User.HoTen)) {
+        var nameParts = Model.User.HoTen.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList();
+        initials = nameParts.Count > 0 ? nameParts.Last()[0].ToString().ToUpper() : "?";
+        // Nếu muốn 2 chữ cái:
+        // if (nameParts.Count > 1) initials = $"{nameParts[0][0]}{nameParts.Last()[0]}".ToUpper();
+        // else if (nameParts.Count == 1) initials = $"{nameParts[0][0]}".ToUpper();
+    }
+
+    // Kiểm tra trạng thái xác minh doanh nghiệp (nếu là NTD)
+    bool? isBusinessVerified = (Model.User?.LoaiTk == LoaiTaiKhoan.doanhnghiep) ? Model.User.HoSoDoanhNghiep?.DaXacMinh : null;
+}
+
+<style>
+    .details-card dd { margin-bottom: 0.75rem; font-weight: 500; color: #5a5c69; }
+    .details-card dt { color: #858796; font-weight: normal; }
+    .avatar-lg { width: 80px; height: 80px; border-radius: 50%; background-color: #4e73df; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 2rem; text-transform: uppercase; margin: 0 auto 1rem auto; }
+    .profile-header { text-align: center; margin-bottom: 1.5rem; }
+    .profile-header h4 { margin-bottom: 0.2rem; }
+    .profile-header .text-muted { font-size: 0.9rem; }
+    .verification-status { font-size: 0.85rem; margin-top: 0.3rem; }
+    /* Style cho tab hoạt động */
+    .activity-list .list-group-item { border-left: 3px solid #4e73df; padding-left: 1.5rem; position: relative; border-radius: 0;}
+    .activity-list .list-group-item::before { content: ''; position: absolute; left: -6px; top: 50%; transform: translateY(-50%); width: 10px; height: 10px; background-color: #4e73df; border-radius: 50%; }
+    .activity-list .list-group-item .activity-icon { margin-right: 0.75rem; font-size: 1.1rem; min-width: 20px; text-align: center; }
+    .activity-list small { font-size: 0.8em; }
+    /* Style cho table trong tabs */
+    .tab-pane table { font-size: 0.9rem; }
+    .tab-pane thead th { background-color: #f8f9fc; }
+</style>
+
+<div class="container-fluid mt-4">
+    <h1 class="h3 mb-2 text-gray-800">@ViewData["Title"]</h1>
+    <p class="mb-4">Xem thông tin chi tiết, hoạt động, công việc và báo cáo liên quan đến người dùng.</p>
+
+    @if (Model.User == null) // Kiểm tra User trong ViewModel
+    {
+        <div class="alert alert-warning">Không tìm thấy thông tin người dùng hoặc người dùng không hợp lệ.</div>
+        <a asp-controller="AdminUser" asp-action="Index" class="btn btn-secondary btn-sm">
+            <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
+        </a>
+    }
+    else
+    {
+        <div class="row">
+            <!-- Cột trái: Thông tin cơ bản & Ảnh đại diện -->
+            <div class="col-lg-4 mb-4">
+                <div class="card shadow h-100">
+                    <div class="card-body">
+                         <div class="profile-header">
+                            <div class="avatar-lg" title="@Model.User.HoTen">@initials</div>
+                            <h4>@Model.User.HoTen</h4>
+                            <p class="text-muted mb-1"><i class="fas fa-user-tag me-1"></i>@roleText</p>
+                            <span class="@statusInfo.Item2">@statusInfo.Item1</span>
+
+                            @* Hiển thị trạng thái xác minh DN nếu là NTD *@
+                            @if(isBusinessVerified.HasValue)
+                            {
+                                if(isBusinessVerified.Value)
+                                {
+                                    <p class="verification-status text-success fw-bold"><i class="fas fa-check-circle me-1"></i>Đã xác minh doanh nghiệp</p>
+                                }
+                                else
+                                {
+                                     <p class="verification-status text-warning fw-bold"><i class="fas fa-hourglass-half me-1"></i>Chưa xác minh doanh nghiệp</p>
+                                }
+                            }
+                        </div>
+                        <dl class="row details-card mb-0">
+                            <dt class="col-sm-5">ID:</dt>
+                            <dd class="col-sm-7">@Model.User.Id</dd>
+
+                            <dt class="col-sm-5">Email:</dt>
+                            <dd class="col-sm-7"><a href="mailto:@Model.User.Email">@Model.User.Email</a></dd>
+
+                            <dt class="col-sm-5">Điện thoại:</dt>
+                            <dd class="col-sm-7">@(Model.User.Sdt ?? "Chưa cập nhật")</dd>
+
+                            <dt class="col-sm-5">Tham gia:</dt>
+                            <dd class="col-sm-7">@Model.User.NgayTao.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</dd>
+
+                            <dt class="col-sm-5">Cập nhật:</dt>
+                            <dd class="col-sm-7">@Model.User.NgayCapNhat.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</dd>
+
+                             <dt class="col-sm-5">Đăng nhập cuối:</dt>
+                            <dd class="col-sm-7">@(Model.User.LanDangNhapCuoi?.ToLocalTime().ToString("dd/MM/yyyy HH:mm") ?? "Chưa đăng nhập")</dd>
+                        </dl>
+                    </div>
+                     <div class="card-footer bg-light d-flex justify-content-center flex-wrap gap-2">
+                        @* == CÁC NÚT HÀNH ĐỘNG == *@
+
+                        @* --- Nút Chỉnh sửa --- *@
+                        @if (Model.User.LoaiTk != LoaiTaiKhoan.quantrivien)
+                        {
+                             <a asp-controller="AdminUser" asp-action="Edit" asp-route-id="@Model.User.Id" class="btn btn-warning btn-sm" title="Chỉnh sửa thông tin người dùng">
+                                <i class="fas fa-edit me-1"></i> Sửa
+                            </a>
+                        }
+
+                        @* --- Nút Xác minh DN (chỉ hiển thị khi cần) --- *@
+                        @if (Model.User.LoaiTk == LoaiTaiKhoan.doanhnghiep && Model.User.TrangThaiTk == TrangThaiTaiKhoan.choxacminh)
+                        {
+                             <form asp-controller="AdminUser" asp-action="VerifyBusiness" asp-route-userId="@Model.User.Id" method="post" onsubmit="return confirm('Xác minh và kích hoạt doanh nghiệp này?');" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-primary btn-sm" title="Xác minh và kích hoạt tài khoản doanh nghiệp">
+                                    <i class="fas fa-user-check me-1"></i> Xác minh DN
+                                </button>
+                            </form>
+                        }
+                        @* --- Nút Cấm/Kích hoạt lại (không áp dụng cho Admin) --- *@
+                        @if (Model.User.LoaiTk != LoaiTaiKhoan.quantrivien)
+                        {
+                            if (Model.User.TrangThaiTk == TrangThaiTaiKhoan.bidinhchi)
+                            {
+                                <form asp-controller="AdminUser" asp-action="Unban" asp-route-id="@Model.User.Id" method="post" onsubmit="return confirm('Kích hoạt lại người dùng này?');" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-success btn-sm" title="Kích hoạt lại tài khoản">
+                                        <i class="fas fa-check-circle me-1"></i> Kích hoạt lại
+                                    </button>
+                                </form>
+                            }
+                            else if (Model.User.TrangThaiTk != TrangThaiTaiKhoan.choxacminh && Model.User.TrangThaiTk != TrangThaiTaiKhoan.bidinhchi) // Chỉ cấm khi không chờ xác minh và chưa bị cấm
+                            {
+                                 <form asp-controller="AdminUser" asp-action="Ban" asp-route-id="@Model.User.Id" method="post" onsubmit="return confirm('Cấm (Đình chỉ) người dùng này?');" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-danger btn-sm" title="Đình chỉ tài khoản">
+                                        <i class="fas fa-ban me-1"></i> Cấm
+                                    </button>
+                                </form>
+                            }
+                             @* --- Nút Đặt lại mật khẩu (Tùy chọn - Cần Action Controller) --- *@
+                             @*
+                             <form asp-controller="AdminUser" asp-action="InitiatePasswordReset" asp-route-userId="@Model.User.Id" method="post" onsubmit="return confirm('Gửi yêu cầu đặt lại mật khẩu cho người dùng này?');" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-secondary btn-sm" title="Gửi yêu cầu đặt lại mật khẩu">
+                                    <i class="fas fa-key me-1"></i> Reset MK
+                                </button>
+                             </form>
+                             *@
+
+                             @* --- Nút Xóa (CẨN THẬN - Hiện đang disabled) --- *@
+                             @*
+                             <form asp-controller="AdminUser" asp-action="DeleteConfirmed" asp-route-id="@Model.User.Id" method="post" onsubmit="return confirm('CẢNH BÁO NGHIÊM TRỌNG:\nXóa vĩnh viễn người dùng này?\nHành động này KHÔNG THỂ HOÀN TÁC.');" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-outline-danger btn-sm disabled" title="Xóa vĩnh viễn (Đang tắt)">
+                                    <i class="fas fa-trash-alt me-1"></i> Xóa
+                                </button>
+                            </form>
+                            *@
+                         }
+                    </div>
+                </div>
+            </div>
+
+             <!-- Cột phải: Các Tab chức năng -->
+            <div class="col-lg-8">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Chi tiết & Hoạt động</h6>
+                         <a asp-controller="AdminUser" asp-action="Index" class="btn btn-secondary btn-sm">
+                             <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
+                         </a>
+                    </div>
+                    <div class="card-body">
+                        <!-- Nav Tabs -->
+                         <ul class="nav nav-tabs" id="userTabs" role="tablist">
+                             <li class="nav-item" role="presentation">
+                                 <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="true"><i class="fas fa-info-circle me-1"></i>Thông tin</button>
+                             </li>
+                             <li class="nav-item" role="presentation">
+                                 <button class="nav-link" id="activity-tab" data-bs-toggle="tab" data-bs-target="#activity" type="button" role="tab" aria-controls="activity" aria-selected="false"><i class="fas fa-history me-1"></i>Hoạt động</button>
+                             </li>
+                             <li class="nav-item" role="presentation">
+                                 <button class="nav-link" id="jobs-tab" data-bs-toggle="tab" data-bs-target="#jobs" type="button" role="tab" aria-controls="jobs" aria-selected="false"><i class="fas fa-briefcase me-1"></i>Việc làm</button>
+                             </li>
+                              <li class="nav-item" role="presentation">
+                                 <button class="nav-link" id="reports-tab" data-bs-toggle="tab" data-bs-target="#reports" type="button" role="tab" aria-controls="reports" aria-selected="false"><i class="fas fa-flag me-1"></i>Báo cáo</button>
+                             </li>
+                         </ul>
+
+                         <!-- Tab Content -->
+                         <div class="tab-content pt-3" id="userTabsContent">
+                             <!-- 1. Tab Thông tin chi tiết -->
+                             <div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
+                                 <h5>Thông tin bổ sung</h5>
+                                 <hr class="mt-1 mb-3">
+                                 <dl class="row details-card">
+                                    <dt class="col-sm-4">Giới tính:</dt>
+                                    <dd class="col-sm-8">@(Model.User.GioiTinh.HasValue ? (Model.User.GioiTinh == GioiTinhNguoiDung.nam ? "Nam" : "Nữ") : "Chưa cập nhật")</dd>
+
+                                    <dt class="col-sm-4">Ngày sinh:</dt>
+                                    <dd class="col-sm-8">@(Model.User.NgaySinh?.ToString("dd/MM/yyyy") ?? "Chưa cập nhật")</dd>
+
+                                    <dt class="col-sm-4">Tỉnh/Thành phố:</dt>
+                                    <dd class="col-sm-8">@(Model.User.ThanhPho?.Ten ?? "Chưa cập nhật")</dd>
+
+                                    <dt class="col-sm-4">Quận/Huyện:</dt>
+                                    <dd class="col-sm-8">@(Model.User.QuanHuyen?.Ten ?? "Chưa cập nhật")</dd>
+
+                                     <dt class="col-sm-4">Địa chỉ chi tiết:</dt>
+                                     <dd class="col-sm-8">@(Model.User.DiaChiChiTiet ?? "Chưa cập nhật")</dd>
+                                </dl>
+
+                                <h5 class="mt-4">Hồ sơ liên quan</h5>
+                                <hr class="mt-1 mb-3">
+                                @if (Model.User.LoaiTk == LoaiTaiKhoan.canhan)
+                                {
+                                    if (Model.User.HoSoUngVien != null)
+                                    {
+                                        var hsuv = Model.User.HoSoUngVien;
+                                        <dl class="row details-card">
+                                            <dt class="col-sm-4">Tiêu đề HS:</dt>
+                                            <dd class="col-sm-8">@(hsuv.TieuDeHoSo ?? "Chưa có")</dd>
+                                             <dt class="col-sm-4">Vị trí MM:</dt>
+                                            <dd class="col-sm-8">@(hsuv.ViTriMongMuon ?? "Chưa có")</dd>
+                                            <dt class="col-sm-4">Mức lương MM:</dt>
+                                            <dd class="col-sm-8">@(hsuv.MucLuongMongMuon?.ToString("N0") ?? "Thỏa thuận") (@(hsuv.LoaiLuongMongMuon?.ToString() ?? "N/A"))</dd>
+                                            <dt class="col-sm-4">Trạng thái TV:</dt>
+                                            <dd class="col-sm-8">@hsuv.TrangThaiTimViec</dd>
+                                             <dt class="col-sm-4">Cho phép TK:</dt>
+                                            <dd class="col-sm-8">@(hsuv.ChoPhepTimKiem ? "Có" : "Không")</dd>
+                                             <dt class="col-sm-4">CV:</dt>
+                                            <dd class="col-sm-8">
+                                                @if (!string.IsNullOrEmpty(hsuv.UrlCvMacDinh)) { <a href="@hsuv.UrlCvMacDinh" target="_blank">Xem CV</a> } else { <text>Chưa tải lên</text> }
+                                            </dd>
+                                        </dl>
+                                        @* <a asp-controller="AdminCandidateProfile" asp-action="Details" asp-route-id="@hsuv.Id" class="btn btn-sm btn-outline-primary mt-2">Xem chi tiết Hồ sơ Ứng viên</a> *@
+                                    }
+                                    else { <p class="text-muted">Chưa tạo hồ sơ ứng viên.</p> }
+                                }
+                                else if (Model.User.LoaiTk == LoaiTaiKhoan.doanhnghiep)
+                                {
+                                     if (Model.User.HoSoDoanhNghiep != null)
+                                     {
+                                        var hsdn = Model.User.HoSoDoanhNghiep;
+                                        <dl class="row details-card">
+                                            <dt class="col-sm-4">Tên công ty:</dt>
+                                            <dd class="col-sm-8">@hsdn.TenCongTy</dd>
+                                            <dt class="col-sm-4">Mã số thuế:</dt>
+                                            <dd class="col-sm-8">@(hsdn.MaSoThue ?? "Chưa cập nhật")</dd>
+                                            <dt class="col-sm-4">Website:</dt>
+                                            <dd class="col-sm-8">
+                                                @if (!string.IsNullOrEmpty(hsdn.UrlWebsite)) { <a href="@hsdn.UrlWebsite" target="_blank">@hsdn.UrlWebsite</a> } else { <text>Chưa cập nhật</text> }
+                                            </dd>
+                                             <dt class="col-sm-4">Quy mô:</dt>
+                                            <dd class="col-sm-8">@(hsdn.QuyMoCongTy ?? "Chưa cập nhật")</dd>
+                                            <dt class="col-sm-4">Địa chỉ ĐKKD:</dt>
+                                            <dd class="col-sm-8">@(hsdn.DiaChiDangKy ?? "Chưa cập nhật")</dd>
+                                             <dt class="col-sm-4">Ngày xác minh:</dt>
+                                            <dd class="col-sm-8">@(hsdn.NgayXacMinh?.ToLocalTime().ToString("dd/MM/yyyy HH:mm") ?? (isBusinessVerified == true ? "Đã xác minh" : "Chưa xác minh"))</dd>
+                                             @if(hsdn.AdminXacMinhId.HasValue) {
+                                                <dt class="col-sm-4">Admin xác minh:</dt>
+                                                <dd class="col-sm-8">@(hsdn.AdminXacMinh?.HoTen ?? $"ID: {hsdn.AdminXacMinhId}")</dd>
+                                             }
+                                              <dt class="col-sm-4">Mô tả:</dt>
+                                             <dd class="col-sm-8" style="white-space: pre-wrap;">@(hsdn.MoTa ?? "Chưa cập nhật")</dd>
+                                        </dl>
+                                        @* <a asp-controller="AdminEmployerProfile" asp-action="Details" asp-route-id="@hsdn.Id" class="btn btn-sm btn-outline-info mt-2">Quản lý Hồ sơ Doanh nghiệp</a> *@
+                                     }
+                                     else { <p class="text-danger">Lỗi: Không tìm thấy hồ sơ doanh nghiệp liên kết.</p> }
+                                }
+                                else { <p class="text-muted">Không có hồ sơ liên quan cho loại tài khoản này.</p> }
+                             </div>
+
+                             <!-- 2. Tab Hoạt động -->
+                             <div class="tab-pane fade" id="activity" role="tabpanel" aria-labelledby="activity-tab">
+                                 <h5>Lịch sử hoạt động gần đây</h5>
+                                  <hr class="mt-1 mb-3">
+                                 @if (Model.ActivityLog != null && Model.ActivityLog.Any())
+                                 {
+                                     <ul class="list-group list-group-flush activity-list">
+                                         @foreach (var item in Model.ActivityLog)
+                                         {
+                                             <li class="list-group-item d-flex align-items-center">
+                                                 <i class="@item.IconClass activity-icon text-primary"></i>
+                                                 <div class="ms-1">
+                                                     <div>@item.Description</div>
+                                                     <small class="text-muted">@item.Timestamp.ToLocalTime().ToString("dd/MM/yyyy HH:mm:ss")</small>
+                                                 </div>
+                                                 @if (!string.IsNullOrEmpty(item.Link))
+                                                 {
+                                                     <a href="@item.Link" class="btn btn-sm btn-outline-secondary ms-auto" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+                                                 }
+                                             </li>
+                                         }
+                                     </ul>
+                                 }
+                                 else
+                                 {
+                                     <p class="text-muted">Không có hoạt động nào được ghi nhận.</p>
+                                 }
+                             </div>
+
+                             <!-- 3. Tab Việc làm -->
+                            <div class="tab-pane fade" id="jobs" role="tabpanel" aria-labelledby="jobs-tab">
+                                @if(Model.User.LoaiTk == LoaiTaiKhoan.canhan)
+                                {
+                                    <h5 class="mb-3">Việc làm đã ứng tuyển (@(Model.CandidateApplications?.Count ?? 0))</h5>
+                                    @if (Model.CandidateApplications != null && Model.CandidateApplications.Any())
+                                    {
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-hover">
+                                                <thead><tr><th>Vị trí</th><th>Công ty</th><th>Ngày nộp</th><th>Trạng thái</th><th></th></tr></thead>
+                                                <tbody>
+                                                @foreach (var app in Model.CandidateApplications)
+                                                {
+                                                    <tr>
+                                                        <td>@app.TinTuyenDung?.TieuDe</td>
+                                                        <td>@app.TinTuyenDung?.NguoiDang?.HoSoDoanhNghiep?.TenCongTy ?? "N/A"</td>
+                                                        <td>@app.NgayNop.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+                                                        <td><span class="badge bg-info text-dark">@app.TrangThai.ToString()</span></td>
+                                                        <td>
+                                                            @* Link xem chi tiết tin tuyển dụng (cần action tương ứng, ví dụ AdminJob/Details) *@
+                                                            @* <a asp-controller="AdminJob" asp-action="Details" asp-route-id="@app.TinTuyenDungId" target="_blank" class="btn btn-sm btn-outline-primary" title="Xem tin"><i class="fas fa-eye"></i></a> *@
+                                                        </td>
+                                                    </tr>
+                                                }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    } else { <p class="text-muted">Chưa ứng tuyển việc làm nào.</p> }
+
+                                    <h5 class="mt-4 mb-3">Việc làm đã lưu (@(Model.CandidateSavedJobs?.Count ?? 0))</h5>
+                                     @if (Model.CandidateSavedJobs != null && Model.CandidateSavedJobs.Any())
+                                    {
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-hover">
+                                                <thead><tr><th>Vị trí</th><th>Công ty</th><th>Ngày lưu</th><th></th></tr></thead>
+                                                <tbody>
+                                                @foreach (var saved in Model.CandidateSavedJobs)
+                                                {
+                                                    <tr>
+                                                        <td>@saved.TinTuyenDung?.TieuDe</td>
+                                                        <td>@saved.TinTuyenDung?.NguoiDang?.HoSoDoanhNghiep?.TenCongTy ?? "N/A"</td>
+                                                        <td>@saved.NgayLuu.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+                                                         <td>
+                                                            @* Link xem chi tiết tin tuyển dụng *@
+                                                            @* <a asp-controller="AdminJob" asp-action="Details" asp-route-id="@saved.TinTuyenDungId" target="_blank" class="btn btn-sm btn-outline-primary" title="Xem tin"><i class="fas fa-eye"></i></a> *@
+                                                        </td>
+                                                    </tr>
+                                                }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    } else { <p class="text-muted">Chưa lưu việc làm nào.</p> }
+                                }
+                                else if (Model.User.LoaiTk == LoaiTaiKhoan.doanhnghiep) // Nhà tuyển dụng (doanhnghiep)
+                                {
+                                     <h5 class="mb-3">Việc làm đã đăng (@(Model.EmployerPostedJobs?.Count ?? 0))</h5>
+                                     @if (Model.EmployerPostedJobs != null && Model.EmployerPostedJobs.Any())
+                                    {
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-hover">
+                                                <thead><tr><th>Vị trí</th><th>Ngày đăng</th><th>Hết hạn</th><th>Trạng thái</th><th>Lượt UT</th><th></th></tr></thead>
+                                                <tbody>
+                                                @foreach (var job in Model.EmployerPostedJobs)
+                                                {
+                                                    var jobStatusBadge = "badge bg-secondary";
+                                                    var jobStatusText = job.TrangThai.ToString();
+                                                    switch(job.TrangThai)
+                                                    {
+                                                        case TrangThaiTinTuyenDung.daduyet: jobStatusBadge = "badge bg-success"; break;
+                                                        case TrangThaiTinTuyenDung.choduyet: jobStatusBadge = "badge bg-warning text-dark"; break;
+                                                        case TrangThaiTinTuyenDung.hethan: jobStatusBadge = "badge bg-danger"; break;
+                                                        case TrangThaiTinTuyenDung.bituchoi: jobStatusBadge = "badge bg-danger"; break;
+                                                        // case TrangThaiTinTuyenDung.an: jobStatusBadge = "badge bg-dark"; jobStatusText = "Đã ẩn"; break; // Removed invalid case
+                                                        // Add more cases if needed
+                                                    }
+
+                                                    <tr>
+                                                        <td>@job.TieuDe</td>
+                                                        <td>@job.NgayDang.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+                                                        <td>@(job.NgayHetHan?.ToLocalTime().ToString("dd/MM/yyyy") ?? "-")</td>
+                                                        <td><span class="@jobStatusBadge">@jobStatusText</span></td>
+                                                        <td class="text-center">@(job.UngTuyens?.Count() ?? 0)</td>
+                                                         <td>
+                                                            @* Link đến trang quản lý tin đăng của Admin (cần controller/action tương ứng) *@
+                                                            @* <a asp-controller="AdminJob" asp-action="Details" asp-route-id="@job.Id" class="btn btn-sm btn-outline-primary" title="Xem chi tiết tin"><i class="fas fa-eye"></i></a> *@
+                                                            @* Link đến trang quản lý ứng viên cho tin này (cần controller/action tương ứng) *@
+                                                            @* <a asp-controller="AdminApplication" asp-action="Index" asp-route-jobId="@job.Id" class="btn btn-sm btn-outline-info" title="Xem ứng viên"><i class="fas fa-users"></i></a> *@
+                                                        </td>
+                                                    </tr>
+                                                }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    } else { <p class="text-muted">Chưa đăng tin tuyển dụng nào.</p> }
+                                }
+                                else // Admin
+                                {
+                                     <p class="text-muted">Tài khoản quản trị viên không có hoạt động việc làm liên quan theo cách này.</p>
+                                }
+                            </div>
+
+                            <!-- 4. Tab Báo cáo -->
+                            <div class="tab-pane fade" id="reports" role="tabpanel" aria-labelledby="reports-tab">
+                                 @if(Model.User.LoaiTk == LoaiTaiKhoan.doanhnghiep)
+                                 {
+                                    <h5 class="mb-3">Báo cáo về tin đăng của người dùng này (@(Model.ReportsAboutUser?.Count ?? 0))</h5>
+                                     @if (Model.ReportsAboutUser != null && Model.ReportsAboutUser.Any())
+                                     {
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-hover">
+                                                <thead><tr><th>Tin bị BC</th><th>Lý do</th><th>Người BC</th><th>Ngày BC</th><th>Trạng thái XL</th><th></th></tr></thead>
+                                                <tbody>
+                                                @foreach (var report in Model.ReportsAboutUser)
+                                                {
+                                                    var reportStatusBadge = "badge bg-light text-dark";
+                                                    switch(report.TrangThaiXuLy) {
+                                                        case TrangThaiXuLyBaoCao.moi: reportStatusBadge = "badge bg-warning text-dark"; break;
+                                                        case TrangThaiXuLyBaoCao.daxuly: reportStatusBadge = "badge bg-success"; break;
+                                                        case TrangThaiXuLyBaoCao.boqua: reportStatusBadge = "badge bg-secondary"; break;
+                                                    }
+                                                    <tr>
+                                                        <td>@report.TinTuyenDung?.TieuDe</td>
+                                                        <td>@report.LyDo.ToString()</td>
+                                                        <td>@report.NguoiBaoCao?.HoTen ?? "N/A"</td>
+                                                        <td>@report.NgayBaoCao.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+                                                        <td><span class="@reportStatusBadge">@report.TrangThaiXuLy.ToString()</span></td>
+                                                        <td>
+                                                            @* Link đến trang chi tiết báo cáo của Admin (cần controller/action) *@
+                                                           @* <a asp-controller="AdminReport" asp-action="Details" asp-route-id="@report.Id" class="btn btn-sm btn-outline-primary" title="Xem chi tiết báo cáo"><i class="fas fa-eye"></i></a> *@
+                                                        </td>
+                                                    </tr>
+                                                }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                     } else { <p class="text-muted">Không có báo cáo nào về các tin đăng của người dùng này.</p> }
+                                 }
+                                 else if (Model.User.LoaiTk == LoaiTaiKhoan.quantrivien)
+                                 {
+                                     <p class="text-muted">Không áp dụng báo cáo cho quản trị viên.</p>
+                                 }
+
+
+                                <h5 class="mt-4 mb-3">Báo cáo do người dùng này gửi đi (@(Model.ReportsByUser?.Count ?? 0))</h5>
+                                 @if (Model.ReportsByUser != null && Model.ReportsByUser.Any())
+                                 {
+                                     <div class="table-responsive">
+                                         <table class="table table-sm table-hover">
+                                            <thead><tr><th>Tin bị BC</th><th>Lý do</th><th>Ngày BC</th><th>Trạng thái XL</th><th></th></tr></thead>
+                                            <tbody>
+                                            @foreach (var report in Model.ReportsByUser)
+                                            {
+                                                var reportStatusBadge = "badge bg-light text-dark";
+                                                 switch(report.TrangThaiXuLy) {
+                                                    case TrangThaiXuLyBaoCao.moi: reportStatusBadge = "badge bg-warning text-dark"; break;
+                                                    case TrangThaiXuLyBaoCao.daxuly: reportStatusBadge = "badge bg-success"; break;
+                                                    case TrangThaiXuLyBaoCao.boqua: reportStatusBadge = "badge bg-secondary"; break;
+                                                }
+                                                <tr>
+                                                    <td>@report.TinTuyenDung?.TieuDe</td>
+                                                    <td>@report.LyDo.ToString()</td>
+                                                    <td>@report.NgayBaoCao.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+                                                    <td><span class="@reportStatusBadge">@report.TrangThaiXuLy.ToString()</span></td>
+                                                     <td>
+                                                         @* Link đến trang chi tiết báo cáo của Admin (cần controller/action) *@
+                                                        @* <a asp-controller="AdminReport" asp-action="Details" asp-route-id="@report.Id" class="btn btn-sm btn-outline-primary" title="Xem chi tiết báo cáo"><i class="fas fa-eye"></i></a> *@
+                                                    </td>
+                                                </tr>
+                                            }
+                                            </tbody>
+                                        </table>
+                                     </div>
+                                 } else { <p class="text-muted">Người dùng này chưa gửi báo cáo nào.</p> }
+                            </div>
+
+                         </div> <!-- End Tab Content -->
+                    </div> <!-- /.card-body -->
+                 </div><!-- /.card -->
+            </div><!-- /.col-lg-8 -->
+        </div><!-- /.row -->
+    } @* End of if (Model.User != null) *@
+</div><!-- /.container-fluid -->
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Optional: Activate the correct tab if linked directly, e.g., #activity
+        $(document).ready(function(){
+            var hash = window.location.hash;
+            if (hash) {
+                var triggerEl = document.querySelector('#userTabs button[data-bs-target="' + hash + '"]');
+                if(triggerEl) {
+                    var tab = new bootstrap.Tab(triggerEl);
+                    tab.show();
+                }
+            }
+
+            // Ensure tab history works with back/forward buttons
+            $('#userTabs button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+                if(history.pushState) {
+                    history.pushState(null, null, e.target.dataset.bsTarget);
+                } else {
+                    location.hash = e.target.dataset.bsTarget;
+                }
+            });
+            // Update tab on hash change (e.g., back/forward button)
+             $(window).on('popstate', function() {
+                var anchor = location.hash || $("#userTabs button.active").data("bsTarget");
+                 var triggerEl = document.querySelector('#userTabs button[data-bs-target="' + anchor + '"]');
+                if(triggerEl) {
+                     var tab = new bootstrap.Tab(triggerEl);
+                    tab.show();
+                }
+            });
+        });
+    </script>
+}

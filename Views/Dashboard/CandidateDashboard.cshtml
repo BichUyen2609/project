@@ -1,0 +1,44 @@
+@model HeThongTimViec.Models.HoSoUngVien
+@{
+    ViewData["Title"] = "Bảng điều khiển Ứng viên";
+    Layout = "_LayoutUser"; // Layout riêng nếu có
+}
+
+<div class="container mt-4">
+     <h1><i class="fas fa-user-tie me-2"></i>@ViewData["Title"]</h1>
+    <hr />
+
+     @if (Model != null && Model.NguoiDung != null)
+    {
+        <div class="alert alert-success">
+            Chào mừng bạn, <strong>@Model.NguoiDung.HoTen</strong>!
+        </div>
+
+         <div class="row">
+            <div class="col-md-6">
+                <h4>Hồ sơ của bạn</h4>
+                <ul>
+                    <li>Trạng thái tìm việc: @Model.TrangThaiTimViec</li>
+                     @* TODO: Hiển thị thêm tóm tắt hồ sơ, link quản lý CV... *@
+                    <li>Số CV đã tải lên: [Số lượng]</li>
+                    <li>Việc làm đã ứng tuyển: [Số lượng]</li>
+                </ul>
+                 @* Nút chức năng nhanh *@
+                 @* <a asp-action="TimKiemViecLam" asp-controller="UngVien" class="btn btn-primary me-2">Tìm việc ngay</a>
+                 <a asp-action="QuanLyHoSoCV" asp-controller="UngVien" class="btn btn-secondary me-2">Quản lý CV</a>
+                 <a asp-action="ViecLamDaUngTuyen" asp-controller="UngVien" class="btn btn-info">Việc đã ứng tuyển</a> *@
+            </div>
+             <div class="col-md-6">
+                 <h4>Việc làm gợi ý</h4>
+                  @* TODO: Hiển thị danh sách việc làm phù hợp *@
+                 <p>Hiện chưa có gợi ý việc làm phù hợp.</p>
+             </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            Không thể tải thông tin hồ sơ ứng viên. Vui lòng <a asp-action="CaiDat" asp-controller="TaiKhoan">cập nhật hồ sơ</a> của bạn.
+        </div>
+    }
+</div>

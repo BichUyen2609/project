@@ -1,0 +1,26 @@
+@{
+    ViewData["Title"] = "Truy Cập Bị Từ Chối";
+     Layout = "~/Views/Shared/_Layout.cshtml"; // Hoặc _LayoutLoggedIn.cshtml tùy ngữ cảnh
+}
+
+<div class="container text-center mt-5 mb-5">
+     <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm border-warning">
+                <div class="card-body p-5">
+                     <i class="fas fa-ban fa-3x text-warning mb-3"></i>
+                    <h2 class="card-title text-warning">@ViewData["Title"]</h2>
+                    <p class="card-text lead">
+                       Bạn không có quyền truy cập vào tài nguyên hoặc trang này.
+                    </p>
+                     <p class="card-text">
+                       Nếu bạn cho rằng đây là một lỗi, vui lòng liên hệ quản trị viên.
+                    </p>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-3">Quay về Trang chủ</a>
+                    @* Nút quay lại trang trước nếu an toàn *@
+                    @* <button onclick="history.back()" class="btn btn-outline-secondary mt-3">Quay lại</button> *@
+                 </div>
+             </div>
+         </div>
+     </div>
+</div>

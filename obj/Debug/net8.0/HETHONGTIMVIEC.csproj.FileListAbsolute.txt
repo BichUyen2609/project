@@ -1,0 +1,499 @@
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/appsettings.Development.json
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/appsettings.json
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/HETHONGTIMVIEC.staticwebassets.runtime.json
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/HETHONGTIMVIEC.staticwebassets.endpoints.json
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/HETHONGTIMVIEC
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/HETHONGTIMVIEC.deps.json
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/HETHONGTIMVIEC.runtimeconfig.json
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/HETHONGTIMVIEC.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/HETHONGTIMVIEC.pdb
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/BCrypt.Net-Next.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/BouncyCastle.Cryptography.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/DocumentFormat.OpenXml.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/DocumentFormat.OpenXml.Framework.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Enums.NET.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/ExtendedNumerics.BigDecimal.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Google.Protobuf.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Humanizer.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/K4os.Compression.LZ4.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/K4os.Compression.LZ4.Streams.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/K4os.Hash.xxHash.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/MathNet.Numerics.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.Bcl.AsyncInterfaces.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.CodeAnalysis.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.CodeAnalysis.CSharp.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.CodeAnalysis.CSharp.Workspaces.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.CodeAnalysis.Workspaces.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Design.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Relational.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.Extensions.Caching.Memory.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.Extensions.DependencyModel.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.Extensions.Logging.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.Extensions.Logging.Abstractions.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.Extensions.Options.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.IO.RecyclableMemoryStream.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.Win32.SystemEvents.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Mono.TextTemplating.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/MySql.Data.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/MySqlConnector.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/NPOI.Core.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/NPOI.OOXML.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/NPOI.OpenXml4Net.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/NPOI.OpenXmlFormats.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/PdfSharpCore.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Pomelo.EntityFrameworkCore.MySql.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/ICSharpCode.SharpZipLib.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/SixLabors.Fonts.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/SixLabors.ImageSharp.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/System.CodeDom.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/System.Composition.AttributedModel.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/System.Composition.Convention.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/System.Composition.Hosting.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/System.Composition.Runtime.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/System.Composition.TypedParts.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/System.Configuration.ConfigurationManager.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/System.Drawing.Common.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/System.IO.Packaging.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/System.Security.Cryptography.Pkcs.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/System.Security.Cryptography.ProtectedData.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/System.Security.Cryptography.Xml.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/System.Security.Permissions.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/System.Windows.Extensions.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/UglyToad.PdfPig.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/UglyToad.PdfPig.Core.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/UglyToad.PdfPig.Fonts.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/UglyToad.PdfPig.Tokenization.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/UglyToad.PdfPig.Tokens.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/ZstdSharp.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/cs/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/de/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/es/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/fr/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/it/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/ja/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/ko/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/pl/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/pt-BR/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/ru/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/tr/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/zh-Hans/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/zh-Hant/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/cs/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/de/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/es/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/fr/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/it/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/ja/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/ko/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/pl/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/pt-BR/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/ru/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/tr/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/cs/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/de/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/es/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/fr/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/it/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/ja/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/ko/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/pl/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/pt-BR/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/ru/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/tr/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/cs/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/de/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/es/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/fr/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/it/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/ja/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/ko/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/pl/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/pt-BR/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/ru/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/tr/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/zh-Hans/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/de/PdfSharpCore.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/runtimes/win/lib/netcoreapp3.0/Microsoft.Win32.SystemEvents.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/runtimes/win-x64/native/comerr64.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/runtimes/win-x64/native/gssapi64.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/runtimes/win-x64/native/k5sprt64.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/runtimes/win-x64/native/krb5_64.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/runtimes/win-x64/native/krbcc64.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/runtimes/unix/lib/netcoreapp3.0/System.Drawing.Common.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/runtimes/win/lib/netcoreapp3.0/System.Drawing.Common.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/runtimes/win/lib/net8.0/System.Security.Cryptography.Pkcs.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/runtimes/win/lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/runtimes/win/lib/netcoreapp3.0/System.Windows.Extensions.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/HETHONGTIMVIEC.csproj.AssemblyReference.cache
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/HETHONGTIMVIEC.GeneratedMSBuildEditorConfig.editorconfig
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/HETHONGTIMVIEC.AssemblyInfoInputs.cache
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/HETHONGTIMVIEC.AssemblyInfo.cs
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/HETHONGTIMVIEC.csproj.CoreCompileInputs.cache
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/HETHONGTIMVIEC.MvcApplicationPartsAssemblyInfo.cache
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/HETHONGTIMVIEC.RazorAssemblyInfo.cache
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/HETHONGTIMVIEC.RazorAssemblyInfo.cs
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/scopedcss/Views/Shared/_Layout.cshtml.rz.scp.css
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/scopedcss/bundle/HETHONGTIMVIEC.styles.css
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/scopedcss/projectbundle/HETHONGTIMVIEC.bundle.scp.css
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/staticwebassets.build.json
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/staticwebassets.development.json
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/staticwebassets.build.endpoints.json
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/staticwebassets/msbuild.HETHONGTIMVIEC.Microsoft.AspNetCore.StaticWebAssets.props
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/staticwebassets/msbuild.HETHONGTIMVIEC.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/staticwebassets/msbuild.build.HETHONGTIMVIEC.props
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/staticwebassets/msbuild.buildMultiTargeting.HETHONGTIMVIEC.props
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/staticwebassets/msbuild.buildTransitive.HETHONGTIMVIEC.props
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/staticwebassets.pack.json
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/HETHONGT.B756FB56.Up2Date
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/HETHONGTIMVIEC.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/refint/HETHONGTIMVIEC.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/HETHONGTIMVIEC.pdb
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/HETHONGTIMVIEC.genruntimeconfig.cache
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/obj/Debug/net8.0/ref/HETHONGTIMVIEC.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.AspNetCore.Cryptography.Internal.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.Extensions.Identity.Core.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.Extensions.Identity.Stores.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/appsettings.Development.json
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/appsettings.json
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/HETHONGTIMVIEC.staticwebassets.runtime.json
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/HETHONGTIMVIEC.staticwebassets.endpoints.json
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/HETHONGTIMVIEC
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/HETHONGTIMVIEC.deps.json
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/HETHONGTIMVIEC.runtimeconfig.json
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/HETHONGTIMVIEC.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/HETHONGTIMVIEC.pdb
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/BCrypt.Net-Next.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/BouncyCastle.Cryptography.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/DocumentFormat.OpenXml.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/DocumentFormat.OpenXml.Framework.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Enums.NET.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/ExtendedNumerics.BigDecimal.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Google.Protobuf.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Humanizer.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/K4os.Compression.LZ4.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/K4os.Compression.LZ4.Streams.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/K4os.Hash.xxHash.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/MathNet.Numerics.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.AspNetCore.Cryptography.Internal.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.Bcl.AsyncInterfaces.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.CodeAnalysis.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.CodeAnalysis.CSharp.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.CodeAnalysis.CSharp.Workspaces.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.CodeAnalysis.Workspaces.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Design.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Relational.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.Extensions.Caching.Memory.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.Extensions.DependencyModel.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.Extensions.Identity.Core.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.Extensions.Identity.Stores.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.Extensions.Logging.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.Extensions.Logging.Abstractions.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.Extensions.Options.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.IO.RecyclableMemoryStream.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Microsoft.Win32.SystemEvents.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Mono.TextTemplating.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/MySql.Data.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/MySqlConnector.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/NPOI.Core.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/NPOI.OOXML.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/NPOI.OpenXml4Net.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/NPOI.OpenXmlFormats.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/PdfSharpCore.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/Pomelo.EntityFrameworkCore.MySql.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/ICSharpCode.SharpZipLib.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/SixLabors.Fonts.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/SixLabors.ImageSharp.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/System.CodeDom.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/System.Composition.AttributedModel.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/System.Composition.Convention.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/System.Composition.Hosting.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/System.Composition.Runtime.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/System.Composition.TypedParts.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/System.Configuration.ConfigurationManager.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/System.Drawing.Common.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/System.IO.Packaging.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/System.Security.Cryptography.Pkcs.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/System.Security.Cryptography.ProtectedData.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/System.Security.Cryptography.Xml.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/System.Security.Permissions.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/System.Windows.Extensions.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/UglyToad.PdfPig.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/UglyToad.PdfPig.Core.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/UglyToad.PdfPig.Fonts.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/UglyToad.PdfPig.Tokenization.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/UglyToad.PdfPig.Tokens.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/ZstdSharp.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/cs/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/de/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/es/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/fr/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/it/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/ja/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/ko/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/pl/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/pt-BR/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/ru/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/tr/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/zh-Hans/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/zh-Hant/Microsoft.CodeAnalysis.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/cs/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/de/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/es/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/fr/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/it/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/ja/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/ko/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/pl/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/pt-BR/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/ru/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/tr/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/cs/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/de/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/es/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/fr/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/it/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/ja/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/ko/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/pl/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/pt-BR/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/ru/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/tr/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/cs/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/de/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/es/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/fr/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/it/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/ja/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/ko/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/pl/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/pt-BR/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/ru/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/tr/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/zh-Hans/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/de/PdfSharpCore.resources.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/runtimes/win/lib/netcoreapp3.0/Microsoft.Win32.SystemEvents.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/runtimes/win-x64/native/comerr64.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/runtimes/win-x64/native/gssapi64.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/runtimes/win-x64/native/k5sprt64.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/runtimes/win-x64/native/krb5_64.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/runtimes/win-x64/native/krbcc64.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/runtimes/unix/lib/netcoreapp3.0/System.Drawing.Common.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/runtimes/win/lib/netcoreapp3.0/System.Drawing.Common.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/runtimes/win/lib/net8.0/System.Security.Cryptography.Pkcs.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/runtimes/win/lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/bin/Debug/net8.0/runtimes/win/lib/netcoreapp3.0/System.Windows.Extensions.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/HETHONGTIMVIEC.csproj.AssemblyReference.cache
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/HETHONGTIMVIEC.GeneratedMSBuildEditorConfig.editorconfig
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/HETHONGTIMVIEC.AssemblyInfoInputs.cache
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/HETHONGTIMVIEC.AssemblyInfo.cs
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/HETHONGTIMVIEC.csproj.CoreCompileInputs.cache
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/HETHONGTIMVIEC.MvcApplicationPartsAssemblyInfo.cache
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/HETHONGTIMVIEC.RazorAssemblyInfo.cache
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/HETHONGTIMVIEC.RazorAssemblyInfo.cs
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/scopedcss/Views/Shared/_Layout.cshtml.rz.scp.css
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/scopedcss/bundle/HETHONGTIMVIEC.styles.css
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/scopedcss/projectbundle/HETHONGTIMVIEC.bundle.scp.css
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/staticwebassets.build.json
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/staticwebassets.development.json
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/staticwebassets.build.endpoints.json
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/staticwebassets/msbuild.HETHONGTIMVIEC.Microsoft.AspNetCore.StaticWebAssets.props
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/staticwebassets/msbuild.HETHONGTIMVIEC.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/staticwebassets/msbuild.build.HETHONGTIMVIEC.props
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/staticwebassets/msbuild.buildMultiTargeting.HETHONGTIMVIEC.props
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/staticwebassets/msbuild.buildTransitive.HETHONGTIMVIEC.props
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/staticwebassets.pack.json
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/HETHONGT.B756FB56.Up2Date
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/HETHONGTIMVIEC.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/refint/HETHONGTIMVIEC.dll
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/HETHONGTIMVIEC.pdb
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/HETHONGTIMVIEC.genruntimeconfig.cache
+/Users/nguyenthanhhuyen/Pictures/tai_lieu/Toán ứng dụng/Toán ứng dụng code/HETHONGTIMVIEC/obj/Debug/net8.0/ref/HETHONGTIMVIEC.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\appsettings.Development.json
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\appsettings.json
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\HETHONGTIMVIEC.staticwebassets.runtime.json
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\HETHONGTIMVIEC.exe
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\HETHONGTIMVIEC.deps.json
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\HETHONGTIMVIEC.runtimeconfig.json
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\HETHONGTIMVIEC.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\HETHONGTIMVIEC.pdb
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\BCrypt.Net-Next.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\DocumentFormat.OpenXml.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\DocumentFormat.OpenXml.Framework.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Enums.NET.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\ExtendedNumerics.BigDecimal.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Google.Protobuf.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Humanizer.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\K4os.Compression.LZ4.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\K4os.Compression.LZ4.Streams.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\K4os.Hash.xxHash.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\MathNet.Numerics.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.AspNetCore.DataProtection.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.AspNetCore.DataProtection.Abstractions.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.CodeAnalysis.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.CodeAnalysis.CSharp.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.CodeAnalysis.CSharp.Workspaces.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.CodeAnalysis.Workspaces.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Design.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.Extensions.Caching.Memory.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.Extensions.DependencyModel.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.Abstractions.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.Extensions.Hosting.Abstractions.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.Extensions.Identity.Core.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.Extensions.Identity.Stores.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.Extensions.Logging.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.IO.RecyclableMemoryStream.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Microsoft.Win32.SystemEvents.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Mono.TextTemplating.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\MySql.Data.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\MySqlConnector.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\NPOI.Core.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\NPOI.OOXML.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\NPOI.OpenXml4Net.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\NPOI.OpenXmlFormats.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\PdfSharpCore.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\Pomelo.EntityFrameworkCore.MySql.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\ICSharpCode.SharpZipLib.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\SixLabors.Fonts.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\SixLabors.ImageSharp.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\System.CodeDom.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\System.Composition.AttributedModel.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\System.Composition.Convention.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\System.Composition.Hosting.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\System.Composition.Runtime.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\System.Composition.TypedParts.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\System.Configuration.ConfigurationManager.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\System.Drawing.Common.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\System.IO.Packaging.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\System.Security.Cryptography.Pkcs.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\System.Security.Cryptography.ProtectedData.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\System.Security.Cryptography.Xml.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\System.Security.Permissions.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\System.Windows.Extensions.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\UglyToad.PdfPig.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\UglyToad.PdfPig.Core.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\UglyToad.PdfPig.Fonts.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\UglyToad.PdfPig.Tokenization.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\UglyToad.PdfPig.Tokens.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\ZstdSharp.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\fr\Microsoft.CodeAnalysis.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\it\Microsoft.CodeAnalysis.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\ja\Microsoft.CodeAnalysis.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\ko\Microsoft.CodeAnalysis.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\pl\Microsoft.CodeAnalysis.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\pt-BR\Microsoft.CodeAnalysis.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\ru\Microsoft.CodeAnalysis.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\fr\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\it\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\ja\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\ko\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\pl\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\pt-BR\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\ru\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\fr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\it\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\ja\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\ko\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\pl\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\pt-BR\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\ru\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\fr\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\it\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\ja\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\ko\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\pl\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\pt-BR\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\ru\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\de\PdfSharpCore.resources.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\runtimes\win-x64\native\comerr64.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\runtimes\win-x64\native\gssapi64.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\runtimes\win-x64\native\k5sprt64.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\runtimes\win-x64\native\krb5_64.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\runtimes\win-x64\native\krbcc64.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+E:\HETHONGTIMVIEC\bin\Debug\net8.0\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
+E:\HETHONGTIMVIEC\obj\Debug\net8.0\HETHONGTIMVIEC.csproj.AssemblyReference.cache
+E:\HETHONGTIMVIEC\obj\Debug\net8.0\HETHONGTIMVIEC.GeneratedMSBuildEditorConfig.editorconfig
+E:\HETHONGTIMVIEC\obj\Debug\net8.0\HETHONGTIMVIEC.AssemblyInfoInputs.cache
+E:\HETHONGTIMVIEC\obj\Debug\net8.0\HETHONGTIMVIEC.AssemblyInfo.cs
+E:\HETHONGTIMVIEC\obj\Debug\net8.0\HETHONGTIMVIEC.csproj.CoreCompileInputs.cache
+E:\HETHONGTIMVIEC\obj\Debug\net8.0\HETHONGTIMVIEC.MvcApplicationPartsAssemblyInfo.cache
+E:\HETHONGTIMVIEC\obj\Debug\net8.0\HETHONGTIMVIEC.RazorAssemblyInfo.cache
+E:\HETHONGTIMVIEC\obj\Debug\net8.0\HETHONGTIMVIEC.RazorAssemblyInfo.cs
+E:\HETHONGTIMVIEC\obj\Debug\net8.0\staticwebassets.build.json
+E:\HETHONGTIMVIEC\obj\Debug\net8.0\staticwebassets.development.json
+E:\HETHONGTIMVIEC\obj\Debug\net8.0\staticwebassets\msbuild.HETHONGTIMVIEC.Microsoft.AspNetCore.StaticWebAssets.props
+E:\HETHONGTIMVIEC\obj\Debug\net8.0\staticwebassets\msbuild.build.HETHONGTIMVIEC.props
+E:\HETHONGTIMVIEC\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.HETHONGTIMVIEC.props
+E:\HETHONGTIMVIEC\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.HETHONGTIMVIEC.props
+E:\HETHONGTIMVIEC\obj\Debug\net8.0\staticwebassets.pack.json
+E:\HETHONGTIMVIEC\obj\Debug\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+E:\HETHONGTIMVIEC\obj\Debug\net8.0\scopedcss\bundle\HETHONGTIMVIEC.styles.css
+E:\HETHONGTIMVIEC\obj\Debug\net8.0\scopedcss\projectbundle\HETHONGTIMVIEC.bundle.scp.css
+E:\HETHONGTIMVIEC\obj\Debug\net8.0\HETHONGT.B756FB56.Up2Date
+E:\HETHONGTIMVIEC\obj\Debug\net8.0\HETHONGTIMVIEC.dll
+E:\HETHONGTIMVIEC\obj\Debug\net8.0\refint\HETHONGTIMVIEC.dll
+E:\HETHONGTIMVIEC\obj\Debug\net8.0\HETHONGTIMVIEC.pdb
+E:\HETHONGTIMVIEC\obj\Debug\net8.0\HETHONGTIMVIEC.genruntimeconfig.cache
+E:\HETHONGTIMVIEC\obj\Debug\net8.0\ref\HETHONGTIMVIEC.dll

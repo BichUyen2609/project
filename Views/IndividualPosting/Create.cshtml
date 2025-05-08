@@ -1,0 +1,41 @@
+@model HeThongTimViec.ViewModels.JobPosting.IndividualPostingViewModel
+@using HeThongTimViec.Extensions
+@using HeThongTimViec.Models
+@{
+    ViewData["Title"] = "Đăng tin tuyển dụng mới (Cá nhân)";
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb bg-light p-2 rounded">
+    <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index">Bảng điều khiển NTD</a></li>
+    <li class="breadcrumb-item"><a asp-action="Index">Quản lý Tin đăng</a></li>
+    <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
+  </ol>
+</nav>
+
+<h1 class="display-6"><i class="fas fa-plus-circle me-2 text-success"></i>@ViewData["Title"]</h1>
+<p class="text-muted">Điền thông tin chi tiết về công việc bạn muốn đăng tuyển.</p>
+<hr />
+
+<form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3 alert alert-danger" role="alert">Vui lòng kiểm tra lại các thông tin bạn đã nhập.</div>
+
+    @* Sử dụng Partial View cho các trường input *@
+    <partial name="Partials/_JobPostingFormPartial" model="Model" />
+
+    <div class="mt-4 mb-5 border-top pt-3 text-end">
+        <a asp-action="Index" class="btn btn-secondary btn-lg me-2"><i class="fas fa-times me-1"></i> Hủy bỏ</a>
+        <button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-paper-plane me-1"></i> Đăng tin</button> @* NTD Cá nhân tự duyệt *@
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @* Tham chiếu đến file JS xử lý form *@
+    <script src="~/js/jobPostingForm.js" asp-append-version="true"></script>
+    <script>
+        // Gọi hàm khởi tạo form khi trang tải xong
+         document.addEventListener('DOMContentLoaded', initJobPostingForm);
+    </script>
+}

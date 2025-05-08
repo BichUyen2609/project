@@ -1,0 +1,320 @@
+@model HeThongTimViec.ViewModels.JobPosting.JobPostingViewModelBase
+@using HeThongTimViec.Models
+@using HeThongTimViec.Extensions
+
+<input type="hidden" asp-for="Id" />
+
+<div class="container-fluid p-0">
+    <!-- Main Form Card -->
+    <div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-gradient bg-primary py-3">
+        <h5 class="mb-0 text-white"><i class="fas fa-briefcase me-2"></i>Thông tin tin tuyển dụng</h5>
+    </div>
+        
+        <div class="card-body">
+            <!-- Job Title Section -->
+            <div class="mb-4">
+                <label asp-for="TieuDe" class="form-label fw-bold text-primary fs-5"></label><span class="text-danger ms-1">*</span>
+                <input asp-for="TieuDe" class="form-control form-control-lg border-primary-subtle" placeholder="VD: Tuyển nhân viên phục vụ ca tối"/>
+                <span asp-validation-for="TieuDe" class="text-danger small"></span>
+            </div>
+            
+            <div class="row g-4">
+                <!-- Left Column - Main Job Details -->
+                <div class="col-lg-8">
+                    <div class="card border-0 bg-light rounded-3 shadow-sm mb-4">
+                        <div class="card-header bg-light border-bottom-0 pb-0">
+                            <h6 class="text-primary mb-0"><i class="fas fa-align-left me-2"></i>Nội dung chi tiết</h6>
+                        </div>
+                        <div class="card-body">
+                            <!-- Job Description -->
+                            <div class="mb-4">
+                                <label asp-for="MoTa" class="form-label fw-semibold"></label><span class="text-danger ms-1">*</span>
+                                <textarea asp-for="MoTa" class="form-control" rows="5" placeholder="Mô tả chi tiết công việc cần làm..."></textarea>
+                                <span asp-validation-for="MoTa" class="text-danger small"></span>
+                            </div>
+                            
+                            <!-- Job Requirements -->
+                            <div class="mb-4">
+                                <label asp-for="YeuCau" class="form-label fw-semibold"></label>
+                                <textarea asp-for="YeuCau" class="form-control" rows="4" placeholder="Các yêu cầu về kỹ năng, kinh nghiệm, thái độ... (nếu có)"></textarea>
+                                <span asp-validation-for="YeuCau" class="text-danger small"></span>
+                            </div>
+                            
+                            <!-- Job Benefits -->
+                            <div class="mb-3">
+                                <label asp-for="QuyenLoi" class="form-label fw-semibold"></label>
+                                <textarea asp-for="QuyenLoi" class="form-control" rows="4" placeholder="Các quyền lợi ứng viên được hưởng (lương thưởng, phụ cấp, môi trường làm việc... nếu có)"></textarea>
+                                <span asp-validation-for="QuyenLoi" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                  @* --- Ngành nghề (Sử dụng giao diện Tag) --- *@
+        <div class="mb-3">
+            <label class="form-label fw-semibold">@Html.DisplayNameFor(model => model.SelectedNganhNgheIds)</label>
+            @if (ViewBag.NganhNgheList != null && ((List<SelectListItem>)ViewBag.NganhNgheList).Any())
+            {
+                <div class="card border-light shadow-sm"> @* Bọc trong card cho đẹp *@
+                    <div class="card-body p-3">
+                        @* Khu vực hiển thị các tag đã chọn *@
+                        <div id="selectedTagsContainer" class="mb-2 pb-2 border-bottom">
+                            @* Các tag đã chọn sẽ được render bằng JS hoặc từ server nếu là trang Edit *@
+                            @if (Model.SelectedNganhNgheIds != null && Model.SelectedNganhNgheIds.Any())
+                            {
+                                @foreach (var nganhNgheId in Model.SelectedNganhNgheIds)
+                                {
+                                    var selectedItem = ((List<SelectListItem>)ViewBag.NganhNgheList).FirstOrDefault(x => x.Value == nganhNgheId.ToString());
+                                    if (selectedItem != null)
+                                    {
+                                        <span class="badge bg-primary me-2 mb-2 p-2 rounded-pill shadow-sm selected-tag" data-id="@nganhNgheId">
+                                            @selectedItem.Text
+                                            <i class="fas fa-times ms-1 remove-tag" role="button" tabindex="0" aria-label="Xóa tag @selectedItem.Text" data-id="@nganhNgheId"></i>
+                                        </span>
+                                    }
+                                }
+                            }
+                             <span id="noSelectedTagText" class="text-muted small fst-italic" style="@((Model.SelectedNganhNgheIds?.Any() ?? false) ? "display:none;" : "")">Chưa chọn ngành nghề nào.</span>
+                        </div>
+
+                        @* Input tìm kiếm *@
+                        <div class="position-relative mb-2">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-light border-end-0"><i class="fas fa-search text-muted"></i></span>
+                                <input type="text" class="form-control border-start-0" id="nganhNgheSearchInput" placeholder="Tìm hoặc chọn ngành nghề bên dưới...">
+                            </div>
+                        </div>
+
+                        @* Khu vực hiển thị các tag có sẵn để chọn *@
+                        <div id="availableTagsContainer" class="border p-2 rounded bg-light" style="max-height: 200px; overflow-y: auto;">
+                            @* Các tag có sẵn sẽ được render bằng JavaScript dựa trên ViewBag.NganhNgheList *@
+                            @* Để đơn giản, ta sẽ không render sẵn ở đây mà để JS làm hết *@
+                             <span class="text-muted small">Đang tải danh sách...</span>
+                        </div>
+
+                        @* Checkbox ẩn để lưu trữ và submit các ID đã chọn *@
+                        <div style="display:none;" id="hiddenCheckboxesContainer">
+                            @foreach (var item in (List<SelectListItem>)ViewBag.NganhNgheList)
+                            {
+                                <input class="nganh-nghe-checkbox" type="checkbox" name="SelectedNganhNgheIds" value="@item.Value"
+                                       id="nn_@item.Value" @(Model.SelectedNganhNgheIds?.Contains(int.Parse(item.Value)) ?? false ? "checked" : "")>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+            else { <div class="alert alert-warning small py-2">Chưa có dữ liệu ngành nghề. Vui lòng liên hệ quản trị viên.</div> }
+            <span asp-validation-for="SelectedNganhNgheIds" class="text-danger small"></span>
+        </div>
+
+                    <!-- Work Schedule Section -->
+                    <div class="card border-0 rounded-3 shadow-sm mb-4">
+                        <div class="card-header bg-light border-bottom-0 pb-0">
+                            <h6 class="text-primary mb-0"><i class="fas fa-calendar-alt me-2"></i>Lịch làm việc</h6>
+                        </div>
+                        <div class="card-body">
+                            <label asp-for="LichLamViecItems" class="form-label fw-semibold"></label>
+                            <div id="lichLamViecContainer" class="border p-3 rounded bg-light">
+                                @if(Model.LichLamViecItems != null) {
+                                    @for (int i = 0; i < Model.LichLamViecItems.Count; i++)
+                                    {
+                                        var displayStyle = Model.LichLamViecItems[i].MarkedForDeletion ? "display: none;" : "";
+                                        <div class="row g-2 mb-2 align-items-center lich-lam-viec-row" style="@displayStyle">
+                                             @if(Model.LichLamViecItems[i].Id.HasValue) { <input type="hidden" asp-for="LichLamViecItems[i].Id" /> }
+                                             else { <input type="hidden" name="LichLamViecItems[@i].Id" value="" /> }
+                                             <input type="hidden" asp-for="LichLamViecItems[i].MarkedForDeletion" class="mark-delete-flag"/>
+                                            <div class="col-md-3">
+                                                <select asp-for="LichLamViecItems[i].NgayTrongTuan" asp-items="ViewBag.NgayTrongTuanList" class="form-select form-select-sm">
+                                                    <option value="">-- Ngày --</option>
+                                                </select>
+                                                <span asp-validation-for="LichLamViecItems[i].NgayTrongTuan" class="text-danger small"></span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                 <select asp-for="LichLamViecItems[i].BuoiLamViec" asp-items="ViewBag.BuoiLamViecList" class="form-select form-select-sm">
+                                                    <option value="">-- Buổi (Tùy chọn) --</option>
+                                                </select>
+                                                <span asp-validation-for="LichLamViecItems[i].BuoiLamViec" class="text-danger small"></span>
+                                            </div>
+                                             <div class="col-md-2">
+                                                 <input asp-for="LichLamViecItems[i].GioBatDau" type="time" class="form-control form-control-sm" placeholder="Từ giờ">
+                                                 <span asp-validation-for="LichLamViecItems[i].GioBatDau" class="text-danger small"></span>
+                                             </div>
+                                             <div class="col-md-2">
+                                                 <input asp-for="LichLamViecItems[i].GioKetThuc" type="time" class="form-control form-control-sm" placeholder="Đến giờ">
+                                                 <span asp-validation-for="LichLamViecItems[i].GioKetThuc" class="text-danger small"></span>
+                                             </div>
+                                            <div class="col-md-2 text-end">
+                                                <button type="button" class="btn btn-sm btn-outline-danger remove-lich-lam-viec" title="Xóa dòng này">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                            <button type="button" id="addLichLamViec" class="btn btn-sm btn-primary mt-2">
+                                <i class="fas fa-plus me-1"></i>Thêm lịch làm việc
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Column - Job Details -->
+                <div class="col-lg-4">
+                    <!-- Job Type and Salary -->
+                    <div class="card border-0 rounded-3 shadow-sm mb-4">
+                        <div class="card-header bg-light border-bottom-0 pb-0">
+                            <h6 class="text-primary mb-0"><i class="fas fa-info-circle me-2"></i>Thông tin cơ bản</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label asp-for="LoaiHinhCongViec" class="form-label fw-semibold"></label><span class="text-danger ms-1">*</span>
+                                <select asp-for="LoaiHinhCongViec" asp-items="ViewBag.LoaiHinhCongViecList" class="form-select">
+                                    <option value="">-- Chọn loại hình --</option>
+                                </select>
+                                <span asp-validation-for="LoaiHinhCongViec" class="text-danger small"></span>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label asp-for="SoLuongTuyen" class="form-label fw-semibold"></label><span class="text-danger ms-1">*</span>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-users"></i></span>
+                                    <input asp-for="SoLuongTuyen" type="number" min="1" class="form-control" />
+                                </div>
+                                <span asp-validation-for="SoLuongTuyen" class="text-danger small"></span>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label asp-for="NgayHetHan" class="form-label fw-semibold"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-calendar"></i></span>
+                                    <input asp-for="NgayHetHan" type="date" class="form-control" />
+                                </div>
+                                <span asp-validation-for="NgayHetHan" class="text-danger small"></span>
+                            </div>
+                            
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" asp-for="TinGap">
+                                <label class="form-check-label fw-semibold" asp-for="TinGap"></label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Salary Information -->
+                    <div class="card border-0 rounded-3 shadow-sm mb-4">
+                        <div class="card-header bg-light border-bottom-0 pb-0">
+                            <h6 class="text-primary mb-0"><i class="fas fa-money-bill-wave me-2"></i>Thông tin lương</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label asp-for="LoaiLuong" class="form-label fw-semibold"></label><span class="text-danger ms-1">*</span>
+                                <select asp-for="LoaiLuong" asp-items="ViewBag.LoaiLuongList" class="form-select">
+                                    <option value="">-- Chọn hình thức lương --</option>
+                                </select>
+                                <span asp-validation-for="LoaiLuong" class="text-danger small"></span>
+                            </div>
+                            
+                            <div class="row g-2">
+                                <div class="col-6 mb-3">
+                                    <label asp-for="LuongToiThieu" class="form-label fw-semibold"></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="fas fa-money-bill"></i></span>
+                                        <input asp-for="LuongToiThieu" type="number" min="0" step="1000" class="form-control" placeholder="VD: 25000" />
+                                    </div>
+                                    <span asp-validation-for="LuongToiThieu" class="text-danger small"></span>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label asp-for="LuongToiDa" class="form-label fw-semibold"></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="fas fa-money-bill"></i></span>
+                                        <input asp-for="LuongToiDa" type="number" min="0" step="1000" class="form-control" placeholder="VD: 35000" />
+                                    </div>
+                                    <span asp-validation-for="LuongToiDa" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <small class="form-text text-muted d-block mb-3">Nhập một hoặc cả hai mức lương (VNĐ). Nếu là "Thỏa thuận", bỏ trống.</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Location Section -->
+                    <div class="card border-0 rounded-3 shadow-sm mb-4">
+                        <div class="card-header bg-light border-bottom-0 pb-0">
+                            <h6 class="text-primary mb-0"><i class="fas fa-map-marker-alt me-2"></i>Địa điểm làm việc</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label asp-for="ThanhPhoId" class="form-label fw-semibold"></label><span class="text-danger ms-1">*</span>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-city"></i></span>
+                                    <select asp-for="ThanhPhoId" asp-items="ViewBag.ThanhPhoList" class="form-select" id="thanhPhoDropdown">
+                                        <option value="">-- Chọn Tỉnh/Thành phố --</option>
+                                    </select>
+                                </div>
+                                <span asp-validation-for="ThanhPhoId" class="text-danger small"></span>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label asp-for="QuanHuyenId" class="form-label fw-semibold"></label><span class="text-danger ms-1">*</span>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-map"></i></span>
+                                    <select asp-for="QuanHuyenId" asp-items="ViewBag.QuanHuyenList" class="form-select" id="quanHuyenDropdown" disabled>
+                                         <option value="">-- Chọn Quận/Huyện --</option>
+                                    </select>
+                                </div>
+                                <span asp-validation-for="QuanHuyenId" class="text-danger small"></span>
+                                 <div id="quanHuyenLoading" style="display: none; margin-top: 5px;">
+                                     <small class="text-muted"><i class="fas fa-spinner fa-spin me-1"></i>Đang tải quận/huyện...</small>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label asp-for="DiaChiLamViec" class="form-label fw-semibold"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-building"></i></span>
+                                    <input asp-for="DiaChiLamViec" class="form-control" placeholder="VD: Tầng 5, Tòa nhà ABC, Số 123 Đường XYZ"/>
+                                </div>
+                                <span asp-validation-for="DiaChiLamViec" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Requirements Section -->
+                    <div class="card border-0 rounded-3 shadow-sm mb-4">
+                        <div class="card-header bg-light border-bottom-0 pb-0">
+                            <h6 class="text-primary mb-0"><i class="fas fa-clipboard-check me-2"></i>Yêu cầu ứng viên</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label asp-for="YeuCauKinhNghiemText" class="form-label fw-semibold"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-briefcase"></i></span>
+                                    <input asp-for="YeuCauKinhNghiemText" class="form-control" placeholder="VD: Không yêu cầu, 6 tháng..." />
+                                </div>
+                                <span asp-validation-for="YeuCauKinhNghiemText" class="text-danger small"></span>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label asp-for="YeuCauHocVanText" class="form-label fw-semibold"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light"><i class="fas fa-graduation-cap"></i></span>
+                                    <input asp-for="YeuCauHocVanText" class="form-control" placeholder="VD: Không yêu cầu, THPT..." />
+                                </div>
+                                <span asp-validation-for="YeuCauHocVanText" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Form Actions -->
+    </div>
+</div>
+@* // Views/Shared/Partials/_JobPostingFormPartial.cshtml (Thêm vào cuối file) *@
+<script id="nganhNgheData" type="application/json">
+    @if (ViewBag.NganhNgheList != null) {
+        @Html.Raw(System.Text.Json.JsonSerializer.Serialize(((List<SelectListItem>)ViewBag.NganhNgheList).Select(i => new { id = i.Value, text = i.Text })))
+    } else {
+        @Html.Raw("[]")
+    }
+</script>

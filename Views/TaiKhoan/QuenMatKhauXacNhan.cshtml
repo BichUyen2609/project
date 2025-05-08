@@ -1,0 +1,24 @@
+@{
+    ViewData["Title"] = "Đặt Lại Mật Khẩu Thành Công";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Layout công khai
+}
+
+<div class="container text-center mt-5 mb-5">
+     <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body p-5">
+                     <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                    <h2 class="card-title">@ViewData["Title"]</h2>
+                    <p class="card-text lead">
+                       Mật khẩu của bạn đã được đặt lại thành công.
+                    </p>
+                     <p class="card-text">
+                       Bây giờ bạn có thể đăng nhập bằng mật khẩu mới.
+                    </p>
+                    <a asp-action="DangNhap" class="btn btn-primary mt-3">Đi đến Đăng nhập</a>
+                 </div>
+             </div>
+         </div>
+     </div>
+</div>`

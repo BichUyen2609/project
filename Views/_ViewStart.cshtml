@@ -1,0 +1,27 @@
+﻿@using HeThongTimViec.Models
+
+@{
+    // Layout mặc định
+    Layout = "_Layout";
+
+    // Nếu người dùng đã đăng nhập
+    if (User.Identity?.IsAuthenticated ?? false)
+    {
+        // Chọn Layout dựa trên vai trò chính
+        if (User.IsInRole(nameof(LoaiTaiKhoan.quantrivien)))
+        {
+            Layout = "_LayoutAdmin";
+        }
+        else if (User.IsInRole(nameof(LoaiTaiKhoan.doanhnghiep)))
+        {
+            Layout = "_LayoutCompany";
+        }
+        else if (User.IsInRole(nameof(LoaiTaiKhoan.canhan)))
+        {
+            // Vai trò 'canhan' dùng chung layout này.
+            // Logic hiển thị khác nhau sẽ nằm trong _LayoutUser.cshtml dựa vào Session["DangLaNTD"].
+            Layout = "_LayoutUser";
+        }
+    }
+    // Nếu chưa đăng nhập, dùng Layout mặc định "_Layout"
+}

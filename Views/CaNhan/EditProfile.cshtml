@@ -1,0 +1,148 @@
+@model HeThongTimViec.Models.HoSoUngVien
+@using HeThongTimViec.Models
+@using System.IO 
+
+@{
+    ViewData["Title"] = "Chỉnh sửa Hồ sơ Ứng viên";
+    Layout = "_LayoutUser";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <form asp-action="EditProfile" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="NguoiDungId" />
+
+            @* --- SỬA Ở ĐÂY: Đổi từ ModelOnly thành All --- *@
+            @if (!ViewData.ModelState.IsValid)
+            {
+                 <div asp-validation-summary="All" class="text-danger mb-3 alert alert-danger" role="alert">
+                     Vui lòng kiểm tra lại các lỗi sau:
+                 </div>
+            }
+            @* --- KẾT THÚC SỬA --- *@
+
+            <div class="mb-3">
+                <label asp-for="TieuDeHoSo" class="form-label fw-bold"></label>
+                <input asp-for="TieuDeHoSo" class="form-control" />
+                <span asp-validation-for="TieuDeHoSo" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="GioiThieuBanThan" class="form-label fw-bold"></label>
+                <textarea asp-for="GioiThieuBanThan" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="GioiThieuBanThan" class="text-danger"></span>
+            </div>
+
+             <div class="mb-3">
+                <label asp-for="ViTriMongMuon" class="form-label fw-bold"></label>
+                <input asp-for="ViTriMongMuon" class="form-control" />
+                <span asp-validation-for="ViTriMongMuon" class="text-danger"></span>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                     <label asp-for="LoaiLuongMongMuon" class="form-label fw-bold"></label>
+                     <select asp-for="LoaiLuongMongMuon" class="form-select" asp-items="@(ViewBag.LoaiLuongList as List<SelectListItem>)" id="LoaiLuongMongMuon">
+                     </select>
+                     <span asp-validation-for="LoaiLuongMongMuon" class="text-danger"></span>
+                </div>
+                 <div class="col-md-6" id="MucLuongMongMuonGroup">
+                     <label asp-for="MucLuongMongMuon" class="form-label fw-bold"></label>
+                     <input asp-for="MucLuongMongMuon" type="number" class="form-control" placeholder="Để trống nếu chọn Thỏa thuận" min="0" id="MucLuongMongMuon" />
+                     <span asp-validation-for="MucLuongMongMuon" class="text-danger"></span>
+                 </div>
+            </div>
+
+             <div class="row g-3 mb-3">
+                 <div class="col-md-6">
+                     <label asp-for="TrangThaiTimViec" class="form-label fw-bold"></label>
+                      <select asp-for="TrangThaiTimViec" class="form-select" asp-items="@(ViewBag.TrangThaiList as List<SelectListItem>)"></select>
+                      <span asp-validation-for="TrangThaiTimViec" class="text-danger"></span>
+                 </div>
+                  <div class="col-md-6 align-self-center pt-3">
+                     <div class="form-check">
+                         <input class="form-check-input" type="checkbox" asp-for="ChoPhepTimKiem">
+                         <label class="form-check-label" asp-for="ChoPhepTimKiem">
+                             Cho phép nhà tuyển dụng tìm kiếm hồ sơ này
+                         </label>
+                     </div>
+                      <span asp-validation-for="ChoPhepTimKiem" class="text-danger"></span>
+                 </div>
+             </div>
+
+            @* --- CV Upload Section --- *@
+            <div class="mb-3">
+                <label class="form-label fw-bold">CV Mặc định</label>
+                 <div class="mb-2">
+                    @if (!string.IsNullOrEmpty(Model.UrlCvMacDinh))
+                    {
+                         <a href="@Url.Content(Model.UrlCvMacDinh)" target="_blank" class="btn btn-sm btn-outline-secondary me-2">
+                             <i class="fas fa-file-alt me-1"></i> Xem CV (@System.IO.Path.GetFileName(Model.UrlCvMacDinh))
+                         </a>
+                    }
+                    else
+                    {
+                        <span class="text-muted fst-italic me-2">Chưa tải lên CV.</span>
+                    }
+                </div>
+                <label for="cvFile" class="form-label">Tải lên CV mới (Tối đa 5MB, .pdf, .doc, .docx)</label>
+                <input type="file" name="cvFile" id="cvFile" class="form-control" accept=".pdf,.doc,.docx" />
+
+                @* Hiển thị lỗi cụ thể cho cvFile nếu có trong ModelState *@
+                 @{
+                     var cvFileError = ViewData.ModelState["cvFile"]?.Errors.FirstOrDefault();
+                 }
+                 @if (cvFileError != null)
+                 {
+                     <span class="text-danger d-block">@cvFileError.ErrorMessage</span>
+                 }
+
+                 @* Validation chung cho trường UrlCvMacDinh (nếu có) *@
+                 <span asp-validation-for="UrlCvMacDinh" class="text-danger d-block"></span>
+            </div>
+             @* --- End CV Upload Section --- *@
+
+
+            <div class="d-flex justify-content-end gap-2 mt-4">
+                 <a asp-action="Index" class="btn btn-secondary">Hủy Bỏ</a>
+                <button type="submit" class="btn btn-primary"><i class="fa-regular fa-save me-1"></i> Lưu Hồ Sơ</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var loaiLuongSelect = $('#LoaiLuongMongMuon');
+            var mucLuongGroup = $('#MucLuongMongMuonGroup');
+            var mucLuongInput = $('#MucLuongMongMuon');
+
+            function toggleMucLuong() {
+                var selectedValue = loaiLuongSelect.val();
+                // Giả sử giá trị của option "Thỏa thuận" là chuỗi 'thoathuan'
+                var isThoaThuanHoacChuaChon = (selectedValue === 'thoathuan' || selectedValue === '');
+                console.log("LoaiLuong value:", selectedValue, "IsThoaThuan/Empty:", isThoaThuanHoacChuaChon);
+
+                if (isThoaThuanHoacChuaChon) {
+                    mucLuongGroup.hide();
+                    mucLuongInput.val('');
+                    // Vô hiệu hóa input và validation khi ẩn
+                    mucLuongInput.prop('disabled', true);
+                } else {
+                    mucLuongGroup.show();
+                    // Bật lại input và validation khi hiện
+                    mucLuongInput.prop('disabled', false);
+                }
+            }
+            loaiLuongSelect.change(toggleMucLuong);
+            toggleMucLuong(); // Chạy khi tải trang
+        });
+    </script>
+}

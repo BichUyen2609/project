@@ -1,0 +1,83 @@
+@* File: Views/AdminUser/Delete.cshtml *@
+@model HeThongTimViec.Models.NguoiDung
+@using HeThongTimViec.Models
+@using HeThongTimViec.Controllers 
+@{
+    ViewData["Title"] = "Xác nhận Xóa Vĩnh Viễn Người dùng";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml"; // Assuming you have an admin layout
+    var statusInfo = AdminUserController.GetTrangThaiDisplay(Model.TrangThaiTk);
+    var roleInfo = AdminUserController.GetVaiTroDisplay(Model.LoaiTk);
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h4 class="m-0 font-weight-bold text-danger">@ViewData["Title"]</h4>
+         <a asp-action="Index" class="btn btn-sm btn-secondary">
+             <i class="fas fa-arrow-left fa-sm text-white-50"></i> Quay lại Danh sách
+        </a>
+    </div>
+    <div class="card-body">
+        <h3>Bạn có chắc chắn muốn xóa vĩnh viễn người dùng này không?</h3>
+        <hr />
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading"><i class="fas fa-exclamation-triangle"></i> Cảnh báo Cực kỳ Quan trọng!</h4>
+            <p>Hành động này sẽ **XÓA VĨNH VIỄN** người dùng và tất cả dữ liệu liên quan (có thể bao gồm hồ sơ, tin đăng, ứng tuyển, v.v...) khỏi hệ thống.</p>
+            <hr>
+            <p class="mb-0"><strong>Dữ liệu đã xóa sẽ KHÔNG THỂ KHÔI PHỤC.</strong> Hãy chắc chắn rằng bạn thực sự muốn thực hiện hành động này.</p>
+        </div>
+
+        <div>
+            <h4>Thông tin người dùng sẽ bị xóa</h4>
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-3">ID:</dt>
+                <dd class="col-sm-9">@Model.Id</dd>
+
+                <dt class="col-sm-3">@Html.DisplayNameFor(model => model.HoTen):</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.HoTen)</dd>
+
+                <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Email):</dt>
+                <dd class="col-sm-9">@Html.DisplayFor(model => model.Email)</dd>
+
+                 <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Sdt):</dt>
+                <dd class="col-sm-9">@(Model.Sdt ?? "N/A")</dd>
+
+                 <dt class="col-sm-3">Loại tài khoản:</dt>
+                <dd class="col-sm-9">@roleInfo</dd>
+
+                <dt class="col-sm-3">Trạng thái hiện tại:</dt>
+                <dd class="col-sm-9"><span class="@statusInfo.BadgeClass">@statusInfo.Text</span></dd>
+
+                 <dt class="col-sm-3">Ngày tạo:</dt>
+                <dd class="col-sm-9">@Model.NgayTao.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</dd>
+
+                <dt class="col-sm-3">Tỉnh/Thành phố:</dt>
+                <dd class="col-sm-9">@(Model.ThanhPho?.Ten ?? "N/A")</dd>
+
+                @* Removed the specific warning about already being banned, as it's less relevant for hard delete *@
+            </dl>
+
+            <form asp-action="Delete" method="post" class="mt-4">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                 @* Pass the viewMode back if needed, though it might default if not present *@
+                <input type="hidden" name="viewMode" value="@Context.Request.Query["viewMode"]" />
+
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash-alt"></i> Xác nhận Xóa Vĩnh Viễn
+                </button>
+                @* Provide clear options to cancel *@
+                <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">
+                     <i class="fas fa-times"></i> Hủy bỏ (Xem chi tiết)
+                </a>
+                 <a asp-action="Index" class="btn btn-outline-secondary">
+                     <i class="fas fa-list"></i> Hủy bỏ (Về danh sách)
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

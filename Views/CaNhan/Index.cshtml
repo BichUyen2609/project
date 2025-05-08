@@ -1,0 +1,568 @@
+@model HeThongTimViec.Models.NguoiDung
+@using HeThongTimViec.Models
+@using HeThongTimViec.Controllers
+@* Bỏ using HeThongTimViec.Extensions; nếu bạn không tạo file EnumExtensions.cs *@
+@using System.IO
+
+@{
+    Layout = "_LayoutUser";
+    ViewData["Title"] = "Trang Cá Nhân";
+    var hoSoUV = Model.HoSoUngVien;
+    var lichRanh = Model.LichRanhUngViens?.OrderBy(l => l.NgayTrongTuan).ThenBy(l => l.BuoiLamViec).ToList() ?? new List<LichRanhUngVien>();
+    var diaDiemMongMuon = Model.DiaDiemMongMuons?
+                              .Where(d => d.QuanHuyen?.ThanhPho != null)
+                              .OrderBy(d => d.QuanHuyen!.ThanhPho!.Ten)
+                              .ThenBy(d => d.QuanHuyen!.Ten)
+                              .ToList() ?? new List<DiaDiemMongMuon>();
+}
+<style>
+.user-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #dee2e6;
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
+    background-color: #f8f9fa;
+}
+.text-indigo {
+    color: #6610f2;
+}
+.icon-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>
+<div class="container mt-4 mb-5">
+
+    <!-- Alert Messages -->
+    @if (ViewBag.SuccessMessage != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fa-regular fa-circle-check me-2"></i> @ViewBag.SuccessMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+             <i class="fa-regular fa-circle-xmark me-2"></i> @ViewBag.ErrorMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Profile Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+        <h1 class="display-6 mb-2 mb-md-0 me-3">Trang Cá Nhân Của Bạn</h1>
+        <div class="d-flex flex-wrap gap-2">
+            @if (hoSoUV != null)
+            {
+                @* --- SỬA LỖI GetDisplayName: Quay lại dùng biểu thức điều kiện --- *@
+                <span class="badge bg-@(hoSoUV.TrangThaiTimViec == TrangThaiTimViec.dangtimtichcuc ? "success" :
+                                      hoSoUV.TrangThaiTimViec == TrangThaiTimViec.dangtimthudong ? "info" : "secondary") p-2">
+                    <i class="fa-solid fa-user-tie me-1"></i>
+                    @(hoSoUV.TrangThaiTimViec == TrangThaiTimViec.dangtimtichcuc ? "Đang tìm tích cực" :
+                      hoSoUV.TrangThaiTimViec == TrangThaiTimViec.dangtimthudong ? "Đang tìm thụ động" : "Không tìm kiếm việc")
+                </span>
+            }
+             @{
+                string trangThaiTKClass = Model.TrangThaiTk switch {
+                    TrangThaiTaiKhoan.kichhoat => "success", TrangThaiTaiKhoan.choxacminh => "warning text-dark",
+                    TrangThaiTaiKhoan.tamdung => "secondary", TrangThaiTaiKhoan.bidinhchi => "danger", _ => "secondary" };
+                @* --- SỬA LỖI GetDisplayName: Quay lại dùng switch --- *@
+                string trangThaiTKText = Model.TrangThaiTk switch {
+                     TrangThaiTaiKhoan.kichhoat => "Kích hoạt", TrangThaiTaiKhoan.choxacminh => "Chờ xác minh",
+                     TrangThaiTaiKhoan.tamdung => "Tạm dừng", TrangThaiTaiKhoan.bidinhchi => "Bị đình chỉ",
+                     _ => "Không xác định" };
+            }
+            <span class="badge bg-@trangThaiTKClass p-2">
+                <i class="fa-solid fa-user-check me-1"></i> Tài khoản: @trangThaiTKText
+            </span>
+        </div>
+    </div>
+
+    <!-- Profile Overview Card -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body p-lg-4">
+            <div class="row align-items-center g-3">
+                <div class="col-lg-2 text-center">
+                   @{
+                        var avatarUrlForDisplay = Model.UrlAvatar ?? "/images/default-avatar.png";
+                   }
+                   <img src="@Url.Content(avatarUrlForDisplay)" alt="Ảnh đại diện"
+                        class="user-avatar mx-auto d-block">
+                </div>
+                <div class="col-lg-7">
+                    <h4 class="mb-1">@Model.HoTen</h4>
+                     @if (hoSoUV != null && !string.IsNullOrWhiteSpace(hoSoUV.TieuDeHoSo))
+                    {
+                        <p class="mb-1 text-primary fw-medium"><i class="fa-solid fa-briefcase me-2 opacity-75"></i>@hoSoUV.TieuDeHoSo</p>
+                    }
+                    <p class="text-muted mb-1"><i class="fa-solid fa-envelope me-2 opacity-75"></i>@Model.Email</p>
+                    <p class="text-muted mb-0">
+                         <i class="fa-solid fa-phone me-2 opacity-75"></i>
+                         @(string.IsNullOrWhiteSpace(Model.Sdt) ? Html.Raw("<span class=\"fst-italic\">Chưa cập nhật SĐT</span>") : Model.Sdt)
+                    </p>
+                </div>
+                <div class="col-lg-3 text-lg-end mt-3 mt-lg-0">
+                    <div class="d-grid gap-2 d-lg-block">
+                        @if (hoSoUV != null && !string.IsNullOrEmpty(hoSoUV.UrlCvMacDinh))
+                        {
+                            var cvUrlForLink = hoSoUV.UrlCvMacDinh;
+                            <a href="@Url.Content(cvUrlForLink)" target="_blank" class="btn btn-primary btn-sm mb-2 mb-lg-0 me-lg-1">
+                                <i class="fa-regular fa-file-pdf me-1"></i> Xem CV
+                            </a>
+                        }
+                        <a asp-action="EditAccount" asp-controller="CaNhan" class="btn btn-outline-secondary btn-sm">
+                            <i class="fa-solid fa-user-edit me-1"></i> Chỉnh sửa TK
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs Container -->
+    <div class="card shadow-sm">
+        <div class="card-header p-0 border-bottom-0">
+            <ul class="nav nav-tabs card-header-tabs" id="profileTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-content" type="button" role="tab" aria-controls="profile-content" aria-selected="true">
+                        <i class="fa-regular fa-file-alt me-1"></i> Hồ Sơ Ứng Viên
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="account-tab" data-bs-toggle="tab" data-bs-target="#account-content" type="button" role="tab" aria-controls="account-content" aria-selected="false">
+                        <i class="fa-regular fa-user-circle me-1"></i> Thông Tin Tài Khoản
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="schedule-tab" data-bs-toggle="tab" data-bs-target="#schedule-content" type="button" role="tab" aria-controls="schedule-content" aria-selected="false">
+                        <i class="fa-regular fa-calendar-alt me-1"></i> Lịch Làm Việc
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="location-tab" data-bs-toggle="tab" data-bs-target="#location-content" type="button" role="tab" aria-controls="location-content" aria-selected="false">
+                        <i class="fa-solid fa-map-marker-alt me-1"></i> Khu Vực
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="tab-content pt-3" id="profileTabContent">
+
+                <!-- Hồ Sơ Ứng Viên Tab -->
+                <div class="tab-pane fade show active" id="profile-content" role="tabpanel" aria-labelledby="profile-tab">
+                    @if (hoSoUV != null)
+                    {
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="card-title mb-0"><i class="fa-solid fa-file-lines me-2 text-primary"></i>Hồ Sơ Ứng Viên</h5>
+                            <a asp-action="EditProfile" asp-controller="CaNhan" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                <i class="fa-solid fa-pencil-alt me-1"></i> Chỉnh sửa Hồ sơ
+                            </a>
+                        </div>
+
+                        <div class="card mb-4 border-light shadow-sm">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted"><i class="fa-solid fa-bullseye me-2"></i>Tiêu đề hồ sơ</h6>
+                                <p class="card-text lead">
+                                    @(string.IsNullOrWhiteSpace(hoSoUV.TieuDeHoSo)
+                                       ? Html.Raw("<span class=\"text-muted fst-italic\">Chưa cập nhật</span>")
+                                       : hoSoUV.TieuDeHoSo)
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row g-4">
+                            <!-- Giới thiệu bản thân -->
+                            <div class="col-12">
+                                <div class="card h-100 border-light shadow-sm">
+                                    <div class="card-body">
+                                        <h6 class="card-subtitle mb-2 text-muted"><i class="fa-solid fa-quote-left me-2"></i>Giới thiệu bản thân</h6>
+                                        <p class="card-text text-break mb-0">
+                                            @(string.IsNullOrWhiteSpace(hoSoUV.GioiThieuBanThan)
+                                               ? Html.Raw("<span class=\"text-muted fst-italic\">Chưa cập nhật</span>")
+                                               : Html.Raw(hoSoUV.GioiThieuBanThan.Replace("\n", "<br />")))
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Thông tin công việc -->
+                            <div class="col-md-6">
+                                <div class="card h-100 border-light shadow-sm">
+                                    <div class="card-body">
+                                        <h6 class="card-subtitle mb-3 text-muted"><i class="fa-solid fa-briefcase me-2"></i>Thông tin công việc</h6>
+                                        <dl class="row mb-0">
+                                            <dt class="col-sm-5">Vị trí mong muốn:</dt>
+                                            <dd class="col-sm-7">
+                                                @if (!string.IsNullOrWhiteSpace(hoSoUV.ViTriMongMuon)) { @hoSoUV.ViTriMongMuon }
+                                                else { <span class="text-muted fst-italic">Chưa cập nhật</span> }
+                                            </dd>
+
+                                            <dt class="col-sm-5">Mức lương:</dt>
+                                            <dd class="col-sm-7">
+                                                @if (hoSoUV.LoaiLuongMongMuon.HasValue) {
+                                                    @* --- SỬA LỖI GetDisplayName: Quay lại dùng switch --- *@
+                                                    string luongDisplay = hoSoUV.LoaiLuongMongMuon switch {
+                                                        LoaiLuong.theogio => "Theo giờ", LoaiLuong.theongay => "Theo ngày", LoaiLuong.theoca => "Theo ca",
+                                                        LoaiLuong.theothang => "Theo tháng", LoaiLuong.thoathuan => "Thỏa thuận", _ => "Không xác định"
+                                                    };
+                                                    @luongDisplay
+                                                    @if (hoSoUV.MucLuongMongMuon.HasValue && hoSoUV.MucLuongMongMuon > 0 && hoSoUV.LoaiLuongMongMuon != LoaiLuong.thoathuan) {
+                                                        <span>: @hoSoUV.MucLuongMongMuon.Value.ToString("N0") VNĐ</span>
+                                                    }
+                                                } else { <span class="text-muted fst-italic">Chưa cập nhật</span> }
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Trạng thái tìm việc -->
+                            <div class="col-md-6">
+                                <div class="card h-100 border-light shadow-sm">
+                                    <div class="card-body">
+                                        <h6 class="card-subtitle mb-3 text-muted"><i class="fa-solid fa-magnifying-glass me-2"></i>Trạng thái tìm việc</h6>
+                                        <dl class="row mb-0">
+                                            <dt class="col-sm-5">Trạng thái:</dt>
+                                            <dd class="col-sm-7">
+                                                 @{
+                                                    var statusIcon = hoSoUV.TrangThaiTimViec switch {
+                                                        TrangThaiTimViec.dangtimtichcuc => "<i class=\"fa-solid fa-circle text-success me-1\"></i>",
+                                                        TrangThaiTimViec.dangtimthudong => "<i class=\"fa-solid fa-circle text-info me-1\"></i>",
+                                                        TrangThaiTimViec.khongtimkiem => "<i class=\"fa-solid fa-circle text-secondary me-1\"></i>",
+                                                        _ => "<i class=\"fa-regular fa-circle text-muted me-1\"></i>"
+                                                    };
+                                                    @* --- SỬA LỖI GetDisplayName: Quay lại dùng switch --- *@
+                                                    var statusText = hoSoUV.TrangThaiTimViec switch {
+                                                        TrangThaiTimViec.dangtimtichcuc => "Đang tìm tích cực",
+                                                        TrangThaiTimViec.dangtimthudong => "Đang tìm thụ động",
+                                                        TrangThaiTimViec.khongtimkiem => "Không tìm kiếm",
+                                                        _ => "<span class=\"text-muted fst-italic\">Chưa cập nhật</span>"
+                                                    };
+                                                }
+                                                @Html.Raw(statusIcon)@Html.Raw(statusText)
+                                            </dd>
+                                            <dt class="col-sm-5">NTD tìm kiếm:</dt>
+                                            <dd class="col-sm-7">
+                                                @if (hoSoUV.ChoPhepTimKiem) { <span class="text-success"><i class="fa-solid fa-check-circle me-1"></i> Có</span> }
+                                                else { <span class="text-danger"><i class="fa-solid fa-times-circle me-1"></i> Không</span> }
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @* --- PHẦN HIỂN THỊ CV --- *@
+                            <div class="col-12">
+                                <div class="card border-light shadow-sm">
+                                    <div class="card-body">
+                                        <h6 class="card-subtitle mb-3 text-muted"><i class="fa-solid fa-file-pdf me-2"></i>CV Đính Kèm</h6>
+                                        @if (!string.IsNullOrWhiteSpace(hoSoUV.UrlCvMacDinh))
+                                        {
+                                            var cvUrlValid = hoSoUV.UrlCvMacDinh;
+                                            <div class="d-flex align-items-center flex-wrap">
+                                                <i class="fa-regular fa-file-lines fa-lg text-primary me-3 mb-2 mb-md-0"></i>
+                                                <div class="flex-grow-1 me-3 mb-2 mb-md-0">
+                                                    <a href="@Url.Content(cvUrlValid)" target="_blank" class="text-decoration-none fw-medium d-block">
+                                                        @System.IO.Path.GetFileName(cvUrlValid)
+                                                    </a>
+                                                    <p class="text-muted small mb-0">Nhấn vào tên file hoặc nút bên cạnh để xem.</p>
+                                                </div>
+                                                <a href="@Url.Content(cvUrlValid)" target="_blank" class="btn btn-sm btn-outline-primary flex-shrink-0">
+                                                    <i class="fa-solid fa-eye me-1"></i> Xem Ngay
+                                                </a>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <p class="text-muted fst-italic mb-0">
+                                                <i class="fa-solid fa-circle-exclamation text-warning me-2"></i>Bạn chưa tải lên CV nào.
+                                                <a asp-action="EditProfile" asp-controller="CaNhan" class="ms-2">Tải lên ngay</a>
+                                            </p>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            @* --- KẾT THÚC PHẦN CV --- *@
+
+                        </div> <!-- End row g-4 -->
+                    }
+                    else
+                    {
+                        <div class="alert alert-secondary text-center p-5 border-0 rounded-3">
+                            <i class="fa-solid fa-circle-info fa-3x mb-3 text-primary"></i>
+                            <h5>Bạn chưa có hồ sơ ứng viên</h5>
+                            <p class="mb-3 text-muted">Tạo hồ sơ để nhà tuyển dụng có thể tìm thấy bạn và bạn có thể ứng tuyển dễ dàng.</p>
+                            <a asp-action="EditProfile" asp-controller="CaNhan" class="btn btn-primary rounded-pill px-4">
+                                <i class="fa-solid fa-plus-circle me-1"></i> Tạo hồ sơ ngay
+                            </a>
+                        </div>
+                    }
+                </div>
+
+                <!-- Thông Tin Tài Khoản Tab -->
+                <div class="tab-pane fade" id="account-content" role="tabpanel" aria-labelledby="account-tab">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="card-title mb-0"><i class="fa-solid fa-user me-2 text-primary"></i>Thông Tin Tài Khoản</h5>
+                        <a asp-action="EditAccount" asp-controller="CaNhan" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                            <i class="fa-solid fa-user-edit me-1"></i> Chỉnh sửa Tài khoản
+                        </a>
+                    </div>
+
+                    <div class="row g-4">
+                        <!-- Thông tin cá nhân -->
+                        <div class="col-md-6">
+                            <div class="card h-100 border-light shadow-sm">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-3 text-muted"><i class="fa-solid fa-id-card me-2"></i>Thông tin cá nhân</h6>
+                                    <dl class="row mb-0">
+                                        <dt class="col-sm-4">Họ và Tên:</dt>
+                                        <dd class="col-sm-8">@Model.HoTen</dd>
+                                        <dt class="col-sm-4">Giới tính:</dt>
+                                        <dd class="col-sm-8">
+                                            @* --- SỬA LỖI GetDisplayName: Quay lại dùng biểu thức điều kiện --- *@
+                                            @Html.Raw(Model.GioiTinh.HasValue
+                                                ? (Model.GioiTinh == GioiTinhNguoiDung.nam ? "<i class=\"fa-solid fa-mars text-primary me-1\"></i> Nam"
+                                                    : Model.GioiTinh == GioiTinhNguoiDung.nu ? "<i class=\"fa-solid fa-venus text-danger me-1\"></i> Nữ"
+                                                    : "Khác")
+                                                : "<span class=\"text-muted fst-italic\">Chưa cập nhật</span>")
+                                        </dd>
+                                        <dt class="col-sm-4">Ngày sinh:</dt>
+                                        <dd class="col-sm-8">
+                                            @Html.Raw(Model.NgaySinh.HasValue
+                                                ? "<i class=\"fa-solid fa-calendar-day me-1\"></i> " + Model.NgaySinh.Value.ToString("dd/MM/yyyy")
+                                                : "<span class=\"text-muted fst-italic\">Chưa cập nhật</span>")
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Thông tin liên hệ -->
+                        <div class="col-md-6">
+                            <div class="card h-100 border-light shadow-sm">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-3 text-muted"><i class="fa-solid fa-address-book me-2"></i>Thông tin liên hệ</h6>
+                                    <dl class="row mb-0">
+                                         <dt class="col-sm-4">Email:</dt>
+                                        <dd class="col-sm-8"><i class="fa-solid fa-envelope me-1 opacity-75"></i> @Model.Email</dd>
+                                        <dt class="col-sm-4">Điện thoại:</dt>
+                                        <dd class="col-sm-8"><i class="fa-solid fa-phone me-1 opacity-75"></i> @(string.IsNullOrWhiteSpace(Model.Sdt) ? Html.Raw("<span class=\"fst-italic\">Chưa cập nhật</span>") : Model.Sdt)</dd>
+                                        <dt class="col-sm-4">Địa chỉ:</dt>
+                                        <dd class="col-sm-8">
+                                            @{
+                                                var diaChiParts = new List<string>();
+                                                if (!string.IsNullOrWhiteSpace(Model.DiaChiChiTiet)) { diaChiParts.Add(Model.DiaChiChiTiet); }
+                                                if (Model.QuanHuyen != null) { diaChiParts.Add(Model.QuanHuyen.Ten ?? "N/A"); }
+                                                if (Model.ThanhPho != null) { diaChiParts.Add(Model.ThanhPho.Ten ?? "N/A"); }
+                                                string diaChiDayDu = diaChiParts.Any()
+                                                    ? "<i class=\"fa-solid fa-location-dot me-1 opacity-75\"></i> " + string.Join(", ", diaChiParts)
+                                                    : "<span class=\"text-muted fst-italic\">Chưa cập nhật</span>";
+                                            }
+                                            @Html.Raw(diaChiDayDu)
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Thông tin tài khoản -->
+                        <div class="col-12">
+                            <div class="card border-light shadow-sm">
+                                <div class="card-body">
+                                    <h6 class="card-subtitle mb-3 text-muted"><i class="fa-solid fa-shield-alt me-2"></i>Thông tin tài khoản</h6>
+                                    <dl class="row mb-0">
+                                        <dt class="col-sm-4 col-md-3">Trạng thái:</dt>
+                                        <dd class="col-sm-8 col-md-9">
+                                             <span class="@trangThaiTKClass rounded-pill px-2">@trangThaiTKText</span>
+                                        </dd>
+                                        <dt class="col-sm-4 col-md-3">Ngày tham gia:</dt>
+                                        <dd class="col-sm-8 col-md-9"><i class="fa-solid fa-clock-history me-1 opacity-75"></i> @Model.NgayTao.ToString("dd/MM/yyyy")</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lịch Làm Việc Mong Muốn Tab -->
+                <div class="tab-pane fade" id="schedule-content" role="tabpanel" aria-labelledby="schedule-tab">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="card-title mb-0"><i class="fa-solid fa-calendar-check me-2 text-primary"></i>Lịch Làm Việc Mong Muốn</h5>
+                        <a asp-action="EditSchedule" asp-controller="CaNhan" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                            <i class="fa-solid fa-calendar-plus me-1"></i> Cập nhật Lịch
+                        </a>
+                    </div>
+                    @if (lichRanh.Any())
+                    {
+                        <div class="card border-light shadow-sm">
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0 align-middle">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="ps-3">Ngày trong tuần</th>
+                                                <th>Buổi làm việc</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var lich in lichRanh)
+                                            {
+                                                <tr>
+                                                    <td class="ps-3">
+                                                        @{
+                                                            var ngayDisplay = CaNhanControllerHelper.GetNgayTrongTuanDisplay(lich.NgayTrongTuan);
+                                                            bool isWeekend = lich.NgayTrongTuan == NgayTrongTuan.thu7 || lich.NgayTrongTuan == NgayTrongTuan.chunhat;
+                                                            var ngayIcon = isWeekend ? "fa-calendar-week" : "fa-calendar-day";
+                                                            var ngayClass = isWeekend ? "text-success" : "text-primary";
+                                                        }
+                                                        <i class="fa-solid @ngayIcon @ngayClass me-2 fa-fw"></i> @ngayDisplay
+                                                    </td>
+                                                    <td>
+                                                        @{
+                                                            var buoiDisplay = CaNhanControllerHelper.GetBuoiLamViecDisplay(lich.BuoiLamViec);
+                                                            var buoiIcon = lich.BuoiLamViec switch {
+                                                                BuoiLamViec.sang => "fa-sun", BuoiLamViec.chieu => "fa-cloud-sun",
+                                                                BuoiLamViec.toi => "fa-moon", BuoiLamViec.cangay => "fa-arrows-rotate",
+                                                                _ => "fa-clock" };
+                                                            var buoiClass = lich.BuoiLamViec switch {
+                                                                BuoiLamViec.sang => "text-warning", BuoiLamViec.chieu => "text-info",
+                                                                BuoiLamViec.toi => "text-indigo", BuoiLamViec.cangay => "text-success",
+                                                                _ => "text-secondary" };
+                                                        }
+                                                        <i class="fa-solid @buoiIcon @buoiClass me-2 fa-fw"></i> @buoiDisplay
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-secondary text-center p-4 border-0 rounded-3">
+                            <i class="fa-regular fa-calendar-xmark fa-3x mb-3 text-primary"></i>
+                            <h5>Chưa có lịch làm việc</h5>
+                            <p class="mb-3 text-muted">Cập nhật lịch làm việc để nhận được đề xuất công việc phù hợp.</p>
+                            <a asp-action="EditSchedule" asp-controller="CaNhan" class="btn btn-primary rounded-pill px-4">
+                                <i class="fa-solid fa-calendar-plus me-1"></i> Cập nhật ngay
+                            </a>
+                        </div>
+                    }
+                </div>
+
+                <!-- Khu Vực Mong Muốn Tab -->
+                <div class="tab-pane fade" id="location-content" role="tabpanel" aria-labelledby="location-tab">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="card-title mb-0"><i class="fa-solid fa-map-marked-alt me-2 text-primary"></i>Khu Vực Làm Việc Mong Muốn</h5>
+                        <a asp-action="EditLocations" asp-controller="CaNhan" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                            <i class="fa-solid fa-map-pin me-1"></i> Cập nhật Khu vực
+                        </a>
+                    </div>
+                    @if (diaDiemMongMuon.Any())
+                    {
+                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+                            @foreach (var dd in diaDiemMongMuon)
+                            {
+                                <div class="col">
+                                    <div class="card h-100 border-light shadow-sm">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 me-3">
+                                                    <span class="icon-box bg-danger bg-opacity-10 text-danger rounded-circle" style="width: 40px; height: 40px;">
+                                                        <i class="fa-solid fa-location-dot"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    @* --- SỬA LỖI CS0019: Dùng toán tử ?: --- *@
+                                                    <h6 class="mb-0">@(dd.QuanHuyen?.Ten != null ? dd.QuanHuyen.Ten : Html.Raw("<span class='text-danger fst-italic'>Lỗi Q/H</span>"))</h6>
+                                                    <p class="text-muted small mb-0">@(dd.QuanHuyen?.ThanhPho?.Ten != null ? dd.QuanHuyen.ThanhPho.Ten : Html.Raw("<span class='text-danger fst-italic'>Lỗi T/TP</span>"))</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                         <div class="alert alert-secondary text-center p-4 border-0 rounded-3">
+                            <i class="fa-regular fa-map fa-3x mb-3 text-primary"></i>
+                            <h5>Chưa có khu vực làm việc</h5>
+                            <p class="mb-3 text-muted">Cập nhật khu vực làm việc để nhận được đề xuất công việc gần bạn.</p>
+                            <a asp-action="EditLocations" asp-controller="CaNhan" class="btn btn-primary rounded-pill px-4">
+                                <i class="fa-solid fa-map-pin me-1"></i> Cập nhật ngay
+                            </a>
+                        </div>
+                    }
+                </div>
+
+            </div> <!-- End Tab Content -->
+        </div> <!-- End Card Body -->
+    </div> <!-- End Card -->
+
+    <!-- Profile Stats Cards -->
+    <div class="row row-cols-1 row-cols-md-3 g-4 mt-4">
+        <!-- Ứng tuyển -->
+        <div class="col">
+            <div class="card h-100 shadow-sm border-primary border-opacity-50">
+                <div class="card-body text-center py-4">
+                    <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-circle mx-auto mb-3" style="width: 60px; height: 60px;">
+                        <i class="fa-solid fa-paper-plane fa-lg"></i>
+                    </div>
+                    <h5 class="card-title text-primary">Đã Ứng Tuyển</h5>
+                    <h2 class="display-5 fw-bold text-primary mb-0">@ViewBag.SoLanUngTuyen</h2>
+                    <p class="text-muted small mt-2 mb-3">Công việc đã ứng tuyển</p>
+                    <a href="@Url.Action("DaUngTuyen", "ViecLam", new { area = "UngVien" })" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                        <i class="fa-solid fa-list me-1"></i> Xem chi tiết
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Đã lưu -->
+        <div class="col">
+            <div class="card h-100 shadow-sm border-warning border-opacity-50">
+                <div class="card-body text-center py-4">
+                    <div class="icon-box bg-warning bg-opacity-10 text-warning rounded-circle mx-auto mb-3" style="width: 60px; height: 60px;">
+                        <i class="fa-solid fa-bookmark fa-lg"></i>
+                    </div>
+                    <h5 class="card-title text-warning">Đã Lưu</h5>
+                    <h2 class="display-5 fw-bold text-warning mb-0">@ViewBag.SoTinDaLuu</h2>
+                    <p class="text-muted small mt-2 mb-3">Công việc đã lưu lại</p>
+                    <a href="@Url.Action("DaLuu", "ViecLam", new { area = "UngVien" })" class="btn btn-outline-warning btn-sm rounded-pill px-3">
+                        <i class="fa-solid fa-bookmark me-1"></i> Xem chi tiết
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Đề xuất -->
+        <div class="col">
+            <div class="card h-100 shadow-sm border-success border-opacity-50">
+                <div class="card-body text-center py-4">
+                     <div class="icon-box bg-success bg-opacity-10 text-success rounded-circle mx-auto mb-3" style="width: 60px; height: 60px;">
+                        <i class="fa-solid fa-lightbulb fa-lg"></i>
+                    </div>
+                    <h5 class="card-title text-success">Việc Phù Hợp</h5>
+                    <h2 class="display-5 fw-bold text-success mb-0">@ViewBag.SoViecPhuHop</h2>
+                    <p class="text-muted small mt-2 mb-3">Công việc được đề xuất</p>
+                    <a href="@Url.Action("Index", "TimViec")" class="btn btn-outline-success btn-sm rounded-pill px-3">
+                        <i class="fa-solid fa-magnifying-glass me-1"></i> Khám phá
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div> <!-- End Container -->
+
+@section Scripts {
+    @* Thêm các script cần thiết khác nếu có *@
+}

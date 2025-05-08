@@ -1,0 +1,28 @@
+@{
+    ViewData["Title"] = "Đăng Ký Chờ Duyệt";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Layout công khai
+}
+
+<div class="container text-center mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body p-5">
+                    <i class="fas fa-hourglass-half fa-3x text-warning mb-3"></i>
+                    <h2 class="card-title">@ViewData["Title"]</h2>
+                    <p class="card-text lead">
+                        Tài khoản doanh nghiệp của bạn đã được tạo thành công và đang trong quá trình chờ quản trị viên xem xét và phê duyệt.
+                    </p>
+                    <p class="card-text">
+                        Quá trình này thường mất một khoảng thời gian ngắn. Chúng tôi sẽ thông báo cho bạn qua email khi tài khoản được kích hoạt.
+                    </p>
+                    <p class="card-text">
+                        Cảm ơn bạn đã đăng ký!
+                    </p>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-3">Quay về Trang chủ</a>
+                    <a asp-action="DangNhap" class="btn btn-outline-secondary mt-3">Đi đến Đăng nhập</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

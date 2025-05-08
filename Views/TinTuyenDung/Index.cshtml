@@ -1,0 +1,355 @@
+@model HeThongTimViec.Views.ViewModels.Admin.JobPosts.AdminJobPostIndexViewModel
+@using HeThongTimViec.Views.ViewModels.Admin.JobPosts
+@using HeThongTimViec.Models // For Enums
+@{
+    ViewData["Title"] = "Quản lý tin đăng";
+    Layout = "_LayoutAdmin"; // Assuming you have an admin layout
+}
+
+<style>
+    .stat-card {
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        background-color: #fff;
+        box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,.075);
+    }
+    .stat-card h5 {
+        color: #6c757d; /* text-muted */
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+    .stat-card .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #343a40; /* text-dark */
+    }
+    .stat-card .stat-change {
+        font-size: 0.8rem;
+    }
+    .stat-card .stat-icon {
+        font-size: 2.5rem;
+        opacity: 0.3;
+        position: absolute;
+        right: 1.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    .stat-icon.icon-briefcase { color: #0d6efd; } /* blue */
+    .stat-icon.icon-check-circle { color: #198754; } /* green */
+    .stat-icon.icon-clock { color: #ffc107; } /* yellow */
+    .stat-icon.icon-calendar-x { color: #dc3545; } /* red */
+
+    .table-job-title { font-weight: 500; }
+    .table-job-applicants { font-size: 0.85em; color: #6c757d; }
+    .company-logo { width: 32px; height: 32px; border-radius: 4px; object-fit: contain; margin-right: 8px; background-color: #eee; }
+    .badge { font-size: 0.75em; padding: 0.4em 0.7em; }
+
+    .nav-tabs .nav-link.active {
+        color: #0d6efd;
+        border-color: #dee2e6 #dee2e6 #fff;
+        border-bottom: 2px solid #0d6efd !important;
+         background-color: transparent;
+    }
+     .nav-tabs .nav-link {
+        color: #6c757d;
+         border-bottom: 2px solid transparent;
+    }
+    .table th, .table td { vertical-align: middle; }
+    .ellipsis-action {
+        cursor: pointer;
+        padding: 0.25rem 0.5rem;
+    }
+    .table-responsive { margin-top: 1rem; }
+</style>
+
+<div class="container-fluid mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3">Quản lý việc làm</h1>
+        <div>
+            <button class="btn btn-outline-secondary btn-sm me-2">
+                <i class="bi bi-download me-1"></i> Xuất dữ liệu
+            </button>
+            <button class="btn btn-primary btn-sm">
+                <i class="bi bi-plus-lg me-1"></i> Thao tác
+            </button>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row">
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card position-relative">
+                <h5>Tổng việc làm</h5>
+                <div class="stat-number">@Model.Statistics.TotalJobs.ToString("N0")</div>
+                @if (!string.IsNullOrEmpty(Model.Statistics.TotalJobsChangeText))
+                {
+                    <div class="stat-change text-success"><i class="bi bi-arrow-up-short"></i> @Model.Statistics.TotalJobsChangeText</div>
+                }
+                 <i class="bi bi-briefcase stat-icon icon-briefcase"></i>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card position-relative">
+                <h5>Đang hoạt động</h5>
+                <div class="stat-number">@Model.Statistics.ActiveJobs.ToString("N0")</div>
+                 @if (!string.IsNullOrEmpty(Model.Statistics.ActiveJobsChangeText))
+                {
+                    <div class="stat-change text-success"><i class="bi bi-arrow-up-short"></i> @Model.Statistics.ActiveJobsChangeText</div>
+                }
+                <i class="bi bi-check-circle stat-icon icon-check-circle"></i>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card position-relative">
+                <h5>Chờ duyệt</h5>
+                <div class="stat-number">@Model.Statistics.PendingJobs.ToString("N0")</div>
+                 @if (!string.IsNullOrEmpty(Model.Statistics.PendingJobsChangeText))
+                {
+                    <div class="stat-change text-danger"><i class="bi bi-arrow-down-short"></i> @Model.Statistics.PendingJobsChangeText</div>
+                }
+                <i class="bi bi-clock stat-icon icon-clock"></i>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="stat-card position-relative">
+                <h5>Đã hết hạn</h5>
+                <div class="stat-number">@Model.Statistics.ExpiredOrRejectedJobs.ToString("N0")</div>
+                 @if (!string.IsNullOrEmpty(Model.Statistics.ExpiredOrRejectedJobsChangeText))
+                {
+                    <div class="stat-change text-success"><i class="bi bi-arrow-up-short"></i> @Model.Statistics.ExpiredOrRejectedJobsChangeText</div>
+                }
+                <i class="bi bi-calendar-x stat-icon icon-calendar-x"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs and Filters -->
+    <div class="card">
+        <div class="card-header bg-light p-0">
+            <ul class="nav nav-tabs card-header-tabs" id="jobTabs">
+                <li class="nav-item">
+                    <a class="nav-link @(Model.ActiveTab == "all" ? "active" : "")" 
+                       asp-action="Index" asp-all-route-data="@(new Dictionary<string, string> { { "activeTab", "all" }, { "searchTerm", Model.SearchTerm ?? "" }, { "selectedNganhNgheId", Model.SelectedNganhNgheId?.ToString() ?? "" }, { "selectedThanhPhoId", Model.SelectedThanhPhoId?.ToString() ?? "" }, { "selectedTrangThai", Model.SelectedTrangThai?.ToString() ?? "" }})">
+                       Tất cả
+                    </a>
+                </li>
+                <li class="nav-item">
+                     <a class="nav-link @(Model.ActiveTab == "pending" ? "active" : "")" 
+                       asp-action="Index" asp-all-route-data="@(new Dictionary<string, string> { { "activeTab", "pending" }, { "searchTerm", Model.SearchTerm ?? "" }, { "selectedNganhNgheId", Model.SelectedNganhNgheId?.ToString() ?? "" }, { "selectedThanhPhoId", Model.SelectedThanhPhoId?.ToString() ?? "" }})">
+                       Chờ duyệt
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(Model.ActiveTab == "active" ? "active" : "")" 
+                       asp-action="Index" asp-all-route-data="@(new Dictionary<string, string> { { "activeTab", "active" }, { "searchTerm", Model.SearchTerm ?? "" }, { "selectedNganhNgheId", Model.SelectedNganhNgheId?.ToString() ?? "" }, { "selectedThanhPhoId", Model.SelectedThanhPhoId?.ToString() ?? "" }})">
+                       Đang hoạt động
+                    </a>
+                </li>
+                <li class="nav-item">
+                     <a class="nav-link @(Model.ActiveTab == "expired" ? "active" : "")" 
+                       asp-action="Index" asp-all-route-data="@(new Dictionary<string, string> { { "activeTab", "expired" }, { "searchTerm", Model.SearchTerm ?? "" }, { "selectedNganhNgheId", Model.SelectedNganhNgheId?.ToString() ?? "" }, { "selectedThanhPhoId", Model.SelectedThanhPhoId?.ToString() ?? "" }})">
+                       Đã hết hạn
+                    </a>
+                </li>
+                 <li class="nav-item">
+                    <a class="nav-link @(Model.ActiveTab == "analysis" ? "active" : "")" href="#">Phân tích</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card-body">
+            <h5 class="card-title">Danh sách việc làm</h5>
+            <form asp-action="Index" method="get" id="filterForm">
+                 <input type="hidden" asp-for="ActiveTab" />
+                <div class="row g-3 mb-3">
+                    <div class="col-md-12">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-search"></i></span>
+                            <input type="text" asp-for="SearchTerm" class="form-control" placeholder="Tìm kiếm theo tiêu đề, công ty, vị trí...">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <select asp-for="SelectedNganhNgheId" asp-items="Model.NganhNgheOptions" class="form-select">
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                         <select asp-for="SelectedThanhPhoId" asp-items="Model.ThanhPhoOptions" class="form-select">
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select asp-for="SelectedTrangThai" asp-items="Model.TrangThaiOptions" class="form-select">
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100 me-2">Lọc</button>
+                        <a asp-action="Index" asp-route-activeTab="@Model.ActiveTab" class="btn btn-outline-secondary w-100" title="Xóa bộ lọc">
+                            <i class="bi bi-x-lg"></i>
+                        </a>
+                    </div>
+                </div>
+            </form>
+
+            <div class="d-flex justify-content-end mb-2">
+                 <!-- Icons for list/grid view if needed -->
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width: 3%;"><input type="checkbox" class="form-check-input" id="selectAllCheckbox"></th>
+                            <th style="width: 5%;">ID</th>
+                            <th style="width: 25%;">Việc làm</th>
+                            <th style="width: 20%;">Công ty</th>
+                            <th style="width: 12%;">Danh mục</th>
+                            <th style="width: 10%;">Địa điểm</th>
+                            <th style="width: 10%;">Mức lương</th>
+                            <th style="width: 10%;">Trạng thái</th>
+                            <th style="width: 10%;">Ngày đăng</th>
+                            <th style="width: 5%;">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.JobPosts.Any())
+                        {
+                            foreach (var item in Model.JobPosts)
+                            {
+                                string trangThaiClass = AdminJobPostIndexViewModel.GetTrangThaiCssClass(item.TrangThai, item.NgayHetHan); // <<< CORRECTED (Old line 218)
+                                string trangThaiText = AdminJobPostIndexViewModel.GetTrangThaiDisplayForTable(item.TrangThai, item.NgayHetHan); // <<< CORRECTED (Old line 219
+                                <tr>
+                                    <td><input type="checkbox" class="form-check-input item-checkbox" value="@item.Id"></td>
+                                    <td>@item.Id</td>
+                                    <td>
+                                        <div class="table-job-title">@item.TieuDe</div>
+                                        @if (item.SoUngVien > 0)
+                                        {
+                                            <div class="table-job-applicants">@item.SoUngVien ứng viên</div>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            @if (!string.IsNullOrEmpty(item.LogoCongTyUrl))
+                                            {
+                                                <img src="@item.LogoCongTyUrl" alt="Logo @item.TenCongTy" class="company-logo" />
+                                            }
+                                            else
+                                            {
+                                                <span class="company-logo d-flex align-items-center justify-content-center bg-secondary text-white">
+                                                    @item.TenCongTy.Substring(0, Math.Min(item.TenCongTy.Length, 3)).ToUpper()
+                                                </span>
+                                            }
+                                            @item.TenCongTy
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @if(item.NganhNghes.Any()){
+                                            <span class="badge bg-light text-dark border">@string.Join(", ", item.NganhNghes.Take(1))</span>
+                                            @if(item.NganhNghes.Count > 1){
+                                                <span class="badge bg-light text-dark border" title="@string.Join(", ", item.NganhNghes)">+@(item.NganhNghes.Count - 1)</span>
+                                            }
+                                        }
+                                    </td>
+                                    <td>@item.DiaDiem</td>
+                                    <td>@item.MucLuongText</td>
+                                    <td>
+                                        <span class="@trangThaiClass">@trangThaiText</span>
+                                    </td>
+                                    <td>@item.NgayDang.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-outline-secondary ellipsis-action" type="button" id="dropdownMenuButton_@item.Id" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="bi bi-three-dots-vertical"></i>
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton_@item.Id">
+                                                <li><a class="dropdown-item" href="#">Xem chi tiết</a></li>
+                                                <li><a class="dropdown-item" href="#">Duyệt</a></li>
+                                                <li><a class="dropdown-item" href="#">Từ chối</a></li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item text-danger" href="#">Xóa</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="10" class="text-center">Không có dữ liệu việc làm nào.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            @if (Model.TotalPages > 0)
+            {
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div>Hiển thị @Model.JobPosts.Count trên @Model.TotalItems việc làm</div>
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination mb-0">
+                            <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                                <a class="page-link" asp-action="Index" 
+                                   asp-all-route-data="@(new Dictionary<string, string>(ViewContext.RouteData.Values.ToDictionary(kvp => kvp.Key, kvp => kvp.Value?.ToString() ?? "")) { { "pageIndex", (Model.PageIndex - 1).ToString() } })"
+                                   aria-label="Previous">
+                                    <span aria-hidden="true">«</span>
+                                </a>
+                            </li>
+
+                            @for (int i = 1; i <= Model.TotalPages; i++)
+                            {
+                                <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                                    <a class="page-link" asp-action="Index"
+                                       asp-all-route-data="@(new Dictionary<string, string>(ViewContext.RouteData.Values.ToDictionary(kvp => kvp.Key, kvp => kvp.Value?.ToString() ?? "")) { { "pageIndex", i.ToString() } })">
+                                        @i
+                                    </a>
+                                </li>
+                            }
+
+                            <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                                <a class="page-link" asp-action="Index"
+                                   asp-all-route-data="@(new Dictionary<string, string>(ViewContext.RouteData.Values.ToDictionary(kvp => kvp.Key, kvp => kvp.Value?.ToString() ?? "")) { { "pageIndex", (Model.PageIndex + 1).ToString() } })"
+                                   aria-label="Next">
+                                    <span aria-hidden="true">»</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+            const itemCheckboxes = document.querySelectorAll('.item-checkbox');
+
+            if(selectAllCheckbox) {
+                selectAllCheckbox.addEventListener('change', function () {
+                    itemCheckboxes.forEach(checkbox => {
+                        checkbox.checked = selectAllCheckbox.checked;
+                    });
+                });
+            }
+            
+            itemCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if (!checkbox.checked && selectAllCheckbox) {
+                        selectAllCheckbox.checked = false;
+                    }
+                    // Optionally, check if all items are checked to update selectAllCheckbox
+                    let allChecked = true;
+                    itemCheckboxes.forEach(cb => {
+                        if (!cb.checked) allChecked = false;
+                    });
+                    if(selectAllCheckbox) selectAllCheckbox.checked = allChecked;
+                });
+            });
+        });
+    </script>
+}

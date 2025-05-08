@@ -1,0 +1,41 @@
+@model HeThongTimViec.ViewModels.JobPosting.IndividualPostingViewModel
+@using HeThongTimViec.Models
+@using HeThongTimViec.Extensions
+@{
+    ViewData["Title"] = "Chỉnh sửa tin tuyển dụng (Cá nhân)";
+}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb bg-light p-2 rounded">
+     <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index">Bảng điều khiển NTD</a></li>
+     <li class="breadcrumb-item"><a asp-action="Index">Quản lý Tin đăng</a></li>
+    <li class="breadcrumb-item active" aria-current="page">@ViewData["Title"]</li>
+  </ol>
+</nav>
+
+<h1 class="display-6"><i class="fas fa-edit me-2 text-primary"></i>@ViewData["Title"]</h1>
+<h4 class="text-muted fw-light">@Model.TieuDe</h4>
+<hr />
+
+<form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3 alert alert-danger" role="alert">Vui lòng kiểm tra lại các thông tin bạn đã nhập.</div>
+
+    @* Sử dụng Partial View cho các trường input *@
+    <partial name="Partials/_JobPostingFormPartial" model="Model" />
+
+    <div class="mt-4 mb-5 border-top pt-3 text-end">
+        <a asp-action="Index" class="btn btn-secondary btn-lg me-2"><i class="fas fa-times me-1"></i> Hủy bỏ</a>
+        <button type="submit" class="btn btn-success btn-lg"><i class="fas fa-save me-1"></i> Lưu thay đổi</button>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @* Tham chiếu đến file JS xử lý form *@
+     <script src="~/js/jobPostingForm.js" asp-append-version="true"></script>
+     <script>
+        // Gọi hàm khởi tạo form khi trang tải xong
+         document.addEventListener('DOMContentLoaded', initJobPostingForm);
+     </script>
+}
