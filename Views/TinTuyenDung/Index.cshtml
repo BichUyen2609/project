@@ -1,355 +1,618 @@
-@model HeThongTimViec.Views.ViewModels.Admin.JobPosts.AdminJobPostIndexViewModel
 @using HeThongTimViec.Views.ViewModels.Admin.JobPosts
-@using HeThongTimViec.Models // For Enums
+@model HeThongTimViec.Views.ViewModels.Admin.JobPosts.AdminJobPostIndexViewModel
+@using HeThongTimViec.Models 
 @{
-    ViewData["Title"] = "Quản lý tin đăng";
-    Layout = "_LayoutAdmin"; // Assuming you have an admin layout
+    ViewData["Title"] = "Quản lý việc làm";
+    // Layout = "_AdminLayout"; // Ensure this is set in _ViewStart.cshtml for admin area or uncomment if specific
+
+    // Helper for pagination route data
+    Dictionary<string, string> GetPaginationRouteData(int page)
+    {
+        var routeData = new Dictionary<string, string>();
+        if (!string.IsNullOrEmpty(Model.SearchTerm)) routeData["searchTerm"] = Model.SearchTerm;
+        if (Model.SelectedNganhNgheId.HasValue) routeData["selectedNganhNgheId"] = Model.SelectedNganhNgheId.Value.ToString();
+        if (Model.SelectedThanhPhoId.HasValue) routeData["selectedThanhPhoId"] = Model.SelectedThanhPhoId.Value.ToString();
+        // When building pagination links, if a tab is active (e.g. "pending"), selectedTrangThai might be set by the controller.
+        // However, if the user also selected a status from the dropdown, that should take precedence for pagination links.
+        // The controller logic handles this for querying, this is for link generation.
+        if (Model.SelectedTrangThai.HasValue) routeData["selectedTrangThai"] = Model.SelectedTrangThai.Value.ToString();
+
+        if (!string.IsNullOrEmpty(Model.ActiveTab)) routeData["activeTab"] = Model.ActiveTab;
+        if (!string.IsNullOrEmpty(Model.ViewMode)) routeData["viewMode"] = Model.ViewMode;
+        routeData["pageIndex"] = page.ToString();
+        return routeData;
+    }
 }
 
-<style>
-    .stat-card {
-        border-radius: 0.5rem;
-        padding: 1.5rem;
-        margin-bottom: 1rem;
-        background-color: #fff;
-        box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,.075);
-    }
-    .stat-card h5 {
-        color: #6c757d; /* text-muted */
-        font-size: 0.9rem;
-        margin-bottom: 0.5rem;
-    }
-    .stat-card .stat-number {
-        font-size: 2rem;
-        font-weight: bold;
-        color: #343a40; /* text-dark */
-    }
-    .stat-card .stat-change {
-        font-size: 0.8rem;
-    }
-    .stat-card .stat-icon {
-        font-size: 2.5rem;
-        opacity: 0.3;
-        position: absolute;
-        right: 1.5rem;
-        top: 50%;
-        transform: translateY(-50%);
-    }
-    .stat-icon.icon-briefcase { color: #0d6efd; } /* blue */
-    .stat-icon.icon-check-circle { color: #198754; } /* green */
-    .stat-icon.icon-clock { color: #ffc107; } /* yellow */
-    .stat-icon.icon-calendar-x { color: #dc3545; } /* red */
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
-    .table-job-title { font-weight: 500; }
-    .table-job-applicants { font-size: 0.85em; color: #6c757d; }
-    .company-logo { width: 32px; height: 32px; border-radius: 4px; object-fit: contain; margin-right: 8px; background-color: #eee; }
-    .badge { font-size: 0.75em; padding: 0.4em 0.7em; }
+<style>
+    .avatar-xs-initials, .avatar-sm-initials {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: #fff;
+        background-color: #6c757d; /* Bootstrap secondary color */
+        border-radius: 50%;
+        text-transform: uppercase;
+    }
+    .avatar-xs-initials { width: 2rem; height: 2rem; font-size: 0.8rem; }
+    .avatar-sm-initials { width: 2.5rem; height: 2.5rem; font-size: 1rem; }
+
+    .avatar-xs { width: 2rem; height: 2rem; }
+    .avatar-sm { width: 2.5rem; height: 2.5rem; }
+    .object-fit-contain { object-fit: contain; }
+
+    .bg-info-lighten { background-color: rgba(var(--bs-info-rgb), 0.1) !important; }
+    .bg-success-lighten { background-color: rgba(var(--bs-success-rgb), 0.1) !important; }
+    .bg-warning-lighten { background-color: rgba(var(--bs-warning-rgb), 0.1) !important; }
+    .bg-danger-lighten { background-color: rgba(var(--bs-danger-rgb), 0.1) !important; }
+
+    .text-info { color: var(--bs-info) !important; }
+    .text-success { color: var(--bs-success) !important; }
+    .text-warning { color: var(--bs-warning) !important; }
+    .text-danger { color: var(--bs-danger) !important; }
 
     .nav-tabs .nav-link.active {
-        color: #0d6efd;
-        border-color: #dee2e6 #dee2e6 #fff;
-        border-bottom: 2px solid #0d6efd !important;
-         background-color: transparent;
+        border-bottom-width: 3px;
+        border-color: var(--bs-primary); /* Or your active tab color */
+        color: var(--bs-primary);
+        font-weight: 500;
     }
-     .nav-tabs .nav-link {
-        color: #6c757d;
-         border-bottom: 2px solid transparent;
-    }
+    .card-title a:hover { text-decoration: underline; }
     .table th, .table td { vertical-align: middle; }
-    .ellipsis-action {
-        cursor: pointer;
-        padding: 0.25rem 0.5rem;
-    }
-    .table-responsive { margin-top: 1rem; }
 </style>
 
 <div class="container-fluid mt-3">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h3">Quản lý việc làm</h1>
+        <h1 class="h3 mb-0 text-gray-800">@ViewData["Title"]</h1>
         <div>
-            <button class="btn btn-outline-secondary btn-sm me-2">
+            <button class="btn btn-outline-primary btn-sm" disabled> @* Disabled for now *@
                 <i class="bi bi-download me-1"></i> Xuất dữ liệu
             </button>
-            <button class="btn btn-primary btn-sm">
-                <i class="bi bi-plus-lg me-1"></i> Thao tác
-            </button>
+            <a asp-controller="TinTuyenDung" asp-action="Create" class="btn btn-primary btn-sm" disabled> @* Disabled for now, implement Create action *@
+                <i class="bi bi-plus-circle me-1"></i> Thêm tin mới
+            </a>
         </div>
     </div>
 
     <!-- Statistics Cards -->
     <div class="row">
-        <div class="col-xl-3 col-md-6">
-            <div class="stat-card position-relative">
-                <h5>Tổng việc làm</h5>
-                <div class="stat-number">@Model.Statistics.TotalJobs.ToString("N0")</div>
-                @if (!string.IsNullOrEmpty(Model.Statistics.TotalJobsChangeText))
-                {
-                    <div class="stat-change text-success"><i class="bi bi-arrow-up-short"></i> @Model.Statistics.TotalJobsChangeText</div>
-                }
-                 <i class="bi bi-briefcase stat-icon icon-briefcase"></i>
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title text-muted fw-normal mb-1">Tổng việc làm</h5>
+                            <h2 class="mb-0 fw-bold">@Model.Statistics.TotalJobs.ToString("N0")</h2>
+                        </div>
+                        <div class="avatar-sm flex-shrink-0">
+                            <span class="avatar-title bg-info-lighten rounded-circle text-info">
+                                <i class="bi bi-briefcase fs-3"></i>
+                            </span>
+                        </div>
+                    </div>
+                    @if(!string.IsNullOrWhiteSpace(Model.Statistics.TotalJobsChangeText) && Model.Statistics.TotalJobsChangeText != "N/A")
+                    {
+                        <div class="mt-2">
+                            <span class="badge bg-success-lighten text-success me-1">@Model.Statistics.TotalJobsChangeText.Split(' ')[0]</span>
+                            <span class="text-nowrap text-muted small">@string.Join(" ", Model.Statistics.TotalJobsChangeText.Split(' ').Skip(1))</span>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="stat-card position-relative">
-                <h5>Đang hoạt động</h5>
-                <div class="stat-number">@Model.Statistics.ActiveJobs.ToString("N0")</div>
-                 @if (!string.IsNullOrEmpty(Model.Statistics.ActiveJobsChangeText))
-                {
-                    <div class="stat-change text-success"><i class="bi bi-arrow-up-short"></i> @Model.Statistics.ActiveJobsChangeText</div>
-                }
-                <i class="bi bi-check-circle stat-icon icon-check-circle"></i>
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title text-muted fw-normal mb-1">Đang hoạt động</h5>
+                            <h2 class="mb-0 fw-bold">@Model.Statistics.ActiveJobs.ToString("N0")</h2>
+                        </div>
+                        <div class="avatar-sm flex-shrink-0">
+                            <span class="avatar-title bg-success-lighten rounded-circle text-success">
+                                <i class="bi bi-check-circle fs-3"></i>
+                            </span>
+                        </div>
+                    </div>
+                     @if(!string.IsNullOrWhiteSpace(Model.Statistics.ActiveJobsChangeText) && Model.Statistics.ActiveJobsChangeText != "N/A")
+                    {
+                        <div class="mt-2">
+                            <span class="badge bg-success-lighten text-success me-1">@Model.Statistics.ActiveJobsChangeText.Split(' ')[0]</span>
+                            <span class="text-nowrap text-muted small">@string.Join(" ", Model.Statistics.ActiveJobsChangeText.Split(' ').Skip(1))</span>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="stat-card position-relative">
-                <h5>Chờ duyệt</h5>
-                <div class="stat-number">@Model.Statistics.PendingJobs.ToString("N0")</div>
-                 @if (!string.IsNullOrEmpty(Model.Statistics.PendingJobsChangeText))
-                {
-                    <div class="stat-change text-danger"><i class="bi bi-arrow-down-short"></i> @Model.Statistics.PendingJobsChangeText</div>
-                }
-                <i class="bi bi-clock stat-icon icon-clock"></i>
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title text-muted fw-normal mb-1">Chờ duyệt</h5>
+                            <h2 class="mb-0 fw-bold">@Model.Statistics.PendingJobs.ToString("N0")</h2>
+                        </div>
+                        <div class="avatar-sm flex-shrink-0">
+                            <span class="avatar-title bg-warning-lighten rounded-circle text-warning">
+                                <i class="bi bi-hourglass-split fs-3"></i>
+                            </span>
+                        </div>
+                    </div>
+                     @if(!string.IsNullOrWhiteSpace(Model.Statistics.PendingJobsChangeText) && Model.Statistics.PendingJobsChangeText != "N/A")
+                    {
+                        <div class="mt-2">
+                            <span class="badge bg-warning-lighten text-warning me-1">@Model.Statistics.PendingJobsChangeText.Split(' ')[0]</span>
+                            <span class="text-nowrap text-muted small">@string.Join(" ", Model.Statistics.PendingJobsChangeText.Split(' ').Skip(1))</span>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="stat-card position-relative">
-                <h5>Đã hết hạn</h5>
-                <div class="stat-number">@Model.Statistics.ExpiredOrRejectedJobs.ToString("N0")</div>
-                 @if (!string.IsNullOrEmpty(Model.Statistics.ExpiredOrRejectedJobsChangeText))
-                {
-                    <div class="stat-change text-success"><i class="bi bi-arrow-up-short"></i> @Model.Statistics.ExpiredOrRejectedJobsChangeText</div>
-                }
-                <i class="bi bi-calendar-x stat-icon icon-calendar-x"></i>
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title text-muted fw-normal mb-1">Hết hạn/Từ chối</h5>
+                            <h2 class="mb-0 fw-bold">@Model.Statistics.ExpiredOrRejectedJobs.ToString("N0")</h2>
+                        </div>
+                        <div class="avatar-sm flex-shrink-0">
+                            <span class="avatar-title bg-danger-lighten rounded-circle text-danger">
+                                <i class="bi bi-calendar-x fs-3"></i>
+                            </span>
+                        </div>
+                    </div>
+                     @if(!string.IsNullOrWhiteSpace(Model.Statistics.ExpiredOrRejectedJobsChangeText) && Model.Statistics.ExpiredOrRejectedJobsChangeText != "N/A")
+                    {
+                        <div class="mt-2">
+                            <span class="badge bg-danger-lighten text-danger me-1">@Model.Statistics.ExpiredOrRejectedJobsChangeText.Split(' ')[0]</span>
+                            <span class="text-nowrap text-muted small">@string.Join(" ", Model.Statistics.ExpiredOrRejectedJobsChangeText.Split(' ').Skip(1))</span>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Tabs and Filters -->
-    <div class="card">
-        <div class="card-header bg-light p-0">
-            <ul class="nav nav-tabs card-header-tabs" id="jobTabs">
-                <li class="nav-item">
-                    <a class="nav-link @(Model.ActiveTab == "all" ? "active" : "")" 
-                       asp-action="Index" asp-all-route-data="@(new Dictionary<string, string> { { "activeTab", "all" }, { "searchTerm", Model.SearchTerm ?? "" }, { "selectedNganhNgheId", Model.SelectedNganhNgheId?.ToString() ?? "" }, { "selectedThanhPhoId", Model.SelectedThanhPhoId?.ToString() ?? "" }, { "selectedTrangThai", Model.SelectedTrangThai?.ToString() ?? "" }})">
-                       Tất cả
-                    </a>
-                </li>
-                <li class="nav-item">
-                     <a class="nav-link @(Model.ActiveTab == "pending" ? "active" : "")" 
-                       asp-action="Index" asp-all-route-data="@(new Dictionary<string, string> { { "activeTab", "pending" }, { "searchTerm", Model.SearchTerm ?? "" }, { "selectedNganhNgheId", Model.SelectedNganhNgheId?.ToString() ?? "" }, { "selectedThanhPhoId", Model.SelectedThanhPhoId?.ToString() ?? "" }})">
-                       Chờ duyệt
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link @(Model.ActiveTab == "active" ? "active" : "")" 
-                       asp-action="Index" asp-all-route-data="@(new Dictionary<string, string> { { "activeTab", "active" }, { "searchTerm", Model.SearchTerm ?? "" }, { "selectedNganhNgheId", Model.SelectedNganhNgheId?.ToString() ?? "" }, { "selectedThanhPhoId", Model.SelectedThanhPhoId?.ToString() ?? "" }})">
-                       Đang hoạt động
-                    </a>
-                </li>
-                <li class="nav-item">
-                     <a class="nav-link @(Model.ActiveTab == "expired" ? "active" : "")" 
-                       asp-action="Index" asp-all-route-data="@(new Dictionary<string, string> { { "activeTab", "expired" }, { "searchTerm", Model.SearchTerm ?? "" }, { "selectedNganhNgheId", Model.SelectedNganhNgheId?.ToString() ?? "" }, { "selectedThanhPhoId", Model.SelectedThanhPhoId?.ToString() ?? "" }})">
-                       Đã hết hạn
-                    </a>
-                </li>
-                 <li class="nav-item">
-                    <a class="nav-link @(Model.ActiveTab == "analysis" ? "active" : "")" href="#">Phân tích</a>
-                </li>
-            </ul>
-        </div>
-
+    <!-- Tabs -->
+    <ul class="nav nav-tabs mb-3">
+        <li class="nav-item">
+            <a class="nav-link @(Model.ActiveTab == "all" ? "active" : "")" 
+               asp-action="Index" asp-route-activeTab="all" asp-route-viewMode="@Model.ViewMode" 
+               asp-route-searchTerm="@Model.SearchTerm" asp-route-selectedNganhNgheId="@Model.SelectedNganhNgheId" asp-route-selectedThanhPhoId="@Model.SelectedThanhPhoId" asp-route-selectedTrangThai="@Model.SelectedTrangThai">Tất cả</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(Model.ActiveTab == "pending" ? "active" : "")" 
+               asp-action="Index" asp-route-activeTab="pending" asp-route-viewMode="@Model.ViewMode"
+               asp-route-searchTerm="@Model.SearchTerm" asp-route-selectedNganhNgheId="@Model.SelectedNganhNgheId" asp-route-selectedThanhPhoId="@Model.SelectedThanhPhoId">Chờ duyệt <span class="badge rounded-pill bg-warning text-dark ms-1">@Model.Statistics.PendingJobs</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(Model.ActiveTab == "active" ? "active" : "")" 
+               asp-action="Index" asp-route-activeTab="active" asp-route-viewMode="@Model.ViewMode"
+               asp-route-searchTerm="@Model.SearchTerm" asp-route-selectedNganhNgheId="@Model.SelectedNganhNgheId" asp-route-selectedThanhPhoId="@Model.SelectedThanhPhoId">Đang hoạt động</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(Model.ActiveTab == "expired" ? "active" : "")" 
+               asp-action="Index" asp-route-activeTab="expired" asp-route-viewMode="@Model.ViewMode"
+               asp-route-searchTerm="@Model.SearchTerm" asp-route-selectedNganhNgheId="@Model.SelectedNganhNgheId" asp-route-selectedThanhPhoId="@Model.SelectedThanhPhoId">Hết hạn/Từ chối</a>
+        </li>
+         <li class="nav-item">
+            <a class="nav-link @(Model.ActiveTab == "analysis" ? "active" : "")" 
+               asp-action="Index" asp-route-activeTab="analysis" asp-route-viewMode="@Model.ViewMode" disabled>Phân tích</a> @* Placeholder for Analysis tab *@
+        </li>
+    </ul>
+    
+    <div class="card shadow-sm">
         <div class="card-body">
-            <h5 class="card-title">Danh sách việc làm</h5>
-            <form asp-action="Index" method="get" id="filterForm">
-                 <input type="hidden" asp-for="ActiveTab" />
-                <div class="row g-3 mb-3">
-                    <div class="col-md-12">
+             <!-- TempData Messages -->
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["WarningMessage"] != null)
+            {
+                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    @TempData["WarningMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <!-- Filter Form -->
+            <form asp-action="Index" method="get" class="mb-3">
+                <input type="hidden" name="activeTab" value="@Model.ActiveTab" />
+                <input type="hidden" name="viewMode" id="currentViewModeInput" value="@Model.ViewMode" />
+                <div class="row g-2">
+                    <div class="col-lg-4 col-md-12">
                         <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-search"></i></span>
-                            <input type="text" asp-for="SearchTerm" class="form-control" placeholder="Tìm kiếm theo tiêu đề, công ty, vị trí...">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-search"></i></span>
+                            <input type="search" asp-for="SearchTerm" class="form-control form-control-sm border-start-0" placeholder="Tìm ID, tiêu đề, công ty, mô tả...">
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <select asp-for="SelectedNganhNgheId" asp-items="Model.NganhNgheOptions" class="form-select">
-                        </select>
+                    <div class="col-lg-2 col-md-4">
+                        <select asp-for="SelectedNganhNgheId" asp-items="Model.NganhNgheOptions" class="form-select form-select-sm"></select>
                     </div>
-                    <div class="col-md-3">
-                         <select asp-for="SelectedThanhPhoId" asp-items="Model.ThanhPhoOptions" class="form-select">
-                        </select>
+                    <div class="col-lg-2 col-md-3">
+                        <select asp-for="SelectedThanhPhoId" asp-items="Model.ThanhPhoOptions" class="form-select form-select-sm"></select>
                     </div>
-                    <div class="col-md-3">
-                        <select asp-for="SelectedTrangThai" asp-items="Model.TrangThaiOptions" class="form-select">
-                        </select>
+                    <div class="col-lg-2 col-md-3">
+                        <select asp-for="SelectedTrangThai" asp-items="Model.TrangThaiOptions" class="form-select form-select-sm"></select>
                     </div>
-                    <div class="col-md-2 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary w-100 me-2">Lọc</button>
-                        <a asp-action="Index" asp-route-activeTab="@Model.ActiveTab" class="btn btn-outline-secondary w-100" title="Xóa bộ lọc">
-                            <i class="bi bi-x-lg"></i>
-                        </a>
+                    <div class="col-lg-2 col-md-2 d-flex">
+                        <button type="submit" class="btn btn-primary btn-sm flex-grow-1 me-1">
+                            <i class="bi bi-funnel me-1"></i> Lọc
+                        </button>
+                        @if (!string.IsNullOrEmpty(Model.SearchTerm) || Model.SelectedNganhNgheId.HasValue || Model.SelectedThanhPhoId.HasValue || Model.SelectedTrangThai.HasValue)
+                        {
+                            <a asp-action="Index" asp-route-activeTab="@Model.ActiveTab" asp-route-viewMode="@Model.ViewMode" 
+                               class="btn btn-outline-secondary btn-sm" title="Xóa bộ lọc">
+                                <i class="bi bi-x-lg"></i>
+                            </a>
+                        }
                     </div>
                 </div>
             </form>
 
-            <div class="d-flex justify-content-end mb-2">
-                 <!-- Icons for list/grid view if needed -->
+            <!-- List Header: Count and View Switcher -->
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="text-muted small">
+                    @if (Model.TotalItems > 0)
+{
+    int pageSize = ViewBag.PageSize != null ? (int)ViewBag.PageSize : 10; // default = 10 if null
+    int startItem = (Model.PageIndex - 1) * pageSize + 1;
+    int endItem = Math.Min(Model.PageIndex * pageSize, (int)Model.TotalItems);
+
+    if (pageSize == 0 && Model.JobPosts.Any())
+    {
+        startItem = 1;
+        endItem = Model.JobPosts.Count();
+    }
+
+    <span>Hiển thị @startItem - @endItem trên tổng số @Model.TotalItems việc làm</span>
+}
+else
+{
+    <span>Không có việc làm nào.</span>
+}
+
+                </div>
+                <div>
+                    <button type="button" id="switchToListViewBtn" class="btn btn-sm btn-outline-secondary @(Model.ViewMode == "list" ? "active" : "")" title="Xem dạng danh sách"><i class="bi bi-list-ul"></i></button>
+                    <button type="button" id="switchToCardViewBtn" class="btn btn-sm btn-outline-secondary @(Model.ViewMode == "card" ? "active" : "")" title="Xem dạng thẻ"><i class="bi bi-grid-3x3-gap"></i></button>
+                </div>
             </div>
 
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th style="width: 3%;"><input type="checkbox" class="form-check-input" id="selectAllCheckbox"></th>
-                            <th style="width: 5%;">ID</th>
-                            <th style="width: 25%;">Việc làm</th>
-                            <th style="width: 20%;">Công ty</th>
-                            <th style="width: 12%;">Danh mục</th>
-                            <th style="width: 10%;">Địa điểm</th>
-                            <th style="width: 10%;">Mức lương</th>
-                            <th style="width: 10%;">Trạng thái</th>
-                            <th style="width: 10%;">Ngày đăng</th>
-                            <th style="width: 5%;">Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (Model.JobPosts.Any())
-                        {
-                            foreach (var item in Model.JobPosts)
+            <!-- Table View Container -->
+            <div id="jobPostListViewContainer" style="@(Model.ViewMode == "list" ? "display:block;" : "display:none;")">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle table-sm">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 3%;"><input type="checkbox" class="form-check-input" id="selectAllJobsTable" title="Chọn tất cả"></th>
+                                <th style="width: 5%;">ID</th>
+                                <th>Việc làm</th>
+                                <th>Công ty</th>
+                                <th style="width: 15%;">Danh mục</th>
+                                <th style="width: 10%;">Địa điểm</th>
+                                <th style="width: 15%;">Mức lương</th>
+                                <th style="width: 12%;">Trạng thái</th>
+                                <th style="width: 10%;">Ngày đăng</th>
+                                <th style="width: 5%;" class="text-center">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var job in Model.JobPosts)
                             {
-                                string trangThaiClass = AdminJobPostIndexViewModel.GetTrangThaiCssClass(item.TrangThai, item.NgayHetHan); // <<< CORRECTED (Old line 218)
-                                string trangThaiText = AdminJobPostIndexViewModel.GetTrangThaiDisplayForTable(item.TrangThai, item.NgayHetHan); // <<< CORRECTED (Old line 219
                                 <tr>
-                                    <td><input type="checkbox" class="form-check-input item-checkbox" value="@item.Id"></td>
-                                    <td>@item.Id</td>
+                                    <td><input type="checkbox" class="form-check-input job-checkbox-table" value="@job.Id"></td>
+                                    <td class="text-muted">@job.Id</td>
                                     <td>
-                                        <div class="table-job-title">@item.TieuDe</div>
-                                        @if (item.SoUngVien > 0)
-                                        {
-                                            <div class="table-job-applicants">@item.SoUngVien ứng viên</div>
-                                        }
+                                        <a asp-action="Details" asp-controller="TinTuyenDung" asp-route-id="@job.Id" class="fw-semibold text-dark text-decoration-none">@job.TieuDe</a> @* Placeholder for Details action *@
+                                        @if(job.TinGap) { <span class="badge bg-danger ms-1">Gấp</span> }
+                                        <div class="text-muted small">@job.SoUngVien ứng viên</div>
                                     </td>
                                     <td>
                                         <div class="d-flex align-items-center">
-                                            @if (!string.IsNullOrEmpty(item.LogoCongTyUrl))
+                                            @if (!string.IsNullOrEmpty(job.LogoCongTyUrl))
                                             {
-                                                <img src="@item.LogoCongTyUrl" alt="Logo @item.TenCongTy" class="company-logo" />
+                                                <img src="@job.LogoCongTyUrl" alt="@job.TenCongTy" class="avatar-xs rounded-circle me-2 object-fit-contain border" />
                                             }
-                                            else
+                                            else if (!string.IsNullOrEmpty(job.TenCongTy) && job.TenCongTy != "N/A" && job.TenCongTy.Length > 0)
                                             {
-                                                <span class="company-logo d-flex align-items-center justify-content-center bg-secondary text-white">
-                                                    @item.TenCongTy.Substring(0, Math.Min(item.TenCongTy.Length, 3)).ToUpper()
-                                                </span>
+                                                <span class="avatar-xs-initials me-2">@job.TenCongTy.Substring(0, Math.Min(job.TenCongTy.Length, 2))</span>
                                             }
-                                            @item.TenCongTy
+                                            <span class="small text-wrap">@job.TenCongTy</span>
                                         </div>
                                     </td>
+                                    <td class="small">@string.Join(", ", job.NganhNghes)</td>
+                                    <td class="small">@job.DiaDiem</td>
+                                    <td class="small">@job.MucLuongText</td>
                                     <td>
-                                        @if(item.NganhNghes.Any()){
-                                            <span class="badge bg-light text-dark border">@string.Join(", ", item.NganhNghes.Take(1))</span>
-                                            @if(item.NganhNghes.Count > 1){
-                                                <span class="badge bg-light text-dark border" title="@string.Join(", ", item.NganhNghes)">+@(item.NganhNghes.Count - 1)</span>
-                                            }
-                                        }
+                                        <span class="badge @AdminJobPostIndexViewModel.GetTrangThaiCssClass(job.TrangThai, job.NgayHetHan)">
+                                            @AdminJobPostIndexViewModel.GetTrangThaiDisplayForTable(job.TrangThai, job.NgayHetHan).ToUpper()
+                                        </span>
                                     </td>
-                                    <td>@item.DiaDiem</td>
-                                    <td>@item.MucLuongText</td>
-                                    <td>
-                                        <span class="@trangThaiClass">@trangThaiText</span>
-                                    </td>
-                                    <td>@item.NgayDang.ToString("dd/MM/yyyy")</td>
-                                    <td>
+                                    <td class="small">@job.NgayDang.ToString("dd/MM/yy")</td>
+                                    <td class="text-center">
                                         <div class="dropdown">
-                                            <button class="btn btn-sm btn-outline-secondary ellipsis-action" type="button" id="dropdownMenuButton_@item.Id" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Tùy chọn">
                                                 <i class="bi bi-three-dots-vertical"></i>
                                             </button>
-                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton_@item.Id">
-                                                <li><a class="dropdown-item" href="#">Xem chi tiết</a></li>
-                                                <li><a class="dropdown-item" href="#">Duyệt</a></li>
-                                                <li><a class="dropdown-item" href="#">Từ chối</a></li>
-                                                <li><hr class="dropdown-divider"></li>
-                                                <li><a class="dropdown-item text-danger" href="#">Xóa</a></li>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li><a class="dropdown-item small" asp-action="Details" asp-controller="TinTuyenDung" asp-route-id="@job.Id"><i class="bi bi-eye me-2"></i>Xem chi tiết</a></li>
+                                                <li><a class="dropdown-item small" asp-action="Edit" asp-controller="TinTuyenDung" asp-route-id="@job.Id"><i class="bi bi-pencil-square me-2"></i>Sửa tin</a></li>
+                                                @if (job.TrangThai == TrangThaiTinTuyenDung.choduyet) {
+                                                    <li><hr class="dropdown-divider my-1"></li>
+                                                    <li>
+                                                        <form asp-action="Approve" asp-controller="TinTuyenDung" asp-route-id="@job.Id" method="post" class="d-inline">
+                                                            @Html.AntiForgeryToken()
+                                                            <button type="submit" class="dropdown-item small text-success"><i class="bi bi-check-circle me-2"></i>Duyệt tin</button>
+                                                        </form>
+                                                    </li>
+                                                    <li>
+                                                        <form asp-action="Reject" asp-controller="TinTuyenDung" asp-route-id="@job.Id" method="post" class="d-inline">
+                                                            @Html.AntiForgeryToken()
+                                                            <button type="submit" class="dropdown-item small text-danger"><i class="bi bi-x-circle me-2"></i>Từ chối</button>
+                                                        </form>
+                                                    </li>
+                                                }
+                                                 @if (job.TrangThai != TrangThaiTinTuyenDung.daxoa)
+                                                {
+                                                    <li><hr class="dropdown-divider my-1"></li>
+                                                    <li>
+                                                        <form asp-action="Delete" asp-controller="TinTuyenDung" asp-route-id="@job.Id" method="post" class="d-inline" 
+                                                              onsubmit="return confirm('Bạn có chắc chắn muốn xóa (ẩn) tin tuyển dụng này?');">
+                                                            @Html.AntiForgeryToken()
+                                                            <button type="submit" class="dropdown-item small text-danger"><i class="bi bi-trash me-2"></i>Xóa (ẩn)</button>
+                                                        </form>
+                                                    </li>
+                                                }
                                             </ul>
                                         </div>
                                     </td>
                                 </tr>
                             }
-                        }
-                        else
-                        {
-                            <tr>
-                                <td colspan="10" class="text-center">Không có dữ liệu việc làm nào.</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                            @if (!Model.JobPosts.Any())
+                            {
+                                <tr><td colspan="10" class="text-center py-4">Không có tin tuyển dụng nào phù hợp với bộ lọc hiện tại.</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
+            <!-- Card View Container -->
+            <div id="jobPostCardViewContainer" style="@(Model.ViewMode == "card" ? "display:block;" : "display:none;")">
+                <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
+                    @foreach (var job in Model.JobPosts)
+                    {
+                        <div class="col">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-header d-flex justify-content-between align-items-center bg-light py-2 px-3">
+                                     <div class="d-flex align-items-center overflow-hidden">
+                                        @if (!string.IsNullOrEmpty(job.LogoCongTyUrl))
+                                        {
+                                            <img src="@job.LogoCongTyUrl" alt="@job.TenCongTy" class="avatar-sm rounded-circle me-2 object-fit-contain border" />
+                                        }
+                                        else if (!string.IsNullOrEmpty(job.TenCongTy) && job.TenCongTy != "N/A" && job.TenCongTy.Length > 0)
+                                        {
+                                            <span class="avatar-sm-initials me-2">@job.TenCongTy.Substring(0, Math.Min(job.TenCongTy.Length, 3))</span>
+                                        }
+                                         <a asp-action="CompanyDetails" asp-controller="Company" asp-route-id="@job.Id" class="fw-semibold text-dark text-decoration-none text-truncate" title="@job.TenCongTy">@job.TenCongTy</a> @* Placeholder for CompanyDetails *@
+                                    </div>
+                                    <span class="badge @AdminJobPostIndexViewModel.GetTrangThaiCssClass(job.TrangThai, job.NgayHetHan) ms-2 flex-shrink-0">
+                                        @AdminJobPostIndexViewModel.GetTrangThaiDisplayForTable(job.TrangThai, job.NgayHetHan).ToUpper()
+                                    </span>
+                                </div>
+                                <div class="card-body pb-2 px-3">
+                                    <h5 class="card-title mb-1">
+                                        <a asp-action="Details" asp-controller="TinTuyenDung" asp-route-id="@job.Id" class="text-decoration-none text-primary">@job.TieuDe</a>
+                                         @if(job.TinGap) { <span class="badge bg-danger ms-1">Gấp</span> }
+                                    </h5>
+                                    <p class="card-text small text-muted mb-1">
+                                        <i class="bi bi-briefcase me-1"></i> @(job.NganhNghes.Any() ? string.Join(", ", job.NganhNghes) : "N/A")
+                                    </p>
+                                    <p class="card-text small text-muted mb-1">
+                                        <i class="bi bi-geo-alt me-1"></i> @job.DiaDiem
+                                    </p>
+                                    <p class="card-text small text-muted mb-1">
+                                        <i class="bi bi-cash-coin me-1"></i> @job.MucLuongText
+                                    </p>
+                                     <p class="card-text small text-muted mb-1">
+                                        <i class="bi bi-calendar-event me-1"></i> Đăng: @job.NgayDang.ToString("dd/MM/yyyy")
+                                        @if(job.NgayHetHan.HasValue) {
+                                            <span class="ms-2"><i class="bi bi-calendar-x me-1"></i>Hạn: @job.NgayHetHan.Value.ToString("dd/MM/yyyy")</span>
+                                        }
+                                    </p>
+                                    <p class="card-text small text-muted">
+                                        <i class="bi bi-people me-1"></i> @job.SoUngVien ứng viên
+                                    </p>
+                                </div>
+                                <div class="card-footer bg-transparent border-top-0 pt-0 pb-2 px-3 text-center">
+                                    <div class="btn-group btn-group-sm w-100" role="group">
+                                        <a asp-action="Details" asp-controller="TinTuyenDung" asp-route-id="@job.Id" class="btn btn-outline-primary flex-fill"><i class="bi bi-eye me-1"></i>Chi tiết</a>
+                                        <a asp-action="Edit" asp-controller="TinTuyenDung" asp-route-id="@job.Id" class="btn btn-outline-secondary flex-fill"><i class="bi bi-pencil-square me-1"></i>Sửa</a>
+                                        <div class="btn-group btn-group-sm flex-fill" role="group">
+                                            <button type="button" class="btn btn-outline-secondary dropdown-toggle w-100" data-bs-toggle="dropdown" aria-expanded="false" title="Thêm thao tác">
+                                                <i class="bi bi-three-dots"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                 @if (job.TrangThai == TrangThaiTinTuyenDung.choduyet) {
+                                                    <li>
+                                                        <form asp-action="Approve" asp-controller="TinTuyenDung" asp-route-id="@job.Id" method="post" class="d-inline">
+                                                            @Html.AntiForgeryToken()
+                                                            <button type="submit" class="dropdown-item small text-success"><i class="bi bi-check-circle me-2"></i>Duyệt tin</button>
+                                                        </form>
+                                                    </li>
+                                                    <li>
+                                                         <form asp-action="Reject" asp-controller="TinTuyenDung" asp-route-id="@job.Id" method="post" class="d-inline">
+                                                            @Html.AntiForgeryToken()
+                                                            <button type="submit" class="dropdown-item small text-danger"><i class="bi bi-x-circle me-2"></i>Từ chối</button>
+                                                        </form>
+                                                    </li>
+                                                    <li><hr class="dropdown-divider my-1"></li>
+                                                 }
+                                                 @if (job.TrangThai != TrangThaiTinTuyenDung.daxoa)
+                                                 {
+                                                    <li>
+                                                        <form asp-action="Delete" asp-controller="TinTuyenDung" asp-route-id="@job.Id" method="post" class="d-inline"
+                                                              onsubmit="return confirm('Bạn có chắc chắn muốn xóa (ẩn) tin tuyển dụng ID: @job.Id?');">
+                                                            @Html.AntiForgeryToken()
+                                                            <button type="submit" class="dropdown-item small text-danger"><i class="bi bi-trash me-2"></i>Xóa (ẩn)</button>
+                                                        </form>
+                                                    </li>
+                                                 }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (!Model.JobPosts.Any())
+                    {
+                        <div class="col-12"><p class="text-center py-4">Không có tin tuyển dụng nào phù hợp với bộ lọc hiện tại.</p></div>
+                    }
+                </div>
+            </div>
+            
             <!-- Pagination -->
-            @if (Model.TotalPages > 0)
+            @if (Model.TotalPages > 1)
             {
-                <div class="d-flex justify-content-between align-items-center mt-3">
-                    <div>Hiển thị @Model.JobPosts.Count trên @Model.TotalItems việc làm</div>
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination mb-0">
-                            <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
-                                <a class="page-link" asp-action="Index" 
-                                   asp-all-route-data="@(new Dictionary<string, string>(ViewContext.RouteData.Values.ToDictionary(kvp => kvp.Key, kvp => kvp.Value?.ToString() ?? "")) { { "pageIndex", (Model.PageIndex - 1).ToString() } })"
-                                   aria-label="Previous">
-                                    <span aria-hidden="true">«</span>
-                                </a>
-                            </li>
+                <nav aria-label="Page navigation" class="mt-3">
+                    <ul class="pagination justify-content-center flex-wrap">
+                        <li class="page-item @(!Model.HasPreviousPage ? "disabled" : "")">
+                            <a class="page-link" asp-all-route-data="@GetPaginationRouteData(1)" aria-label="First">
+                                <span aria-hidden="true">««</span>
+                            </a>
+                        </li>
+                        <li class="page-item @(!Model.HasPreviousPage ? "disabled" : "")">
+                            <a class="page-link" asp-all-route-data="@GetPaginationRouteData(Model.PageIndex - 1)" aria-label="Previous">
+                                <span aria-hidden="true">«</span>
+                            </a>
+                        </li>
+                        @{
+                            int Paging_NumericButtonCount = 5; // Max page numbers to show directly
+                            int startPage = Math.Max(1, Model.PageIndex - (Paging_NumericButtonCount / 2));
+                            int endPage = Math.Min(Model.TotalPages, startPage + Paging_NumericButtonCount - 1);
 
-                            @for (int i = 1; i <= Model.TotalPages; i++)
+                            if (endPage - startPage + 1 < Paging_NumericButtonCount) // Adjust startPage if endPage is near TotalPages
+                            {
+                                startPage = Math.Max(1, endPage - Paging_NumericButtonCount + 1);
+                            }
+
+                            if (startPage > 1)
+                            {
+                                <li class="page-item"><a class="page-link" asp-all-route-data="@GetPaginationRouteData(1)">1</a></li>
+                                if (startPage > 2)
+                                {
+                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                }
+                            }
+
+                            for (int i = startPage; i <= endPage; i++)
                             {
                                 <li class="page-item @(i == Model.PageIndex ? "active" : "")">
-                                    <a class="page-link" asp-action="Index"
-                                       asp-all-route-data="@(new Dictionary<string, string>(ViewContext.RouteData.Values.ToDictionary(kvp => kvp.Key, kvp => kvp.Value?.ToString() ?? "")) { { "pageIndex", i.ToString() } })">
-                                        @i
-                                    </a>
+                                    <a class="page-link" asp-all-route-data="@GetPaginationRouteData(i)">@i</a>
                                 </li>
                             }
 
-                            <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
-                                <a class="page-link" asp-action="Index"
-                                   asp-all-route-data="@(new Dictionary<string, string>(ViewContext.RouteData.Values.ToDictionary(kvp => kvp.Key, kvp => kvp.Value?.ToString() ?? "")) { { "pageIndex", (Model.PageIndex + 1).ToString() } })"
-                                   aria-label="Next">
-                                    <span aria-hidden="true">»</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
+                             if (endPage < Model.TotalPages)
+                            {
+                                if (endPage < Model.TotalPages - 1)
+                                {
+                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                }
+                                <li class="page-item"><a class="page-link" asp-all-route-data="@GetPaginationRouteData(Model.TotalPages)">@Model.TotalPages</a></li>
+                            }
+                        }
+                        <li class="page-item @(!Model.HasNextPage ? "disabled" : "")">
+                             <a class="page-link" asp-all-route-data="@GetPaginationRouteData(Model.PageIndex + 1)" aria-label="Next">
+                                 <span aria-hidden="true">»</span>
+                             </a>
+                        </li>
+                         <li class="page-item @(!Model.HasNextPage ? "disabled" : "")">
+                            <a class="page-link" asp-all-route-data="@GetPaginationRouteData(Model.TotalPages)" aria-label="Last">
+                                <span aria-hidden="true">»»</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             }
         </div>
     </div>
 </div>
 
 @section Scripts {
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
-            const itemCheckboxes = document.querySelectorAll('.item-checkbox');
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // For PageSize in item count display
+        @if (ViewBag.PageSize == null) { // Fallback if PageSize not in ViewBag
+            ViewBag.PageSize = Model.JobPosts.Any() ? Model.JobPosts.Count : 10; // Default or actual count
+        }
 
-            if(selectAllCheckbox) {
-                selectAllCheckbox.addEventListener('change', function () {
-                    itemCheckboxes.forEach(checkbox => {
-                        checkbox.checked = selectAllCheckbox.checked;
-                    });
-                });
+        const listViewBtn = document.getElementById('switchToListViewBtn');
+        const cardViewBtn = document.getElementById('switchToCardViewBtn');
+        const listViewContainer = document.getElementById('jobPostListViewContainer');
+        const cardViewContainer = document.getElementById('jobPostCardViewContainer');
+        const currentViewModeInput = document.getElementById('currentViewModeInput'); 
+
+        function setView(viewMode) {
+            if (viewMode === 'card') {
+                if (listViewContainer) listViewContainer.style.display = 'none';
+                if (cardViewContainer) cardViewContainer.style.display = 'block';
+                if (listViewBtn) listViewBtn.classList.remove('active');
+                if (cardViewBtn) cardViewBtn.classList.add('active');
+                if (currentViewModeInput) currentViewModeInput.value = 'card';
+                localStorage.setItem('adminJobPostViewMode', 'card');
+            } else { // Default to list
+                if (listViewContainer) listViewContainer.style.display = 'block';
+                if (cardViewContainer) cardViewContainer.style.display = 'none';
+                if (cardViewBtn) cardViewBtn.classList.remove('active');
+                if (listViewBtn) listViewBtn.classList.add('active');
+                if (currentViewModeInput) currentViewModeInput.value = 'list';
+                localStorage.setItem('adminJobPostViewMode', 'list');
             }
-            
-            itemCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    if (!checkbox.checked && selectAllCheckbox) {
-                        selectAllCheckbox.checked = false;
-                    }
-                    // Optionally, check if all items are checked to update selectAllCheckbox
-                    let allChecked = true;
-                    itemCheckboxes.forEach(cb => {
-                        if (!cb.checked) allChecked = false;
-                    });
-                    if(selectAllCheckbox) selectAllCheckbox.checked = allChecked;
+        }
+
+        if (listViewBtn && cardViewBtn && listViewContainer && cardViewContainer) {
+            listViewBtn.addEventListener('click', () => setView('list'));
+            cardViewBtn.addEventListener('click', () => setView('card'));
+
+            const queryViewMode = new URLSearchParams(window.location.search).get('viewMode');
+            const preferredView = queryViewMode || localStorage.getItem('adminJobPostViewMode') || '@Model.ViewMode'; 
+            setView(preferredView);
+        }
+
+        const selectAllCheckboxTable = document.getElementById('selectAllJobsTable');
+        if(selectAllCheckboxTable) {
+            selectAllCheckboxTable.addEventListener('change', function() {
+                document.querySelectorAll('.job-checkbox-table').forEach(checkbox => {
+                    checkbox.checked = this.checked;
                 });
             });
-        });
-    </script>
+        }
+
+        // Auto-dismiss alerts after 5 seconds
+        setTimeout(function() {
+            let alerts = document.querySelectorAll('.alert-dismissible');
+            alerts.forEach(function(alert) {
+                new bootstrap.Alert(alert).close();
+            });
+        }, 5000);
+
+    });
+</script>
 }

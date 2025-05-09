@@ -497,3 +497,4 @@ E:\HETHONGTIMVIEC\obj\Debug\net8.0\refint\HETHONGTIMVIEC.dll
 E:\HETHONGTIMVIEC\obj\Debug\net8.0\HETHONGTIMVIEC.pdb
 E:\HETHONGTIMVIEC\obj\Debug\net8.0\HETHONGTIMVIEC.genruntimeconfig.cache
 E:\HETHONGTIMVIEC\obj\Debug\net8.0\ref\HETHONGTIMVIEC.dll
+E:\HETHONGTIMVIEC\obj\Debug\net8.0\HETHONGTIMVIEC.sourcelink.json
